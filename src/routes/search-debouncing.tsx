@@ -1,9 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/search-debouncing')({
-  component: RouteComponent,
-})
+export const Route = createFileRoute("/search-debouncing")({
+	component: RouteComponent,
+});
 
 function RouteComponent() {
-  return <div>Hello "/search-debouncing"!</div>
+	return <div>Hello "/search-debouncing"!</div>;
 }

@@ -1,9 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/pagination')({
-  component: RouteComponent,
-})
+export const Route = createFileRoute("/pagination")({
+	component: RouteComponent,
+});
 
 function RouteComponent() {
-  return <div>Hello "/pagination"!</div>
+	return <div>Hello "/pagination"!</div>;
 }
