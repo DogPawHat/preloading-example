@@ -8,8 +8,8 @@ export default function Header() {
 					<Link to="/">Home</Link>
 				</div>
 
-				<div className="px-2 font-bold">
-					<Link to="/demo/tanstack-query">TanStack Query</Link>
+				<div className="px-2">
+					<Link to="/basic">Basic Example</Link>
 				</div>
 			</nav>
 		</header>

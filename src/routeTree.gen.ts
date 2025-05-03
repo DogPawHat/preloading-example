@@ -18,7 +18,6 @@ import { Route as PaginationImport } from './routes/pagination'
 import { Route as IntentPreloadingImport } from './routes/intent-preloading'
 import { Route as BasicImport } from './routes/basic'
 import { Route as IndexImport } from './routes/index'
-import { Route as DemoTanstackQueryImport } from './routes/demo.tanstack-query'
 
 // Create/Update Routes
 
@@ -61,12 +60,6 @@ const BasicRoute = BasicImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const DemoTanstackQueryRoute = DemoTanstackQueryImport.update({
-  id: '/demo/tanstack-query',
-  path: '/demo/tanstack-query',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -123,13 +116,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SuspenceImport
       parentRoute: typeof rootRoute
     }
-    '/demo/tanstack-query': {
-      id: '/demo/tanstack-query'
-      path: '/demo/tanstack-query'
-      fullPath: '/demo/tanstack-query'
-      preLoaderRoute: typeof DemoTanstackQueryImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
@@ -143,7 +129,6 @@ export interface FileRoutesByFullPath {
   '/preloading': typeof PreloadingRoute
   '/search-debouncing': typeof SearchDebouncingRoute
   '/suspence': typeof SuspenceRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 
 export interface FileRoutesByTo {
@@ -154,7 +139,6 @@ export interface FileRoutesByTo {
   '/preloading': typeof PreloadingRoute
   '/search-debouncing': typeof SearchDebouncingRoute
   '/suspence': typeof SuspenceRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 
 export interface FileRoutesById {
@@ -166,7 +150,6 @@ export interface FileRoutesById {
   '/preloading': typeof PreloadingRoute
   '/search-debouncing': typeof SearchDebouncingRoute
   '/suspence': typeof SuspenceRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 
 export interface FileRouteTypes {
@@ -179,7 +162,6 @@ export interface FileRouteTypes {
     | '/preloading'
     | '/search-debouncing'
     | '/suspence'
-    | '/demo/tanstack-query'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -189,7 +171,6 @@ export interface FileRouteTypes {
     | '/preloading'
     | '/search-debouncing'
     | '/suspence'
-    | '/demo/tanstack-query'
   id:
     | '__root__'
     | '/'
@@ -199,7 +180,6 @@ export interface FileRouteTypes {
     | '/preloading'
     | '/search-debouncing'
     | '/suspence'
-    | '/demo/tanstack-query'
   fileRoutesById: FileRoutesById
 }
 
@@ -211,7 +191,6 @@ export interface RootRouteChildren {
   PreloadingRoute: typeof PreloadingRoute
   SearchDebouncingRoute: typeof SearchDebouncingRoute
   SuspenceRoute: typeof SuspenceRoute
-  DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -222,7 +201,6 @@ const rootRouteChildren: RootRouteChildren = {
   PreloadingRoute: PreloadingRoute,
   SearchDebouncingRoute: SearchDebouncingRoute,
   SuspenceRoute: SuspenceRoute,
-  DemoTanstackQueryRoute: DemoTanstackQueryRoute,
 }
 
 export const routeTree = rootRoute
@@ -241,8 +219,7 @@ export const routeTree = rootRoute
         "/pagination",
         "/preloading",
         "/search-debouncing",
-        "/suspence",
-        "/demo/tanstack-query"
+        "/suspence"
       ]
     },
     "/": {
@@ -265,9 +242,6 @@ export const routeTree = rootRoute
     },
     "/suspence": {
       "filePath": "suspence.tsx"
-    },
-    "/demo/tanstack-query": {
-      "filePath": "demo.tanstack-query.tsx"
     }
   }
 }
