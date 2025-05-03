@@ -35,6 +35,12 @@ importers:
       lucide-react:
         specifier: ^0.476.0
         version: 0.476.0(react@19.1.0)
+      openapi-fetch:
+        specifier: ^0.13.5
+        version: 0.13.5
+      openapi-react-query:
+        specifier: ^0.3.1
+        version: 0.3.1(@tanstack/react-query@5.75.1(react@19.1.0))(openapi-fetch@0.13.5)
       react:
         specifier: ^19.0.0
         version: 19.1.0
@@ -1178,6 +1184,18 @@ packages:
 
   nwsapi@2.2.20:
     resolution: {integrity: sha512-/ieB+mDe4MrrKMT8z+mQL8klXydZWGR5Dowt4RAGKbJ3kIGEx3X4ljUo+6V73IXtUPWgfOlU5B9MlGxFO5T+cA==}
+
+  openapi-fetch@0.13.5:
+    resolution: {integrity: sha512-AQK8T9GSKFREFlN1DBXTYsLjs7YV2tZcJ7zUWxbjMoQmj8dDSFRrzhLCbHPZWA1TMV3vACqfCxLEZcwf2wxV6Q==}
+
+  openapi-react-query@0.3.1:
+    resolution: {integrity: sha512-1R3NunDpf6koap0pF4AiUO5Asw4o3GmKrer6r8+2kvfLTxgHNm9vm7F0grZUcKG1tfc9qKrGa5NSvoMqa79DMg==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.25.0
+      openapi-fetch: ^0.13.5
+
+  openapi-typescript-helpers@0.0.15:
+    resolution: {integrity: sha512-opyTPaunsklCBpTK8JGef6mfPhLSnyy5a0IN9vKtx3+4aExf+KxEqYwIy3hqkedXIB97u357uLMJsOnm3GVjsw==}
 
   parse5@7.3.0:
     resolution: {integrity: sha512-IInvU7fabl34qmi9gY8XOVxhYyMyuH2xUNpb2q8/Y+7552KlejkRvqvD19nMoUW/uQGGbqNpA6Tufu5FL5BZgw==}
@@ -2474,6 +2492,18 @@ snapshots:
   normalize-path@3.0.0: {}
 
   nwsapi@2.2.20: {}
+
+  openapi-fetch@0.13.5:
+    dependencies:
+      openapi-typescript-helpers: 0.0.15
+
+  openapi-react-query@0.3.1(@tanstack/react-query@5.75.1(react@19.1.0))(openapi-fetch@0.13.5):
+    dependencies:
+      '@tanstack/react-query': 5.75.1(react@19.1.0)
+      openapi-fetch: 0.13.5
+      openapi-typescript-helpers: 0.0.15
+
+  openapi-typescript-helpers@0.0.15: {}
 
   parse5@7.3.0:
     dependencies:
