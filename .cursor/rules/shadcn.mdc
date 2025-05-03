@@ -1,3 +1,8 @@
+---
+description: Adding new components from shadcn
+globs: 
+alwaysApply: false
+---
 # shadcn instructions
 
 Use the latest version of Shadcn to install new components, like this command to add a button component:
