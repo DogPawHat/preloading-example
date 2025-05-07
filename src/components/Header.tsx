@@ -36,6 +36,12 @@ export default function Header() {
 						Intent Preloading Example
 					</Link>
 				</div>
+
+				<div className="px-2">
+					<Link to="/pagination" activeProps={{ className: "font-bold" }}>
+						Pagination Example
+					</Link>
+				</div>
 			</nav>
 		</header>
 	);
