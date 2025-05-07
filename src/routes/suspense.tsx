@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { buttonVariants } from "~/components/ui/button";
 
@@ -26,11 +26,26 @@ const searchParamsSchema = v.object({
 export const Route = createFileRoute("/suspense")({
 	validateSearch: searchParamsSchema,
 	component: RouteComponent,
+	notFoundComponent: NotFoundComponent,
+	errorComponent: ErrorComponent,
+	pendingComponent: LoadingComponent,
 });
 
 interface PokemonListResult {
 	name: string;
 	url: string;
+}
+
+function NotFoundComponent() {
+	return <div>Not Found</div>;
+}
+
+function ErrorComponent() {
+	return <div>Error</div>;
+}
+
+function LoadingComponent() {
+	return <div>Loading...</div>;
 }
 
 function RouteComponent() {
@@ -42,7 +57,7 @@ function RouteComponent() {
 		{ limit: POKEMON_LIMIT, offset: currentOffset },
 	] as const;
 
-	const { data, error } = useQuery({
+	const { data } = useSuspenseQuery({
 		queryKey: newKey,
 		queryFn: async () => {
 			const { data, error } = await $pokeFetchClient.GET("/api/v2/pokemon/", {
@@ -78,72 +93,64 @@ function RouteComponent() {
 		return new URL(data.next).searchParams.get("offset") ?? null;
 	}, [data?.next]);
 
-	if (data) {
-		const results = data.results ?? [];
-		return (
-			<div className="p-4">
-				<h1 className="text-2xl font-bold mb-4">
-					National Pokédex: Pokémon {currentOffset + 1}-
-					{currentOffset + POKEMON_LIMIT}
-				</h1>
-				<Table>
-					<TableHeader>
-						<TableRow>
-							<TableHead>#</TableHead>
-							<TableHead>Name</TableHead>
-							<TableHead>Details</TableHead>
+	const results = data.results ?? [];
+	return (
+		<div className="p-4">
+			<h1 className="text-2xl font-bold mb-4">
+				National Pokédex: Pokémon {currentOffset + 1}-
+				{currentOffset + POKEMON_LIMIT}
+			</h1>
+			<Table>
+				<TableHeader>
+					<TableRow>
+						<TableHead>#</TableHead>
+						<TableHead>Name</TableHead>
+						<TableHead>Details</TableHead>
+					</TableRow>
+				</TableHeader>
+				<TableBody>
+					{results.map((pokemon: PokemonListResult) => (
+						<TableRow key={pokemon.name}>
+							<TableCell>{pokemon.url.match(matchPokemonIdExp)?.[1]}</TableCell>
+							<TableCell className="capitalize">{pokemon.name}</TableCell>
+							<TableCell>
+								<a
+									href={pokemon.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-blue-600 underline"
+								>
+									View
+								</a>
+							</TableCell>
 						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{results.map((pokemon: PokemonListResult) => (
-							<TableRow key={pokemon.name}>
-								<TableCell>
-									{pokemon.url.match(matchPokemonIdExp)?.[1]}
-								</TableCell>
-								<TableCell className="capitalize">{pokemon.name}</TableCell>
-								<TableCell>
-									<a
-										href={pokemon.url}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="text-blue-600 underline"
-									>
-										View
-									</a>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-				<div className="flex justify-center gap-4 mt-4">
-					<Link
-						to="/basic"
-						className={buttonVariants({
-							variant: "outline",
-							className: cn(!previousOffset && "opacity-50 cursor-not-allowed"),
-						})}
-						search={{ offset: Number(previousOffset) }}
-						disabled={!previousOffset}
-					>
-						Previous
-					</Link>
-					<Link
-						to="/basic"
-						search={{ offset: Number(nextOffset) }}
-						className={buttonVariants({
-							variant: "outline",
-							className: cn(!nextOffset && "opacity-50 cursor-not-allowed"),
-						})}
-						disabled={!nextOffset}
-					>
-						Next
-					</Link>
-				</div>
+					))}
+				</TableBody>
+			</Table>
+			<div className="flex justify-center gap-4 mt-4">
+				<Link
+					to="/suspense"
+					className={buttonVariants({
+						variant: "outline",
+						className: cn(!previousOffset && "opacity-50 cursor-not-allowed"),
+					})}
+					search={{ offset: Number(previousOffset) }}
+					disabled={!previousOffset}
+				>
+					Previous
+				</Link>
+				<Link
+					to="/suspense"
+					search={{ offset: Number(nextOffset) }}
+					className={buttonVariants({
+						variant: "outline",
+						className: cn(!nextOffset && "opacity-50 cursor-not-allowed"),
+					})}
+					disabled={!nextOffset}
+				>
+					Next
+				</Link>
 			</div>
-		);
-	}
-
-	if (error) return <div>Error loading Pokémon.</div>;
-
-	return <div>No data</div>;
+		</div>
+	);
 }
