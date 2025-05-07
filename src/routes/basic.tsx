@@ -80,7 +80,7 @@ function RouteComponent() {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{results.map((pokemon: PokemonListResult, idx: number) => (
+						{results.map((pokemon: PokemonListResult) => (
 							<TableRow key={pokemon.name}>
 								<TableCell>
 									{pokemon.url.match(matchPokemonIdExp)?.[1]}
