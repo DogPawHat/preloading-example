@@ -21,6 +21,12 @@ export default function Header() {
 						Suspense Example
 					</Link>
 				</div>
+
+				<div className="px-2">
+					<Link to="/preloading" activeProps={{ className: "font-bold" }}>
+						Preloading Example
+					</Link>
+				</div>
 			</nav>
 		</header>
 	);
