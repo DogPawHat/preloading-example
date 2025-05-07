@@ -27,6 +27,15 @@ export default function Header() {
 						Preloading Example
 					</Link>
 				</div>
+
+				<div className="px-2">
+					<Link
+						to="/intent-preloading"
+						activeProps={{ className: "font-bold" }}
+					>
+						Intent Preloading Example
+					</Link>
+				</div>
 			</nav>
 		</header>
 	);
