@@ -12,7 +12,6 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SuspenseImport } from './routes/suspense'
-import { Route as SearchDebouncingImport } from './routes/search-debouncing'
 import { Route as PreloadingImport } from './routes/preloading'
 import { Route as PaginationImport } from './routes/pagination'
 import { Route as IntentPreloadingImport } from './routes/intent-preloading'
@@ -24,12 +23,6 @@ import { Route as IndexImport } from './routes/index'
 const SuspenseRoute = SuspenseImport.update({
   id: '/suspense',
   path: '/suspense',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const SearchDebouncingRoute = SearchDebouncingImport.update({
-  id: '/search-debouncing',
-  path: '/search-debouncing',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -102,13 +95,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PreloadingImport
       parentRoute: typeof rootRoute
     }
-    '/search-debouncing': {
-      id: '/search-debouncing'
-      path: '/search-debouncing'
-      fullPath: '/search-debouncing'
-      preLoaderRoute: typeof SearchDebouncingImport
-      parentRoute: typeof rootRoute
-    }
     '/suspense': {
       id: '/suspense'
       path: '/suspense'
@@ -127,7 +113,6 @@ export interface FileRoutesByFullPath {
   '/intent-preloading': typeof IntentPreloadingRoute
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
-  '/search-debouncing': typeof SearchDebouncingRoute
   '/suspense': typeof SuspenseRoute
 }
 
@@ -137,7 +122,6 @@ export interface FileRoutesByTo {
   '/intent-preloading': typeof IntentPreloadingRoute
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
-  '/search-debouncing': typeof SearchDebouncingRoute
   '/suspense': typeof SuspenseRoute
 }
 
@@ -148,7 +132,6 @@ export interface FileRoutesById {
   '/intent-preloading': typeof IntentPreloadingRoute
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
-  '/search-debouncing': typeof SearchDebouncingRoute
   '/suspense': typeof SuspenseRoute
 }
 
@@ -160,7 +143,6 @@ export interface FileRouteTypes {
     | '/intent-preloading'
     | '/pagination'
     | '/preloading'
-    | '/search-debouncing'
     | '/suspense'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -169,7 +151,6 @@ export interface FileRouteTypes {
     | '/intent-preloading'
     | '/pagination'
     | '/preloading'
-    | '/search-debouncing'
     | '/suspense'
   id:
     | '__root__'
@@ -178,7 +159,6 @@ export interface FileRouteTypes {
     | '/intent-preloading'
     | '/pagination'
     | '/preloading'
-    | '/search-debouncing'
     | '/suspense'
   fileRoutesById: FileRoutesById
 }
@@ -189,7 +169,6 @@ export interface RootRouteChildren {
   IntentPreloadingRoute: typeof IntentPreloadingRoute
   PaginationRoute: typeof PaginationRoute
   PreloadingRoute: typeof PreloadingRoute
-  SearchDebouncingRoute: typeof SearchDebouncingRoute
   SuspenseRoute: typeof SuspenseRoute
 }
 
@@ -199,7 +178,6 @@ const rootRouteChildren: RootRouteChildren = {
   IntentPreloadingRoute: IntentPreloadingRoute,
   PaginationRoute: PaginationRoute,
   PreloadingRoute: PreloadingRoute,
-  SearchDebouncingRoute: SearchDebouncingRoute,
   SuspenseRoute: SuspenseRoute,
 }
 
@@ -218,7 +196,6 @@ export const routeTree = rootRoute
         "/intent-preloading",
         "/pagination",
         "/preloading",
-        "/search-debouncing",
         "/suspense"
       ]
     },
@@ -236,9 +213,6 @@ export const routeTree = rootRoute
     },
     "/preloading": {
       "filePath": "preloading.tsx"
-    },
-    "/search-debouncing": {
-      "filePath": "search-debouncing.tsx"
     },
     "/suspense": {
       "filePath": "suspense.tsx"
