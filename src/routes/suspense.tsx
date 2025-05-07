@@ -23,7 +23,7 @@ const searchParamsSchema = v.object({
 	offset: v.optional(v.number(), 0),
 });
 
-export const Route = createFileRoute("/basic")({
+export const Route = createFileRoute("/suspense")({
 	validateSearch: searchParamsSchema,
 	component: RouteComponent,
 });
@@ -38,7 +38,7 @@ function RouteComponent() {
 
 	const newKey = [
 		"pokemon-list",
-		"basic",
+		"suspense",
 		{ limit: POKEMON_LIMIT, offset: currentOffset },
 	] as const;
 

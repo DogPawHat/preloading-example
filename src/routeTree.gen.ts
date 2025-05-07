@@ -11,7 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SuspenceImport } from './routes/suspence'
+import { Route as SuspenseImport } from './routes/suspense'
 import { Route as SearchDebouncingImport } from './routes/search-debouncing'
 import { Route as PreloadingImport } from './routes/preloading'
 import { Route as PaginationImport } from './routes/pagination'
@@ -21,9 +21,9 @@ import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
 
-const SuspenceRoute = SuspenceImport.update({
-  id: '/suspence',
-  path: '/suspence',
+const SuspenseRoute = SuspenseImport.update({
+  id: '/suspense',
+  path: '/suspense',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -109,11 +109,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchDebouncingImport
       parentRoute: typeof rootRoute
     }
-    '/suspence': {
-      id: '/suspence'
-      path: '/suspence'
-      fullPath: '/suspence'
-      preLoaderRoute: typeof SuspenceImport
+    '/suspense': {
+      id: '/suspense'
+      path: '/suspense'
+      fullPath: '/suspense'
+      preLoaderRoute: typeof SuspenseImport
       parentRoute: typeof rootRoute
     }
   }
@@ -128,7 +128,7 @@ export interface FileRoutesByFullPath {
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
   '/search-debouncing': typeof SearchDebouncingRoute
-  '/suspence': typeof SuspenceRoute
+  '/suspense': typeof SuspenseRoute
 }
 
 export interface FileRoutesByTo {
@@ -138,7 +138,7 @@ export interface FileRoutesByTo {
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
   '/search-debouncing': typeof SearchDebouncingRoute
-  '/suspence': typeof SuspenceRoute
+  '/suspense': typeof SuspenseRoute
 }
 
 export interface FileRoutesById {
@@ -149,7 +149,7 @@ export interface FileRoutesById {
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
   '/search-debouncing': typeof SearchDebouncingRoute
-  '/suspence': typeof SuspenceRoute
+  '/suspense': typeof SuspenseRoute
 }
 
 export interface FileRouteTypes {
@@ -161,7 +161,7 @@ export interface FileRouteTypes {
     | '/pagination'
     | '/preloading'
     | '/search-debouncing'
-    | '/suspence'
+    | '/suspense'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -170,7 +170,7 @@ export interface FileRouteTypes {
     | '/pagination'
     | '/preloading'
     | '/search-debouncing'
-    | '/suspence'
+    | '/suspense'
   id:
     | '__root__'
     | '/'
@@ -179,7 +179,7 @@ export interface FileRouteTypes {
     | '/pagination'
     | '/preloading'
     | '/search-debouncing'
-    | '/suspence'
+    | '/suspense'
   fileRoutesById: FileRoutesById
 }
 
@@ -190,7 +190,7 @@ export interface RootRouteChildren {
   PaginationRoute: typeof PaginationRoute
   PreloadingRoute: typeof PreloadingRoute
   SearchDebouncingRoute: typeof SearchDebouncingRoute
-  SuspenceRoute: typeof SuspenceRoute
+  SuspenseRoute: typeof SuspenseRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -200,7 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   PaginationRoute: PaginationRoute,
   PreloadingRoute: PreloadingRoute,
   SearchDebouncingRoute: SearchDebouncingRoute,
-  SuspenceRoute: SuspenceRoute,
+  SuspenseRoute: SuspenseRoute,
 }
 
 export const routeTree = rootRoute
@@ -219,7 +219,7 @@ export const routeTree = rootRoute
         "/pagination",
         "/preloading",
         "/search-debouncing",
-        "/suspence"
+        "/suspense"
       ]
     },
     "/": {
@@ -240,8 +240,8 @@ export const routeTree = rootRoute
     "/search-debouncing": {
       "filePath": "search-debouncing.tsx"
     },
-    "/suspence": {
-      "filePath": "suspence.tsx"
+    "/suspense": {
+      "filePath": "suspense.tsx"
     }
   }
 }
