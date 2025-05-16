@@ -113,7 +113,7 @@ function RouteComponent() {
 	}, [data?.next]);
 
 	if (previousOffset !== null) {
-		queryClient.prefetchQuery({
+		void queryClient.prefetchQuery({
 			...pokemonListOptions,
 			queryKey: [
 				"pokemon-list",
@@ -124,7 +124,7 @@ function RouteComponent() {
 	}
 
 	if (nextOffset !== null) {
-		queryClient.prefetchQuery({
+		void queryClient.prefetchQuery({
 			...pokemonListOptions,
 			queryKey: [
 				"pokemon-list",
