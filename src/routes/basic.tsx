@@ -51,6 +51,9 @@ function RouteComponent() {
 						limit: POKEMON_LIMIT,
 						offset: currentOffset,
 					},
+					headers: {
+						"x-fetch-type": "basic",
+					},
 				},
 			});
 

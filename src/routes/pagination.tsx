@@ -48,6 +48,9 @@ export const Route = createFileRoute("/pagination")({
 							limit: queryKey[2].limit,
 							offset: queryKey[2].offset,
 						},
+						headers: {
+							"x-fetch-type": "pagination",
+						},
 					},
 				});
 

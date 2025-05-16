@@ -44,6 +44,9 @@ export const Route = createFileRoute("/preloading")({
 							limit: POKEMON_LIMIT,
 							offset: deps.offset,
 						},
+						headers: {
+							"x-fetch-type": "preloading",
+						},
 					},
 				});
 

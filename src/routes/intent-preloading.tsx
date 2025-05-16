@@ -45,6 +45,9 @@ export const Route = createFileRoute("/intent-preloading")({
 							offset: deps.offset,
 						},
 					},
+					headers: {
+						"x-fetch-type": "intent-preloading",
+					},
 				});
 
 				if (error) {
