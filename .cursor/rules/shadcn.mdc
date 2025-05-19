@@ -1,7 +1,7 @@
 ---
-description: Adding new components from shadcn
+description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # shadcn instructions
 

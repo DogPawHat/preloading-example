@@ -1,0 +1,70 @@
+---
+description: 
+globs: *.ts,*.tsx
+alwaysApply: false
+---
+# Valibot Validation Best Practices
+
+When validating unknown data in your application, prefer using Valibot over other validation libraries. Valibot is a lightweight, type-safe validation library that provides excellent TypeScript integration and runtime type checking. It is fully compliant with the Standard Schema standard and can be used as a drop-in replacement for Zod in most cases.
+
+## Basic Usage
+```ts
+import { object, string, number, parse } from 'valibot'
+
+// Define your schema
+const UserSchema = object({
+  name: string(),
+  age: number()
+})
+
+// Validate data
+try {
+  const user = parse(UserSchema, unknownData)
+  // user is now typed and validated
+} catch (error) {
+  // Handle validation errors
+}
+```
+
+## Common Patterns
+
+### Form Validation
+```ts
+import { object, string, minLength, email } from 'valibot'
+
+const LoginSchema = object({
+  email: string([email()]),
+  password: string([minLength(8)])
+})
+```
+
+### API Response Validation
+```ts
+import { object, array, string, number } from 'valibot'
+
+const ApiResponseSchema = object({
+  data: array(object({
+    id: number(),
+    title: string()
+  }))
+})
+```
+
+## Best Practices
+1. Define schemas at the top level of your files
+2. Use TypeScript inference with `typeof` to get types from schemas
+3. Handle validation errors appropriately
+4. Use composition to build complex schemas
+5. Add custom error messages for better UX
+
+## When to Use
+- Validating API responses
+- Form input validation
+- Configuration validation
+- Runtime type checking
+- Data transformation
+
+## When Not to Use
+- Simple type assertions (use TypeScript's type system)
+- Performance-critical validation (consider alternatives)
+- Complex business logic (separate from validation)

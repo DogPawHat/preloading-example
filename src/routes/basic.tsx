@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { buttonVariants } from "~/components/ui/button";
 
 import { useMemo } from "react";
@@ -13,25 +13,16 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { $pokeFetchClient } from "../data/client";
-
-const POKEMON_LIMIT = 20;
-
-const matchPokemonIdExp = /\/api\/v2\/pokemon\/(\d+)\/?/;
+import { POKEMON_LIMITgggetPokemonList } from "~/util/pokemon";
 
 const searchParamsSchema = v.object({
 	offset: v.optional(v.number(), 0),
 });
 
-export const Route = createFileRoute("/basic")({
+export const Route = createFileRoute({
 	validateSearch: searchParamsSchema,
 	component: RouteComponent,
 });
-
-interface PokemonListResult {
-	name: string;
-	url: string;
-}
 
 function RouteComponent() {
 	const { offset: currentOffset } = Route.useSearch();
@@ -45,44 +36,28 @@ function RouteComponent() {
 	const { data, error } = useQuery({
 		queryKey: newKey,
 		queryFn: async () => {
-			const { data, error } = await $pokeFetchClient.GET("/api/v2/pokemon/", {
-				params: {
-					query: {
-						limit: POKEMON_LIMIT,
-						offset: currentOffset,
-					},
-					headers: {
-						"x-fetch-type": "basic",
-					},
-				},
-			});
-
-			if (error) {
-				throw error;
-			}
-
-			return data;
+			return await getPokemonList({ data: { offset: currentOffset } });
 		},
 	});
 
 	const previousOffset = useMemo(() => {
-		if (data?.previous == null) {
+		if (data?.prevOffset == null) {
 			return null;
 		}
 
-		return new URL(data.previous).searchParams.get("offset") ?? null;
-	}, [data?.previous]);
+		return data.prevOffset.toString();
+	}, [data?.prevOffset]);
 
 	const nextOffset = useMemo(() => {
-		if (data?.next == null) {
+		if (data?.nextOffset == null) {
 			return null;
 		}
 
-		return new URL(data.next).searchParams.get("offset") ?? null;
-	}, [data?.next]);
+		return data.nextOffset.toString();
+	}, [data?.nextOffset]);
 
 	if (data) {
-		const results = data.results ?? [];
+		const results = data.pokemon ?? [];
 		return (
 			<div className="p-4">
 				<h1 className="text-2xl font-bold mb-4">
@@ -98,21 +73,19 @@ function RouteComponent() {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{results.map((pokemon: PokemonListResult) => (
+						{results.map((pokemon) => (
 							<TableRow key={pokemon.name}>
-								<TableCell>
-									{pokemon.url.match(matchPokemonIdExp)?.[1]}
-								</TableCell>
+								<TableCell>{pokemon.id}</TableCell>
 								<TableCell className="capitalize">{pokemon.name}</TableCell>
 								<TableCell>
-									<a
-										href={pokemon.url}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="text-blue-600 underline"
-									>
-										View
-									</a>
+									{pokemon.types.map((type) => (
+										<span
+											key={type.type.name}
+											className="inline-block px-2 py-1 mr-1 text-sm font-medium rounded-full bg-gray-100"
+										>
+											{type.type.name}
+										</span>
+									))}
 								</TableCell>
 							</TableRow>
 						))}

@@ -1,0 +1,46 @@
+---
+description: 
+globs: src/**/*.ts,src/**/*.tsx
+alwaysApply: false
+---
+# TanStack Start: Creating Server Functions (Concise)
+
+TanStack Start server functions let you write server-only logic that can be called from your client or server code, similar to RPCs. They are not public API routes, but are invoked via fetches under the hood and can access secure server resources.
+
+- Use `createServerFn` from `@tanstack/react-start` at the top level of a file.
+- Specify HTTP method (e.g., `GET`, `POST`) if needed.
+- If required, add `.validator()` for input validation. Use Valibot for validation unless otherwise instructed.
+- Add `.handler()` for async server-side logic. The handler receives `{ data }` (validated input).
+- Server functions are not public API routes; they run only on the server and can be called from loaders, hooks, or components.
+
+## Example
+```ts
+import { createServerFn } from '@tanstack/react-start'
+
+const myFn = createServerFn({ method: 'POST' })
+  .validator((formData) => {
+    if (!(formData instanceof FormData)) throw new Error('Invalid form')
+    const age = formData.get('age')
+    if (!age) throw new Error('age required')
+    return age.toString()
+  })
+  .handler(async ({ data }) => {
+    // server logic here
+    return result
+  })
+```
+
+## Usage in Components
+```tsx
+<form action={myFn.url} method="POST" encType="multipart/form-data">
+  <input name="age" />
+  <button>Submit</button>
+</form>
+```
+
+**Best Practices:**
+- Always validate input
+- Use TypeScript for types
+- Handle errors
+- Use correct HTTP methods
+- Invalidate data after mutations if needed

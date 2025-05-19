@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { buttonVariants } from "~/components/ui/button";
 
 import { useMemo } from "react";
@@ -13,7 +13,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { $pokeFetchClient } from "../data/client";
+import { getPokemonList } from "~/util/pokemon";
 
 const POKEMON_LIMIT = 20;
 
@@ -23,7 +23,7 @@ const searchParamsSchema = v.object({
 	offset: v.optional(v.number(), 0),
 });
 
-export const Route = createFileRoute("/suspense")({
+export const Route = createFileRoute({
 	validateSearch: searchParamsSchema,
 	component: RouteComponent,
 	notFoundComponent: NotFoundComponent,
@@ -60,23 +60,21 @@ function RouteComponent() {
 	const { data } = useSuspenseQuery({
 		queryKey: newKey,
 		queryFn: async () => {
-			const { data, error } = await $pokeFetchClient.GET("/api/v2/pokemon/", {
-				params: {
-					query: {
-						limit: POKEMON_LIMIT,
-						offset: currentOffset,
-					},
-					headers: {
-						"x-fetch-type": "suspense",
-					},
-				},
-			});
-
-			if (error) {
-				throw error;
-			}
-
-			return data;
+			const result = await getPokemonList({ offset: currentOffset });
+			return {
+				results: result.pokemon.map((p) => ({
+					name: p.name,
+					url: `/api/v2/pokemon/${p.id}/`,
+				})),
+				next:
+					result.nextOffset !== null
+						? `/api/v2/pokemon/?offset=${result.nextOffset}`
+						: null,
+				previous:
+					result.prevOffset !== null
+						? `/api/v2/pokemon/?offset=${result.prevOffset}`
+						: null,
+			};
 		},
 	});
 

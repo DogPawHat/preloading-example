@@ -3,3 +3,6 @@ node_modules
 dist
 dist-ssr
 *.local
+.tanstack-start
+local.db
+local.db:*

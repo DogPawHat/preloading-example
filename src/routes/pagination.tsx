@@ -3,7 +3,7 @@ import {
 	useQueryClient,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { buttonVariants } from "~/components/ui/button";
 
 import { useMemo } from "react";
@@ -17,7 +17,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { $pokeFetchClient } from "../data/client";
+import { getPokemonList } from "~/util/pokemon";
 
 const POKEMON_LIMIT = 20;
 
@@ -27,7 +27,7 @@ const searchParamsSchema = v.object({
 	offset: v.optional(v.number(), 0),
 });
 
-export const Route = createFileRoute("/pagination")({
+export const Route = createFileRoute({
 	validateSearch: searchParamsSchema,
 	loaderDeps: ({ search }) => ({
 		offset: search.offset,
@@ -42,23 +42,23 @@ export const Route = createFileRoute("/pagination")({
 		const pokemonListOptions = queryOptions({
 			queryKey: newKey,
 			queryFn: async ({ queryKey }) => {
-				const { data, error } = await $pokeFetchClient.GET("/api/v2/pokemon/", {
-					params: {
-						query: {
-							limit: queryKey[2].limit,
-							offset: queryKey[2].offset,
-						},
-						headers: {
-							"x-fetch-type": "pagination",
-						},
-					},
+				const result = await getPokemonList({
+					url: `/api/v2/pokemon/?offset=${queryKey[2].offset}`,
 				});
-
-				if (error) {
-					throw error;
-				}
-
-				return data;
+				return {
+					results: result.pokemon.map((p) => ({
+						name: p.name,
+						url: `/api/v2/pokemon/${p.id}/`,
+					})),
+					next:
+						result.nextOffset !== null
+							? `/api/v2/pokemon/?offset=${result.nextOffset}`
+							: null,
+					previous:
+						result.prevOffset !== null
+							? `/api/v2/pokemon/?offset=${result.prevOffset}`
+							: null,
+				};
 			},
 		});
 

@@ -8,49 +8,51 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import type { CreateFileRoute, FileRoutesByPath } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SuspenseImport } from './routes/suspense'
-import { Route as PreloadingImport } from './routes/preloading'
-import { Route as PaginationImport } from './routes/pagination'
-import { Route as IntentPreloadingImport } from './routes/intent-preloading'
-import { Route as BasicImport } from './routes/basic'
-import { Route as IndexImport } from './routes/index'
+import { Route as SuspenseRouteImport } from './routes/suspense'
+import { Route as PreloadingRouteImport } from './routes/preloading'
+import { Route as PaginationRouteImport } from './routes/pagination'
+import { Route as IntentPreloadingRouteImport } from './routes/intent-preloading'
+import { Route as BasicRouteImport } from './routes/basic'
+import { Route as IndexRouteImport } from './routes/index'
 
 // Create/Update Routes
 
-const SuspenseRoute = SuspenseImport.update({
+const SuspenseRoute = SuspenseRouteImport.update({
   id: '/suspense',
   path: '/suspense',
   getParentRoute: () => rootRoute,
 } as any)
 
-const PreloadingRoute = PreloadingImport.update({
+const PreloadingRoute = PreloadingRouteImport.update({
   id: '/preloading',
   path: '/preloading',
   getParentRoute: () => rootRoute,
 } as any)
 
-const PaginationRoute = PaginationImport.update({
+const PaginationRoute = PaginationRouteImport.update({
   id: '/pagination',
   path: '/pagination',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IntentPreloadingRoute = IntentPreloadingImport.update({
+const IntentPreloadingRoute = IntentPreloadingRouteImport.update({
   id: '/intent-preloading',
   path: '/intent-preloading',
   getParentRoute: () => rootRoute,
 } as any)
 
-const BasicRoute = BasicImport.update({
+const BasicRoute = BasicRouteImport.update({
   id: '/basic',
   path: '/basic',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
@@ -64,45 +66,102 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRoute
     }
     '/basic': {
       id: '/basic'
       path: '/basic'
       fullPath: '/basic'
-      preLoaderRoute: typeof BasicImport
+      preLoaderRoute: typeof BasicRouteImport
       parentRoute: typeof rootRoute
     }
     '/intent-preloading': {
       id: '/intent-preloading'
       path: '/intent-preloading'
       fullPath: '/intent-preloading'
-      preLoaderRoute: typeof IntentPreloadingImport
+      preLoaderRoute: typeof IntentPreloadingRouteImport
       parentRoute: typeof rootRoute
     }
     '/pagination': {
       id: '/pagination'
       path: '/pagination'
       fullPath: '/pagination'
-      preLoaderRoute: typeof PaginationImport
+      preLoaderRoute: typeof PaginationRouteImport
       parentRoute: typeof rootRoute
     }
     '/preloading': {
       id: '/preloading'
       path: '/preloading'
       fullPath: '/preloading'
-      preLoaderRoute: typeof PreloadingImport
+      preLoaderRoute: typeof PreloadingRouteImport
       parentRoute: typeof rootRoute
     }
     '/suspense': {
       id: '/suspense'
       path: '/suspense'
       fullPath: '/suspense'
-      preLoaderRoute: typeof SuspenseImport
+      preLoaderRoute: typeof SuspenseRouteImport
       parentRoute: typeof rootRoute
     }
   }
+}
+
+// Add type-safety to the createFileRoute function across the route tree
+
+declare module './routes/index' {
+  const createFileRoute: CreateFileRoute<
+    '/',
+    FileRoutesByPath['/']['parentRoute'],
+    FileRoutesByPath['/']['id'],
+    FileRoutesByPath['/']['path'],
+    FileRoutesByPath['/']['fullPath']
+  >
+}
+declare module './routes/basic' {
+  const createFileRoute: CreateFileRoute<
+    '/basic',
+    FileRoutesByPath['/basic']['parentRoute'],
+    FileRoutesByPath['/basic']['id'],
+    FileRoutesByPath['/basic']['path'],
+    FileRoutesByPath['/basic']['fullPath']
+  >
+}
+declare module './routes/intent-preloading' {
+  const createFileRoute: CreateFileRoute<
+    '/intent-preloading',
+    FileRoutesByPath['/intent-preloading']['parentRoute'],
+    FileRoutesByPath['/intent-preloading']['id'],
+    FileRoutesByPath['/intent-preloading']['path'],
+    FileRoutesByPath['/intent-preloading']['fullPath']
+  >
+}
+declare module './routes/pagination' {
+  const createFileRoute: CreateFileRoute<
+    '/pagination',
+    FileRoutesByPath['/pagination']['parentRoute'],
+    FileRoutesByPath['/pagination']['id'],
+    FileRoutesByPath['/pagination']['path'],
+    FileRoutesByPath['/pagination']['fullPath']
+  >
+}
+declare module './routes/preloading' {
+  const createFileRoute: CreateFileRoute<
+    '/preloading',
+    FileRoutesByPath['/preloading']['parentRoute'],
+    FileRoutesByPath['/preloading']['id'],
+    FileRoutesByPath['/preloading']['path'],
+    FileRoutesByPath['/preloading']['fullPath']
+  >
+}
+declare module './routes/suspense' {
+  const createFileRoute: CreateFileRoute<
+    '/suspense',
+    FileRoutesByPath['/suspense']['parentRoute'],
+    FileRoutesByPath['/suspense']['id'],
+    FileRoutesByPath['/suspense']['path'],
+    FileRoutesByPath['/suspense']['fullPath']
+  >
 }
 
 // Create and export the route tree
