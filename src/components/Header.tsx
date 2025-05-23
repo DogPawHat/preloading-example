@@ -43,6 +43,12 @@ export default function Header() {
 						Pagination Example
 					</Link>
 				</div>
+
+				<div className="px-2">
+					<Link to="/filters" activeProps={{ className: "font-bold" }}>
+						Filters Example
+					</Link>
+				</div>
 			</nav>
 		</header>
 	);
