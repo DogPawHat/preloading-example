@@ -3,11 +3,9 @@ import {
 	useQueryClient,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
-import { buttonVariants } from "~/components/ui/button";
-
 import { useServerFn } from "@tanstack/react-start";
 import * as v from "valibot";
+import { PaginationNav } from "~/components/pagination-nav";
 import {
 	Table,
 	TableBody,
@@ -16,7 +14,6 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
-import { cn } from "~/lib/utils";
 import {
 	POKEMON_LIMIT,
 	getPokemonListQueryKey,
@@ -108,32 +105,11 @@ function RouteComponent() {
 					))}
 				</TableBody>
 			</Table>
-			<div className="flex justify-center gap-4 mt-4">
-				<Link
-					to="/pagination"
-					preload="intent"
-					className={buttonVariants({
-						variant: "outline",
-						className: cn(!data.prevOffset && "opacity-50 cursor-not-allowed"),
-					})}
-					search={{ offset: Number(data.prevOffset) }}
-					disabled={!data.prevOffset}
-				>
-					Previous
-				</Link>
-				<Link
-					to="/pagination"
-					preload="intent"
-					search={{ offset: Number(data.nextOffset) }}
-					className={buttonVariants({
-						variant: "outline",
-						className: cn(!data.nextOffset && "opacity-50 cursor-not-allowed"),
-					})}
-					disabled={!data.nextOffset}
-				>
-					Next
-				</Link>
-			</div>
+			<PaginationNav
+				prevOffset={data.prevOffset ?? undefined}
+				nextOffset={data.nextOffset ?? undefined}
+				to="/pagination"
+			/>
 		</div>
 	);
 }
