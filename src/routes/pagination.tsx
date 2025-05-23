@@ -51,27 +51,7 @@ export const Route = createFileRoute({
 		context.queryClient.prefetchQuery(context.pokemonListOptions);
 	},
 	component: RouteComponent,
-	notFoundComponent: NotFoundComponent,
-	errorComponent: ErrorComponent,
-	pendingComponent: LoadingComponent,
 });
-
-interface PokemonListResult {
-	name: string;
-	url: string;
-}
-
-function NotFoundComponent() {
-	return <div>Not Found</div>;
-}
-
-function ErrorComponent() {
-	return <div>Error</div>;
-}
-
-function LoadingComponent() {
-	return <div>Loading...</div>;
-}
 
 function RouteComponent() {
 	const { offset: currentOffset } = Route.useSearch();
@@ -115,7 +95,12 @@ function RouteComponent() {
 							<TableCell className="capitalize">{pokemon.name}</TableCell>
 							<TableCell>
 								{pokemon.types.map((type) => (
-									<span key={type.type.name}>{type.type.name}</span>
+									<span
+										key={type.type.name}
+										className="inline-block px-2 py-1 mr-1 text-sm font-medium rounded-full bg-gray-100"
+									>
+										{type.type.name}
+									</span>
 								))}
 							</TableCell>
 						</TableRow>

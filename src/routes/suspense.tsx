@@ -21,22 +21,7 @@ const searchParamsSchema = v.object({
 export const Route = createFileRoute({
 	validateSearch: searchParamsSchema,
 	component: RouteComponent,
-	notFoundComponent: NotFoundComponent,
-	errorComponent: ErrorComponent,
-	pendingComponent: LoadingComponent,
 });
-
-function NotFoundComponent() {
-	return <div>Not Found</div>;
-}
-
-function ErrorComponent() {
-	return <div>Error</div>;
-}
-
-function LoadingComponent() {
-	return <div>Loading...</div>;
-}
 
 function RouteComponent() {
 	const { offset: currentOffset } = Route.useSearch();
