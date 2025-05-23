@@ -13,7 +13,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { getPokemonList } from "~/util/pokemon";
+import { getPokemonList, getServerPokemonList } from "~/util/pokemon";
 
 const POKEMON_LIMIT = 20;
 
@@ -60,7 +60,9 @@ function RouteComponent() {
 	const { data } = useSuspenseQuery({
 		queryKey: newKey,
 		queryFn: async () => {
-			const result = await getPokemonList({ offset: currentOffset });
+			const result = await getServerPokemonList({
+				data: { offset: currentOffset },
+			});
 			return {
 				results: result.pokemon.map((p) => ({
 					name: p.name,

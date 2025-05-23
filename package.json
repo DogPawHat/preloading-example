@@ -3,10 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "dotenvx run -f .env.local -- vite",
+    "dev:base": "vite",
     "build": "vite build",
-    "start": "node .output/server/index.mjs",
-    "test": "vitest run",
+    "start:base": "node .output/server/index.mjs",
+    "start": "dotenvx run -f .env.local -- node .output/server/index.mjs",
     "format": "biome format",
     "lint": "biome lint",
     "check": "biome check"
@@ -40,18 +41,14 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@dotenvx/dotenvx": "^1.44.1",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/react": "^16.3.0",
     "@types/node": "^22.15.21",
     "@types/react": "^19.1.5",
     "@types/react-dom": "^19.1.5",
-    "@vitejs/plugin-react": "^4.4.1",
+    "@vitejs/plugin-react": "^4.5.0",
     "drizzle-kit": "^0.31.1",
     "jsdom": "^26.1.0",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vitest": "^3.1.4",
-    "web-vitals": "^5.0.1"
+    "vite": "^6.3.5"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { buttonVariants } from "~/components/ui/button";
 
+import { useServerFn } from "@tanstack/react-start";
 import { useMemo } from "react";
 import * as v from "valibot";
 import {
@@ -13,7 +14,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { POKEMON_LIMITgggetPokemonList } from "~/util/pokemon";
+import { POKEMON_LIMIT, getServerPokemonList } from "~/util/pokemon";
 
 const searchParamsSchema = v.object({
 	offset: v.optional(v.number(), 0),
@@ -25,6 +26,7 @@ export const Route = createFileRoute({
 });
 
 function RouteComponent() {
+	const getPokemonList = useServerFn(getServerPokemonList);
 	const { offset: currentOffset } = Route.useSearch();
 
 	const newKey = [

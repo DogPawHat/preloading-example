@@ -17,7 +17,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { getPokemonList } from "~/util/pokemon";
+import { getServerPokemonList } from "~/util/pokemon";
 
 const POKEMON_LIMIT = 20;
 
@@ -42,23 +42,11 @@ export const Route = createFileRoute({
 		const pokemonListOptions = queryOptions({
 			queryKey: newKey,
 			queryFn: async ({ queryKey }) => {
-				const result = await getPokemonList({
-					url: `/api/v2/pokemon/?offset=${queryKey[2].offset}`,
+				const result = await getServerPokemonList({
+					data: { offset: queryKey[2].offset },
 				});
-				return {
-					results: result.pokemon.map((p) => ({
-						name: p.name,
-						url: `/api/v2/pokemon/${p.id}/`,
-					})),
-					next:
-						result.nextOffset !== null
-							? `/api/v2/pokemon/?offset=${result.nextOffset}`
-							: null,
-					previous:
-						result.prevOffset !== null
-							? `/api/v2/pokemon/?offset=${result.prevOffset}`
-							: null,
-				};
+
+				return result.pokemon;
 			},
 		});
 

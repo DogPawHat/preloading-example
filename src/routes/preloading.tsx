@@ -13,7 +13,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { getPokemonList } from "~/util/pokemon";
+import { getServerPokemonList } from "~/util/pokemon";
 
 const POKEMON_LIMIT = 20;
 
@@ -38,7 +38,9 @@ export const Route = createFileRoute({
 		const pokemonListOptions = queryOptions({
 			queryKey: newKey,
 			queryFn: async () => {
-				const result = await getPokemonList({ offset: deps.offset });
+				const result = await getServerPokemonList({
+					data: { offset: deps.offset },
+				});
 				return {
 					results: result.pokemon.map((p) => ({
 						name: p.name,

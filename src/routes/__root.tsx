@@ -2,6 +2,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
 	HeadContent,
 	Outlet,
+	Scripts,
 	createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
@@ -56,6 +57,7 @@ function RootDocument(props: Readonly<{ children: React.ReactNode }>) {
 				{props.children}
 				<TanStackRouterDevtools />
 				<ReactQueryDevtools buttonPosition="bottom-right" />
+				<Scripts />
 			</body>
 		</html>
 	);

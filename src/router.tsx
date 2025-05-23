@@ -9,7 +9,7 @@ import { routeTree } from "./routeTree.gen.ts";
 export function createRouter() {
 	const queryClient = new QueryClient();
 
-	return routerWithQueryClient(
+	const router = routerWithQueryClient(
 		createTanstackRouter({
 			routeTree,
 			scrollRestoration: true,
@@ -17,12 +17,17 @@ export function createRouter() {
 			defaultStructuralSharing: true,
 			defaultPreloadStaleTime: 0,
 			defaultPendingMs: 0,
+			defaultErrorComponent: () => <div>Error</div>,
+			defaultPendingComponent: () => <div>Loading...</div>,
+			defaultNotFoundComponent: () => <div>Not Found</div>,
 			context: {
 				queryClient,
 			},
 		}),
 		queryClient,
 	);
+
+	return router;
 }
 
 // Register the router instance for type safety
