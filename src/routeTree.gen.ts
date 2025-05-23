@@ -13,7 +13,6 @@ import type { CreateFileRoute, FileRoutesByPath } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SuspenseRouteImport } from './routes/suspense'
 import { Route as PreloadingRouteImport } from './routes/preloading'
 import { Route as PaginationRouteImport } from './routes/pagination'
 import { Route as IntentPreloadingRouteImport } from './routes/intent-preloading'
@@ -21,12 +20,6 @@ import { Route as BasicRouteImport } from './routes/basic'
 import { Route as IndexRouteImport } from './routes/index'
 
 // Create/Update Routes
-
-const SuspenseRoute = SuspenseRouteImport.update({
-  id: '/suspense',
-  path: '/suspense',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const PreloadingRoute = PreloadingRouteImport.update({
   id: '/preloading',
@@ -97,13 +90,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PreloadingRouteImport
       parentRoute: typeof rootRoute
     }
-    '/suspense': {
-      id: '/suspense'
-      path: '/suspense'
-      fullPath: '/suspense'
-      preLoaderRoute: typeof SuspenseRouteImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
@@ -154,15 +140,6 @@ declare module './routes/preloading' {
     FileRoutesByPath['/preloading']['fullPath']
   >
 }
-declare module './routes/suspense' {
-  const createFileRoute: CreateFileRoute<
-    '/suspense',
-    FileRoutesByPath['/suspense']['parentRoute'],
-    FileRoutesByPath['/suspense']['id'],
-    FileRoutesByPath['/suspense']['path'],
-    FileRoutesByPath['/suspense']['fullPath']
-  >
-}
 
 // Create and export the route tree
 
@@ -172,7 +149,6 @@ export interface FileRoutesByFullPath {
   '/intent-preloading': typeof IntentPreloadingRoute
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
-  '/suspense': typeof SuspenseRoute
 }
 
 export interface FileRoutesByTo {
@@ -181,7 +157,6 @@ export interface FileRoutesByTo {
   '/intent-preloading': typeof IntentPreloadingRoute
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
-  '/suspense': typeof SuspenseRoute
 }
 
 export interface FileRoutesById {
@@ -191,7 +166,6 @@ export interface FileRoutesById {
   '/intent-preloading': typeof IntentPreloadingRoute
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
-  '/suspense': typeof SuspenseRoute
 }
 
 export interface FileRouteTypes {
@@ -202,15 +176,8 @@ export interface FileRouteTypes {
     | '/intent-preloading'
     | '/pagination'
     | '/preloading'
-    | '/suspense'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/basic'
-    | '/intent-preloading'
-    | '/pagination'
-    | '/preloading'
-    | '/suspense'
+  to: '/' | '/basic' | '/intent-preloading' | '/pagination' | '/preloading'
   id:
     | '__root__'
     | '/'
@@ -218,7 +185,6 @@ export interface FileRouteTypes {
     | '/intent-preloading'
     | '/pagination'
     | '/preloading'
-    | '/suspense'
   fileRoutesById: FileRoutesById
 }
 
@@ -228,7 +194,6 @@ export interface RootRouteChildren {
   IntentPreloadingRoute: typeof IntentPreloadingRoute
   PaginationRoute: typeof PaginationRoute
   PreloadingRoute: typeof PreloadingRoute
-  SuspenseRoute: typeof SuspenseRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -237,7 +202,6 @@ const rootRouteChildren: RootRouteChildren = {
   IntentPreloadingRoute: IntentPreloadingRoute,
   PaginationRoute: PaginationRoute,
   PreloadingRoute: PreloadingRoute,
-  SuspenseRoute: SuspenseRoute,
 }
 
 export const routeTree = rootRoute
@@ -254,8 +218,7 @@ export const routeTree = rootRoute
         "/basic",
         "/intent-preloading",
         "/pagination",
-        "/preloading",
-        "/suspense"
+        "/preloading"
       ]
     },
     "/": {
@@ -272,9 +235,6 @@ export const routeTree = rootRoute
     },
     "/preloading": {
       "filePath": "preloading.tsx"
-    },
-    "/suspense": {
-      "filePath": "suspense.tsx"
     }
   }
 }
