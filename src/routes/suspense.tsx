@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { buttonVariants } from "~/components/ui/button";
 
+import { useServerFn } from "@tanstack/react-start";
 import * as v from "valibot";
 import {
 	Table,
@@ -12,7 +13,11 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { POKEMON_LIMIT, getServerPokemonList } from "~/util/pokemon";
+import {
+	POKEMON_LIMIT,
+	getPokemonListQueryKey,
+	getServerPokemonListQueryFn,
+} from "~/util/pokemon";
 
 const searchParamsSchema = v.object({
 	offset: v.optional(v.number(), 0),
@@ -25,20 +30,11 @@ export const Route = createFileRoute({
 
 function RouteComponent() {
 	const { offset: currentOffset } = Route.useSearch();
-
-	const newKey = [
-		"pokemon-list",
-		"suspense",
-		{ limit: POKEMON_LIMIT, offset: currentOffset },
-	] as const;
+	const getPokemonListQueryFn = useServerFn(getServerPokemonListQueryFn);
 
 	const { data } = useSuspenseQuery({
-		queryKey: newKey,
-		queryFn: async () => {
-			return await getServerPokemonList({
-				data: { offset: currentOffset },
-			});
-		},
+		queryKey: getPokemonListQueryKey("suspense", currentOffset),
+		queryFn: getPokemonListQueryFn,
 	});
 
 	return (

@@ -13,7 +13,11 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { POKEMON_LIMIT, getServerPokemonList } from "~/util/pokemon";
+import {
+	POKEMON_LIMIT,
+	getPokemonListQueryKey,
+	getServerPokemonListQueryFn,
+} from "~/util/pokemon";
 
 const searchParamsSchema = v.object({
 	offset: v.optional(v.number(), 0),
@@ -25,20 +29,11 @@ export const Route = createFileRoute({
 });
 
 function RouteComponent() {
-	const getPokemonList = useServerFn(getServerPokemonList);
 	const { offset: currentOffset } = Route.useSearch();
-
-	const newKey = [
-		"pokemon-list",
-		"basic",
-		{ limit: POKEMON_LIMIT, offset: currentOffset },
-	] as const;
-
+	const getPokemonListQueryFn = useServerFn(getServerPokemonListQueryFn);
 	const { data, error } = useQuery({
-		queryKey: newKey,
-		queryFn: async () => {
-			return await getPokemonList({ data: { offset: currentOffset } });
-		},
+		queryKey: getPokemonListQueryKey("basic", currentOffset),
+		queryFn: getPokemonListQueryFn,
 	});
 
 	if (data) {

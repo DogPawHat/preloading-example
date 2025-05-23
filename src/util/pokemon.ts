@@ -1,3 +1,4 @@
+import type { QueryFunctionContext } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import * as v from "valibot";
 import { DB } from "~/data/db";
@@ -30,7 +31,7 @@ const innerGetPokemonList = async (offset: number) => {
 	};
 };
 
-export const getServerPokemonList = createServerFn({ method: "GET" })
+const getServerPokemonList = createServerFn({ method: "GET" })
 	.validator((params) => {
 		const validated = v.parse(PokemonListParamsSchema, params);
 		const offset = validated.offset ?? 0;
@@ -43,3 +44,14 @@ export const getServerPokemonList = createServerFn({ method: "GET" })
 	.handler(async ({ data }) => {
 		return await innerGetPokemonList(data.offset);
 	});
+
+export const getPokemonListQueryKey = (location: string, offset: number) => {
+	return ["pokemon-list", location, { offset }] as const;
+};
+
+export const getServerPokemonListQueryFn = ({
+	queryKey,
+}: QueryFunctionContext<ReturnType<typeof getPokemonListQueryKey>>) => {
+	const { offset } = queryKey[2];
+	return getServerPokemonList({ data: { offset } });
+};

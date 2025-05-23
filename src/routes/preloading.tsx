@@ -2,7 +2,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { buttonVariants } from "~/components/ui/button";
 
-import { useMemo } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import * as v from "valibot";
 import {
 	Table,
@@ -13,9 +13,11 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { POKEMON_LIMIT, getServerPokemonList } from "~/util/pokemon";
-
-const matchPokemonIdExp = /\/api\/v2\/pokemon\/(\d+)\/?/;
+import {
+	POKEMON_LIMIT,
+	getPokemonListQueryKey,
+	getServerPokemonListQueryFn,
+} from "~/util/pokemon";
 
 const searchParamsSchema = v.object({
 	offset: v.optional(v.number(), 0),
@@ -27,19 +29,11 @@ export const Route = createFileRoute({
 		offset: search.offset,
 	}),
 	context: ({ deps }) => {
-		const newKey = [
-			"pokemon-list",
-			"preloading",
-			{ limit: POKEMON_LIMIT, offset: deps.offset },
-		] as const;
+		const newKey = getPokemonListQueryKey("preloading", deps.offset);
 
 		const pokemonListOptions = queryOptions({
 			queryKey: newKey,
-			queryFn: async () => {
-				return await getServerPokemonList({
-					data: { offset: deps.offset },
-				});
-			},
+			queryFn: getServerPokemonListQueryFn,
 		});
 
 		return {
@@ -54,9 +48,13 @@ export const Route = createFileRoute({
 
 function RouteComponent() {
 	const { offset: currentOffset } = Route.useSearch();
-	const { pokemonListOptions } = Route.useRouteContext();
+	const { pokemonListOptions: serverPokemonListOptions } =
+		Route.useRouteContext();
 
-	const { data } = useSuspenseQuery(pokemonListOptions);
+	const { data } = useSuspenseQuery({
+		...serverPokemonListOptions,
+		queryFn: useServerFn(getServerPokemonListQueryFn),
+	});
 
 	return (
 		<div className="p-4">
