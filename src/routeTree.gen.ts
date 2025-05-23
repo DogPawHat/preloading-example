@@ -16,6 +16,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as PreloadingRouteImport } from './routes/preloading'
 import { Route as PaginationRouteImport } from './routes/pagination'
 import { Route as IntentPreloadingRouteImport } from './routes/intent-preloading'
+import { Route as FiltersRouteImport } from './routes/filters'
 import { Route as BasicRouteImport } from './routes/basic'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -36,6 +37,12 @@ const PaginationRoute = PaginationRouteImport.update({
 const IntentPreloadingRoute = IntentPreloadingRouteImport.update({
   id: '/intent-preloading',
   path: '/intent-preloading',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FiltersRoute = FiltersRouteImport.update({
+  id: '/filters',
+  path: '/filters',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -67,6 +74,13 @@ declare module '@tanstack/react-router' {
       path: '/basic'
       fullPath: '/basic'
       preLoaderRoute: typeof BasicRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/filters': {
+      id: '/filters'
+      path: '/filters'
+      fullPath: '/filters'
+      preLoaderRoute: typeof FiltersRouteImport
       parentRoute: typeof rootRoute
     }
     '/intent-preloading': {
@@ -113,6 +127,15 @@ declare module './routes/basic' {
     FileRoutesByPath['/basic']['fullPath']
   >
 }
+declare module './routes/filters' {
+  const createFileRoute: CreateFileRoute<
+    '/filters',
+    FileRoutesByPath['/filters']['parentRoute'],
+    FileRoutesByPath['/filters']['id'],
+    FileRoutesByPath['/filters']['path'],
+    FileRoutesByPath['/filters']['fullPath']
+  >
+}
 declare module './routes/intent-preloading' {
   const createFileRoute: CreateFileRoute<
     '/intent-preloading',
@@ -146,6 +169,7 @@ declare module './routes/preloading' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/basic': typeof BasicRoute
+  '/filters': typeof FiltersRoute
   '/intent-preloading': typeof IntentPreloadingRoute
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
@@ -154,6 +178,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/basic': typeof BasicRoute
+  '/filters': typeof FiltersRoute
   '/intent-preloading': typeof IntentPreloadingRoute
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
@@ -163,6 +188,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/basic': typeof BasicRoute
+  '/filters': typeof FiltersRoute
   '/intent-preloading': typeof IntentPreloadingRoute
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
@@ -173,15 +199,23 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/basic'
+    | '/filters'
     | '/intent-preloading'
     | '/pagination'
     | '/preloading'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/basic' | '/intent-preloading' | '/pagination' | '/preloading'
+  to:
+    | '/'
+    | '/basic'
+    | '/filters'
+    | '/intent-preloading'
+    | '/pagination'
+    | '/preloading'
   id:
     | '__root__'
     | '/'
     | '/basic'
+    | '/filters'
     | '/intent-preloading'
     | '/pagination'
     | '/preloading'
@@ -191,6 +225,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BasicRoute: typeof BasicRoute
+  FiltersRoute: typeof FiltersRoute
   IntentPreloadingRoute: typeof IntentPreloadingRoute
   PaginationRoute: typeof PaginationRoute
   PreloadingRoute: typeof PreloadingRoute
@@ -199,6 +234,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BasicRoute: BasicRoute,
+  FiltersRoute: FiltersRoute,
   IntentPreloadingRoute: IntentPreloadingRoute,
   PaginationRoute: PaginationRoute,
   PreloadingRoute: PreloadingRoute,
@@ -216,6 +252,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/basic",
+        "/filters",
         "/intent-preloading",
         "/pagination",
         "/preloading"
@@ -226,6 +263,9 @@ export const routeTree = rootRoute
     },
     "/basic": {
       "filePath": "basic.tsx"
+    },
+    "/filters": {
+      "filePath": "filters.tsx"
     },
     "/intent-preloading": {
       "filePath": "intent-preloading.tsx"
