@@ -6,7 +6,6 @@ import {
 import { Link } from "@tanstack/react-router";
 import { buttonVariants } from "~/components/ui/button";
 
-import { useMemo } from "react";
 import * as v from "valibot";
 import {
 	Table,
@@ -17,11 +16,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { getServerPokemonList } from "~/util/pokemon";
-
-const POKEMON_LIMIT = 20;
-
-const matchPokemonIdExp = /\/api\/v2\/pokemon\/(\d+)\/?/;
+import { POKEMON_LIMIT, getServerPokemonList } from "~/util/pokemon";
 
 const searchParamsSchema = v.object({
 	offset: v.optional(v.number(), 0),
@@ -36,17 +31,15 @@ export const Route = createFileRoute({
 		const newKey = [
 			"pokemon-list",
 			"pagination",
-			{ limit: POKEMON_LIMIT, offset: deps.offset },
+			{ offset: deps.offset },
 		] as const;
 
 		const pokemonListOptions = queryOptions({
 			queryKey: newKey,
 			queryFn: async ({ queryKey }) => {
-				const result = await getServerPokemonList({
+				return await getServerPokemonList({
 					data: { offset: queryKey[2].offset },
 				});
-
-				return result.pokemon;
 			},
 		});
 
@@ -87,45 +80,20 @@ function RouteComponent() {
 
 	const { data } = useSuspenseQuery(pokemonListOptions);
 
-	const previousOffset = useMemo(() => {
-		if (data?.previous == null) {
-			return null;
-		}
-
-		return new URL(data.previous).searchParams.get("offset") ?? null;
-	}, [data?.previous]);
-
-	const nextOffset = useMemo(() => {
-		if (data?.next == null) {
-			return null;
-		}
-
-		return new URL(data.next).searchParams.get("offset") ?? null;
-	}, [data?.next]);
-
-	if (previousOffset !== null) {
+	if (data.prevOffset !== null) {
 		void queryClient.prefetchQuery({
 			...pokemonListOptions,
-			queryKey: [
-				"pokemon-list",
-				"pagination",
-				{ limit: POKEMON_LIMIT, offset: Number(previousOffset) },
-			],
+			queryKey: ["pokemon-list", "pagination", { offset: data.prevOffset }],
 		});
 	}
 
-	if (nextOffset !== null) {
+	if (data.nextOffset !== null) {
 		void queryClient.prefetchQuery({
 			...pokemonListOptions,
-			queryKey: [
-				"pokemon-list",
-				"pagination",
-				{ limit: POKEMON_LIMIT, offset: Number(nextOffset) },
-			],
+			queryKey: ["pokemon-list", "pagination", { offset: data.nextOffset }],
 		});
 	}
 
-	const results = data.results ?? [];
 	return (
 		<div className="p-4">
 			<h1 className="text-2xl font-bold mb-4">
@@ -141,19 +109,14 @@ function RouteComponent() {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{results.map((pokemon: PokemonListResult) => (
+					{data.pokemon.map((pokemon) => (
 						<TableRow key={pokemon.name}>
-							<TableCell>{pokemon.url.match(matchPokemonIdExp)?.[1]}</TableCell>
+							<TableCell>{pokemon.id}</TableCell>
 							<TableCell className="capitalize">{pokemon.name}</TableCell>
 							<TableCell>
-								<a
-									href={pokemon.url}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="text-blue-600 underline"
-								>
-									View
-								</a>
+								{pokemon.types.map((type) => (
+									<span key={type.type.name}>{type.type.name}</span>
+								))}
 							</TableCell>
 						</TableRow>
 					))}
@@ -165,22 +128,22 @@ function RouteComponent() {
 					preload="intent"
 					className={buttonVariants({
 						variant: "outline",
-						className: cn(!previousOffset && "opacity-50 cursor-not-allowed"),
+						className: cn(!data.prevOffset && "opacity-50 cursor-not-allowed"),
 					})}
-					search={{ offset: Number(previousOffset) }}
-					disabled={!previousOffset}
+					search={{ offset: Number(data.prevOffset) }}
+					disabled={!data.prevOffset}
 				>
 					Previous
 				</Link>
 				<Link
 					to="/pagination"
 					preload="intent"
-					search={{ offset: Number(nextOffset) }}
+					search={{ offset: Number(data.nextOffset) }}
 					className={buttonVariants({
 						variant: "outline",
-						className: cn(!nextOffset && "opacity-50 cursor-not-allowed"),
+						className: cn(!data.nextOffset && "opacity-50 cursor-not-allowed"),
 					})}
-					disabled={!nextOffset}
+					disabled={!data.nextOffset}
 				>
 					Next
 				</Link>

@@ -13,9 +13,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { getServerPokemonList } from "~/util/pokemon";
-
-const POKEMON_LIMIT = 20;
+import { POKEMON_LIMIT, getServerPokemonList } from "~/util/pokemon";
 
 const matchPokemonIdExp = /\/api\/v2\/pokemon\/(\d+)\/?/;
 
@@ -38,23 +36,9 @@ export const Route = createFileRoute({
 		const pokemonListOptions = queryOptions({
 			queryKey: newKey,
 			queryFn: async () => {
-				const result = await getServerPokemonList({
+				return await getServerPokemonList({
 					data: { offset: deps.offset },
 				});
-				return {
-					results: result.pokemon.map((p) => ({
-						name: p.name,
-						url: `/api/v2/pokemon/${p.id}/`,
-					})),
-					next:
-						result.nextOffset !== null
-							? `/api/v2/pokemon/?offset=${result.nextOffset}`
-							: null,
-					previous:
-						result.prevOffset !== null
-							? `/api/v2/pokemon/?offset=${result.prevOffset}`
-							: null,
-				};
 			},
 		});
 
@@ -94,23 +78,6 @@ function RouteComponent() {
 
 	const { data } = useSuspenseQuery(pokemonListOptions);
 
-	const previousOffset = useMemo(() => {
-		if (data?.previous == null) {
-			return null;
-		}
-
-		return new URL(data.previous).searchParams.get("offset") ?? null;
-	}, [data?.previous]);
-
-	const nextOffset = useMemo(() => {
-		if (data?.next == null) {
-			return null;
-		}
-
-		return new URL(data.next).searchParams.get("offset") ?? null;
-	}, [data?.next]);
-
-	const results = data.results ?? [];
 	return (
 		<div className="p-4">
 			<h1 className="text-2xl font-bold mb-4">
@@ -126,19 +93,14 @@ function RouteComponent() {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{results.map((pokemon: PokemonListResult) => (
+					{data.pokemon.map((pokemon) => (
 						<TableRow key={pokemon.name}>
-							<TableCell>{pokemon.url.match(matchPokemonIdExp)?.[1]}</TableCell>
+							<TableCell>{pokemon.id}</TableCell>
 							<TableCell className="capitalize">{pokemon.name}</TableCell>
 							<TableCell>
-								<a
-									href={pokemon.url}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="text-blue-600 underline"
-								>
-									View
-								</a>
+								{pokemon.types.map((type) => (
+									<span key={type.type.name}>{type.type.name}</span>
+								))}
 							</TableCell>
 						</TableRow>
 					))}
@@ -149,21 +111,21 @@ function RouteComponent() {
 					to="/preloading"
 					className={buttonVariants({
 						variant: "outline",
-						className: cn(!previousOffset && "opacity-50 cursor-not-allowed"),
+						className: cn(!data.prevOffset && "opacity-50 cursor-not-allowed"),
 					})}
-					search={{ offset: Number(previousOffset) }}
-					disabled={!previousOffset}
+					search={{ offset: Number(data.prevOffset) }}
+					disabled={!data.prevOffset}
 				>
 					Previous
 				</Link>
 				<Link
 					to="/preloading"
-					search={{ offset: Number(nextOffset) }}
+					search={{ offset: Number(data.nextOffset) }}
 					className={buttonVariants({
 						variant: "outline",
-						className: cn(!nextOffset && "opacity-50 cursor-not-allowed"),
+						className: cn(!data.nextOffset && "opacity-50 cursor-not-allowed"),
 					})}
-					disabled={!nextOffset}
+					disabled={!data.nextOffset}
 				>
 					Next
 				</Link>

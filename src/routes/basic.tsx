@@ -3,7 +3,6 @@ import { Link } from "@tanstack/react-router";
 import { buttonVariants } from "~/components/ui/button";
 
 import { useServerFn } from "@tanstack/react-start";
-import { useMemo } from "react";
 import * as v from "valibot";
 import {
 	Table,
@@ -42,24 +41,7 @@ function RouteComponent() {
 		},
 	});
 
-	const previousOffset = useMemo(() => {
-		if (data?.prevOffset == null) {
-			return null;
-		}
-
-		return data.prevOffset.toString();
-	}, [data?.prevOffset]);
-
-	const nextOffset = useMemo(() => {
-		if (data?.nextOffset == null) {
-			return null;
-		}
-
-		return data.nextOffset.toString();
-	}, [data?.nextOffset]);
-
 	if (data) {
-		const results = data.pokemon ?? [];
 		return (
 			<div className="p-4">
 				<h1 className="text-2xl font-bold mb-4">
@@ -75,7 +57,7 @@ function RouteComponent() {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{results.map((pokemon) => (
+						{data.pokemon.map((pokemon) => (
 							<TableRow key={pokemon.name}>
 								<TableCell>{pokemon.id}</TableCell>
 								<TableCell className="capitalize">{pokemon.name}</TableCell>
@@ -98,21 +80,25 @@ function RouteComponent() {
 						to="/basic"
 						className={buttonVariants({
 							variant: "outline",
-							className: cn(!previousOffset && "opacity-50 cursor-not-allowed"),
+							className: cn(
+								!data.prevOffset && "opacity-50 cursor-not-allowed",
+							),
 						})}
-						search={{ offset: Number(previousOffset) }}
-						disabled={!previousOffset}
+						search={{ offset: Number(data.prevOffset) }}
+						disabled={!data.prevOffset}
 					>
 						Previous
 					</Link>
 					<Link
 						to="/basic"
-						search={{ offset: Number(nextOffset) }}
+						search={{ offset: Number(data.nextOffset) }}
 						className={buttonVariants({
 							variant: "outline",
-							className: cn(!nextOffset && "opacity-50 cursor-not-allowed"),
+							className: cn(
+								!data.nextOffset && "opacity-50 cursor-not-allowed",
+							),
 						})}
-						disabled={!nextOffset}
+						disabled={!data.nextOffset}
 					>
 						Next
 					</Link>

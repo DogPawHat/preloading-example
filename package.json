@@ -3,11 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "dotenvx run -f .env.local -- vite",
-    "dev:base": "vite",
+    "dev": "vite",
     "build": "vite build",
-    "start:base": "node .output/server/index.mjs",
-    "start": "dotenvx run -f .env.local -- node .output/server/index.mjs",
+    "start": "node .output/server/index.mjs",
     "format": "biome format",
     "lint": "biome lint",
     "check": "biome check"
@@ -40,7 +38,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@dotenvx/dotenvx": "^1.44.1",
     "@types/node": "^22.15.21",
     "@types/react": "^19.1.5",
     "@types/react-dom": "^19.1.5",

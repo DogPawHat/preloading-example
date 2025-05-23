@@ -1,10 +1,8 @@
 import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/libsql";
-
-import { env } from "~/env/server";
 import * as schema from "./schema";
 
-const db = drizzle(env.DB_NAME, { schema });
+const db = drizzle("file:./local.db", { schema });
 
 const preparedGetPokemonAtOffset = db.query.pokemon
 	.findMany({
