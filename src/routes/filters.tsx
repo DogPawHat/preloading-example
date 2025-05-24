@@ -4,6 +4,7 @@ import {
 	useSuspenseQuery,
 } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { useCallback, useState } from "react";
 import * as v from "valibot";
 import { PaginationNav } from "~/components/pagination-nav";
 import { Input } from "~/components/ui/input";
@@ -18,8 +19,8 @@ import {
 } from "~/components/ui/table";
 import {
 	POKEMON_LIMIT,
-	getPokemonListQueryKey,
-	getServerPokemonListQueryFn,
+	getFilteredPokemonListQueryKey,
+	getServerFilteredPokemonListQueryFn,
 } from "~/util/pokemon";
 
 const searchParamsSchema = v.object({
@@ -34,11 +35,15 @@ export const Route = createFileRoute({
 		name: search.name,
 	}),
 	context: ({ deps }) => {
-		const newKey = getPokemonListQueryKey("filters", deps.offset);
+		const newKey = getFilteredPokemonListQueryKey(
+			"filters",
+			deps.offset,
+			deps.name,
+		);
 
 		const pokemonListOptions = queryOptions({
 			queryKey: newKey,
-			queryFn: getServerPokemonListQueryFn,
+			queryFn: getServerFilteredPokemonListQueryFn,
 		});
 
 		return {
@@ -53,33 +58,40 @@ export const Route = createFileRoute({
 
 function RouteComponent() {
 	const { offset: currentOffset, name: nameFilter } = Route.useSearch();
+	const navigate = Route.useNavigate();
 	const { pokemonListOptions: serverPokemonListOptions } =
 		Route.useRouteContext();
 	const queryClient = useQueryClient();
 
 	const { data } = useSuspenseQuery({
 		...serverPokemonListOptions,
-		queryFn: useServerFn(getServerPokemonListQueryFn),
+		queryFn: useServerFn(getServerFilteredPokemonListQueryFn),
 	});
 
 	if (data.prevOffset !== null) {
 		void queryClient.prefetchQuery({
 			...serverPokemonListOptions,
-			queryKey: getPokemonListQueryKey("filters", data.prevOffset),
+			queryKey: getFilteredPokemonListQueryKey(
+				"filters",
+				data.prevOffset,
+				nameFilter,
+			),
 		});
 	}
 
 	if (data.nextOffset !== null) {
 		void queryClient.prefetchQuery({
 			...serverPokemonListOptions,
-			queryKey: getPokemonListQueryKey("filters", data.nextOffset),
+			queryKey: getFilteredPokemonListQueryKey(
+				"filters",
+				data.nextOffset,
+				nameFilter,
+			),
 		});
 	}
 
-	// Filter Pokemon by name (dummy implementation for now)
-	const filteredPokemon = data.pokemon.filter((pokemon) =>
-		pokemon.name.toLowerCase().includes(nameFilter.toLowerCase()),
-	);
+	// Use the filtered results directly from the server
+	const filteredPokemon = data.pokemon;
 
 	return (
 		<div className="p-4">
@@ -91,27 +103,15 @@ function RouteComponent() {
 			{/* Filter UI */}
 			<div className="mb-6 p-4 border rounded-lg bg-gray-50">
 				<h2 className="text-lg font-semibold mb-3">Filters</h2>
-				<div className="space-y-4">
-					<div>
-						<Label htmlFor="name-filter" className="text-sm font-medium">
-							Filter by Name
-						</Label>
-						<Input
-							id="name-filter"
-							type="text"
-							placeholder="Enter Pokemon name..."
-							value={nameFilter}
-							onChange={(e) => {
-								// This is dummy UI - in a real implementation, this would update the URL search params
-								console.log("Filter changed:", e.target.value);
-							}}
-							className="mt-1"
-						/>
-						<p className="text-xs text-gray-500 mt-1">
-							Current filter: "{nameFilter}" (dummy UI - not functional yet)
-						</p>
-					</div>
-				</div>
+				<FilterForm
+					key={`filter-form-${nameFilter}`}
+					handleSubmit={(nameFilter) => {
+						navigate({
+							search: { name: nameFilter },
+						});
+					}}
+					initialName={nameFilter}
+				/>
 			</div>
 
 			<Table>
@@ -153,6 +153,42 @@ function RouteComponent() {
 				nextOffset={data.nextOffset ?? undefined}
 				to="/filters"
 			/>
+		</div>
+	);
+}
+
+function FilterForm(props: {
+	handleSubmit: (nameFilter: string) => void;
+	initialName: string;
+}) {
+	const [nameFilter, setNameFilter] = useState(props.initialName);
+
+	const onSubmit = useCallback(
+		(e: React.FormEvent<HTMLFormElement>) => {
+			e.preventDefault();
+			props.handleSubmit(nameFilter);
+		},
+		[nameFilter, props],
+	);
+
+	return (
+		<div className="space-y-4">
+			<form onSubmit={onSubmit}>
+				<Label htmlFor="name-filter" className="text-sm font-medium">
+					Filter by Name
+				</Label>
+				<Input
+					id="name-filter"
+					type="text"
+					placeholder="Enter Pokemon name..."
+					value={nameFilter}
+					onChange={(e) => setNameFilter(e.target.value)}
+					className="mt-1"
+				/>
+				<p className="text-xs text-gray-500 mt-1">
+					Current filter: "{nameFilter}" (dummy UI - not functional yet)
+				</p>
+			</form>
 		</div>
 	);
 }
