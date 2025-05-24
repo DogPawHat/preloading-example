@@ -1,8 +1,19 @@
-import { ilike, sql } from "drizzle-orm";
+import { config } from "dotenv";
+
+config({ path: ".env.local" });
+
+import { createClient } from "@libsql/client";
+import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "./schema";
 
-const db = drizzle("file:./local.db", { schema });
+const client = createClient({
+	// biome-ignore lint/style/noNonNullAssertion: <explanation>
+	url: process.env.TURSO_DATABASE_URL!,
+	authToken: process.env.TURSO_AUTH_TOKEN,
+});
+
+const db = drizzle({ client, schema });
 
 const preparedGetPokemonAtOffset = db.query.pokemon
 	.findMany({

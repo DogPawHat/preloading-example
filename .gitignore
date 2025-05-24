@@ -6,3 +6,4 @@ dist-ssr
 .tanstack-start
 local.db
 local.db:*
+.env
