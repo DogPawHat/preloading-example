@@ -17,12 +17,6 @@ export default function Header() {
 				</div>
 
 				<div className="px-2">
-					<Link to="/suspense" activeProps={{ className: "font-bold" }}>
-						Suspense Example
-					</Link>
-				</div>
-
-				<div className="px-2">
 					<Link to="/preloading" activeProps={{ className: "font-bold" }}>
 						Preloading Example
 					</Link>
