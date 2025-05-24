@@ -1,4 +1,4 @@
-import { SQL, like, sql } from "drizzle-orm";
+import { ilike, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "./schema";
 
@@ -37,8 +37,8 @@ const preparedGetFilteredPokemonAtOffset = db.query.pokemon
 			name: true,
 			dexId: true,
 		},
-		where: (pokemon, { ilike }) =>
-			ilike(pokemon.name, sql.placeholder("nameFilter")),
+		where: (pokemon, { sql }) =>
+			sql`lower(${pokemon.name}) like lower(${sql.placeholder("nameFilter")})`,
 		orderBy: (pokemon, { asc }) => [asc(pokemon.dexId)],
 		limit: sql.placeholder("limit"),
 		offset: sql.placeholder("offset"),
@@ -81,8 +81,3 @@ export const DB = {
 		},
 	},
 };
-
-// custom lower function
-export function lower(email: AnySQLiteColumn): SQL {
-	return sql`lower(${email})`;
-}
