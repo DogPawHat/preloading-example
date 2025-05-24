@@ -2,6 +2,8 @@ node_modules
 .DS_Store
 dist
 dist-ssr
+.output
+.nitro
 *.local
 .tanstack-start
 local.db
