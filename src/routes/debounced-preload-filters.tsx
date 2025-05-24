@@ -1,3 +1,4 @@
+import { useDebouncedCallback } from "@tanstack/react-pacer";
 import {
 	queryOptions,
 	useQueryClient,
@@ -28,26 +29,6 @@ const searchParamsSchema = v.object({
 	name: v.optional(v.string(), ""),
 });
 
-function FilterSubmitContextProvider(props: {
-	initialName: string;
-	handleSubmit: (nameFilter: string) => void;
-	children: React.ReactNode;
-}) {
-	const [nameFilter, setNameFilter] = useState(props.initialName);
-
-	const handleSubmit = useCallback(() => {
-		props.handleSubmit(nameFilter);
-	}, [nameFilter, props]);
-
-	return (
-		<FilterSubmitContext.Provider
-			value={{ handleSubmit, nameFilter, updateNameFilter: setNameFilter }}
-		>
-			{props.children}
-		</FilterSubmitContext.Provider>
-	);
-}
-
 export const Route = createFileRoute({
 	validateSearch: searchParamsSchema,
 	loaderDeps: ({ search }) => ({
@@ -76,37 +57,82 @@ export const Route = createFileRoute({
 	component: RouteComponent,
 });
 
+function PreloadFilterSubmitContextProvider(props: {
+	initialName: string;
+	handleSubmit: (nameFilter: string) => void;
+	children: React.ReactNode;
+}) {
+	const queryClient = useQueryClient();
+	const { pokemonListOptions: serverPokemonListOptions } =
+		Route.useRouteContext();
+	const [nameFilter, setNameFilter] = useState(props.initialName);
+	const getFilteredPokemonListQueryFn = useServerFn(
+		getServerFilteredPokemonListQueryFn,
+	);
+
+	const debouncedNameFilter = useDebouncedCallback(
+		(newNameFilter: string) => {
+			void queryClient.prefetchQuery({
+				queryKey: getFilteredPokemonListQueryKey(
+					serverPokemonListOptions.queryKey[1],
+					serverPokemonListOptions.queryKey[2].offset,
+					newNameFilter,
+				),
+				queryFn: getFilteredPokemonListQueryFn,
+			});
+		},
+		{
+			wait: 100,
+		},
+	);
+
+	const updateNameFilter = useCallback(
+		(value: string) => {
+			debouncedNameFilter(value);
+			setNameFilter(value);
+		},
+		[debouncedNameFilter],
+	);
+
+	const handleSubmit = useCallback(() => {
+		props.handleSubmit(nameFilter);
+	}, [nameFilter, props]);
+
+	return (
+		<FilterSubmitContext.Provider
+			value={{ handleSubmit, nameFilter, updateNameFilter }}
+		>
+			{props.children}
+		</FilterSubmitContext.Provider>
+	);
+}
+
 function RouteComponent() {
 	const { offset: currentOffset, name: nameFilter } = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const { pokemonListOptions: serverPokemonListOptions } =
 		Route.useRouteContext();
 	const queryClient = useQueryClient();
+	const getFilteredPokemonListQueryFn = useServerFn(
+		getServerFilteredPokemonListQueryFn,
+	);
 
 	const { data } = useSuspenseQuery({
 		...serverPokemonListOptions,
-		queryFn: useServerFn(getServerFilteredPokemonListQueryFn),
+		queryFn: getFilteredPokemonListQueryFn,
 	});
 
 	if (data.prevOffset !== null) {
 		void queryClient.prefetchQuery({
 			...serverPokemonListOptions,
-			queryKey: getFilteredPokemonListQueryKey(
-				"filters",
-				data.prevOffset,
-				nameFilter,
-			),
+			queryFn: getFilteredPokemonListQueryFn,
 		});
 	}
 
 	if (data.nextOffset !== null) {
 		void queryClient.prefetchQuery({
 			...serverPokemonListOptions,
-			queryKey: getFilteredPokemonListQueryKey(
-				"filters",
-				data.nextOffset,
-				nameFilter,
-			),
+			queryFn: getFilteredPokemonListQueryFn,
 		});
 	}
 
@@ -123,7 +149,7 @@ function RouteComponent() {
 			{/* Filter UI */}
 			<div className="mb-6 p-4 border rounded-lg bg-gray-50">
 				<h2 className="text-lg font-semibold mb-3">Filters</h2>
-				<FilterSubmitContextProvider
+				<PreloadFilterSubmitContextProvider
 					initialName={nameFilter}
 					handleSubmit={(nameFilter) => {
 						navigate({
@@ -132,7 +158,7 @@ function RouteComponent() {
 					}}
 				>
 					<FilterForm />
-				</FilterSubmitContextProvider>
+				</PreloadFilterSubmitContextProvider>
 			</div>
 
 			<Table>

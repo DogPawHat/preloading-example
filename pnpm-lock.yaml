@@ -26,6 +26,9 @@ importers:
       '@tanstack/pacer':
         specifier: ^0.7.0
         version: 0.7.0
+      '@tanstack/react-pacer':
+        specifier: ^0.7.0
+        version: 0.7.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@tanstack/react-query':
         specifier: ^5.76.2
         version: 5.76.2(react@19.1.0)
@@ -1239,6 +1242,13 @@ packages:
 
   '@tanstack/query-devtools@5.76.0':
     resolution: {integrity: sha512-1p92nqOBPYVqVDU0Ua5nzHenC6EGZNrLnB2OZphYw8CNA1exuvI97FVgIKON7Uug3uQqvH/QY8suUKpQo8qHNQ==}
+
+  '@tanstack/react-pacer@0.7.0':
+    resolution: {integrity: sha512-1QymYEkRnkcDxARJBb6pCMRtflIqMMsZExa27Qk9npl/StY3fQZZLH2wrNuzi1dyeMdqIxFjx8fm/LqZcxPP3Q==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
 
   '@tanstack/react-query-devtools@5.76.2':
     resolution: {integrity: sha512-XQqPM7ByqhitYtzzRXpFcPXY2FIMGY13atJoQnDInxX+ko7wOhAJg51QGzSxQwZ2JEy91taj0IaIUh3pOz2buw==}
@@ -5023,6 +5033,12 @@ snapshots:
   '@tanstack/query-core@5.76.2': {}
 
   '@tanstack/query-devtools@5.76.0': {}
+
+  '@tanstack/react-pacer@0.7.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@tanstack/pacer': 0.7.0
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   '@tanstack/react-query-devtools@5.76.2(@tanstack/react-query@5.76.2(react@19.1.0))(react@19.1.0)':
     dependencies:
