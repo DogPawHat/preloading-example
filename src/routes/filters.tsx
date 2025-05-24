@@ -6,9 +6,8 @@ import {
 import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useState } from "react";
 import * as v from "valibot";
+import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
 import { PaginationNav } from "~/components/pagination-nav";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import {
 	Table,
 	TableBody,
@@ -28,6 +27,25 @@ const searchParamsSchema = v.object({
 	name: v.optional(v.string(), ""),
 });
 
+function FilterSubmitContextProvider(props: {
+	initialName: string;
+	handleSubmit: (nameFilter: string) => void;
+	children: React.ReactNode;
+}) {
+	const [nameFilter, setNameFilter] = useState(props.initialName);
+
+	const handleSubmit = useCallback(() => {
+		props.handleSubmit(nameFilter);
+	}, [nameFilter, props]);
+
+	return (
+		<FilterSubmitContext.Provider
+			value={{ handleSubmit, nameFilter, updateNameFilter: setNameFilter }}
+		>
+			{props.children}
+		</FilterSubmitContext.Provider>
+	);
+}
 export const Route = createFileRoute({
 	validateSearch: searchParamsSchema,
 	loaderDeps: ({ search }) => ({
@@ -103,15 +121,17 @@ function RouteComponent() {
 			{/* Filter UI */}
 			<div className="mb-6 p-4 border rounded-lg bg-gray-50">
 				<h2 className="text-lg font-semibold mb-3">Filters</h2>
-				<FilterForm
-					key={`filter-form-${nameFilter}`}
+				<FilterSubmitContextProvider
+					key={`filter-submit-context-provider-${nameFilter}`}
+					initialName={nameFilter}
 					handleSubmit={(nameFilter) => {
 						navigate({
 							search: { name: nameFilter },
 						});
 					}}
-					initialName={nameFilter}
-				/>
+				>
+					<FilterForm />
+				</FilterSubmitContextProvider>
 			</div>
 
 			<Table>
@@ -153,42 +173,6 @@ function RouteComponent() {
 				nextOffset={data.nextOffset ?? undefined}
 				to="/filters"
 			/>
-		</div>
-	);
-}
-
-function FilterForm(props: {
-	handleSubmit: (nameFilter: string) => void;
-	initialName: string;
-}) {
-	const [nameFilter, setNameFilter] = useState(props.initialName);
-
-	const onSubmit = useCallback(
-		(e: React.FormEvent<HTMLFormElement>) => {
-			e.preventDefault();
-			props.handleSubmit(nameFilter);
-		},
-		[nameFilter, props],
-	);
-
-	return (
-		<div className="space-y-4">
-			<form onSubmit={onSubmit}>
-				<Label htmlFor="name-filter" className="text-sm font-medium">
-					Filter by Name
-				</Label>
-				<Input
-					id="name-filter"
-					type="text"
-					placeholder="Enter Pokemon name..."
-					value={nameFilter}
-					onChange={(e) => setNameFilter(e.target.value)}
-					className="mt-1"
-				/>
-				<p className="text-xs text-gray-500 mt-1">
-					Current filter: "{nameFilter}" (dummy UI - not functional yet)
-				</p>
-			</form>
 		</div>
 	);
 }

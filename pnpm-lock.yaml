@@ -23,6 +23,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.1.7
         version: 4.1.7(vite@6.3.5(@types/node@22.15.21)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.39.2)(tsx@4.19.4))
+      '@tanstack/pacer':
+        specifier: ^0.7.0
+        version: 0.7.0
       '@tanstack/react-query':
         specifier: ^5.76.2
         version: 5.76.2(react@19.1.0)
@@ -1226,6 +1229,10 @@ packages:
   '@tanstack/history@1.121.0-alpha.1':
     resolution: {integrity: sha512-/nKiPTyUIqSlCS0hGOL/hjQUI/TJ/i5w+dAFdgq0bhhiGpLvv4s/SAxbHb+/6Sm1WGkule6+taaRamDmrK3SYQ==}
     engines: {node: '>=12'}
+
+  '@tanstack/pacer@0.7.0':
+    resolution: {integrity: sha512-/CB3dN05Vd6CxiuiqRYdVQDu9wO61kN9flQiPcbdojYF2hWhhuzwbqS+lbKxZjObWuiTQPsC559lnZn1lbpM9Q==}
+    engines: {node: '>=18'}
 
   '@tanstack/query-core@5.76.2':
     resolution: {integrity: sha512-PFGwWh5ss9cJQ67l6bZ7hqXbisX2gy13G2jP+VGY1bgdbCfOMWh6UBVnN62QbFXro6CCoX9hYzTnZHr6Rz00YQ==}
@@ -5010,6 +5017,8 @@ snapshots:
       - supports-color
 
   '@tanstack/history@1.121.0-alpha.1': {}
+
+  '@tanstack/pacer@0.7.0': {}
 
   '@tanstack/query-core@5.76.2': {}
 
