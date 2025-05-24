@@ -49,6 +49,15 @@ export default function Header() {
 						Filters Example
 					</Link>
 				</div>
+
+				<div className="px-2">
+					<Link
+						to="/debounced-preload-filters"
+						activeProps={{ className: "font-bold" }}
+					>
+						Debounced Preload Filters Example
+					</Link>
+				</div>
 			</nav>
 		</header>
 	);

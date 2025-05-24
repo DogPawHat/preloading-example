@@ -17,6 +17,7 @@ import { Route as PreloadingRouteImport } from './routes/preloading'
 import { Route as PaginationRouteImport } from './routes/pagination'
 import { Route as IntentPreloadingRouteImport } from './routes/intent-preloading'
 import { Route as FiltersRouteImport } from './routes/filters'
+import { Route as DebouncedPreloadFiltersRouteImport } from './routes/debounced-preload-filters'
 import { Route as BasicRouteImport } from './routes/basic'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -43,6 +44,12 @@ const IntentPreloadingRoute = IntentPreloadingRouteImport.update({
 const FiltersRoute = FiltersRouteImport.update({
   id: '/filters',
   path: '/filters',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DebouncedPreloadFiltersRoute = DebouncedPreloadFiltersRouteImport.update({
+  id: '/debounced-preload-filters',
+  path: '/debounced-preload-filters',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -74,6 +81,13 @@ declare module '@tanstack/react-router' {
       path: '/basic'
       fullPath: '/basic'
       preLoaderRoute: typeof BasicRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/debounced-preload-filters': {
+      id: '/debounced-preload-filters'
+      path: '/debounced-preload-filters'
+      fullPath: '/debounced-preload-filters'
+      preLoaderRoute: typeof DebouncedPreloadFiltersRouteImport
       parentRoute: typeof rootRoute
     }
     '/filters': {
@@ -127,6 +141,15 @@ declare module './routes/basic' {
     FileRoutesByPath['/basic']['fullPath']
   >
 }
+declare module './routes/debounced-preload-filters' {
+  const createFileRoute: CreateFileRoute<
+    '/debounced-preload-filters',
+    FileRoutesByPath['/debounced-preload-filters']['parentRoute'],
+    FileRoutesByPath['/debounced-preload-filters']['id'],
+    FileRoutesByPath['/debounced-preload-filters']['path'],
+    FileRoutesByPath['/debounced-preload-filters']['fullPath']
+  >
+}
 declare module './routes/filters' {
   const createFileRoute: CreateFileRoute<
     '/filters',
@@ -169,6 +192,7 @@ declare module './routes/preloading' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/basic': typeof BasicRoute
+  '/debounced-preload-filters': typeof DebouncedPreloadFiltersRoute
   '/filters': typeof FiltersRoute
   '/intent-preloading': typeof IntentPreloadingRoute
   '/pagination': typeof PaginationRoute
@@ -178,6 +202,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/basic': typeof BasicRoute
+  '/debounced-preload-filters': typeof DebouncedPreloadFiltersRoute
   '/filters': typeof FiltersRoute
   '/intent-preloading': typeof IntentPreloadingRoute
   '/pagination': typeof PaginationRoute
@@ -188,6 +213,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/basic': typeof BasicRoute
+  '/debounced-preload-filters': typeof DebouncedPreloadFiltersRoute
   '/filters': typeof FiltersRoute
   '/intent-preloading': typeof IntentPreloadingRoute
   '/pagination': typeof PaginationRoute
@@ -199,6 +225,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/basic'
+    | '/debounced-preload-filters'
     | '/filters'
     | '/intent-preloading'
     | '/pagination'
@@ -207,6 +234,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/basic'
+    | '/debounced-preload-filters'
     | '/filters'
     | '/intent-preloading'
     | '/pagination'
@@ -215,6 +243,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/basic'
+    | '/debounced-preload-filters'
     | '/filters'
     | '/intent-preloading'
     | '/pagination'
@@ -225,6 +254,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BasicRoute: typeof BasicRoute
+  DebouncedPreloadFiltersRoute: typeof DebouncedPreloadFiltersRoute
   FiltersRoute: typeof FiltersRoute
   IntentPreloadingRoute: typeof IntentPreloadingRoute
   PaginationRoute: typeof PaginationRoute
@@ -234,6 +264,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BasicRoute: BasicRoute,
+  DebouncedPreloadFiltersRoute: DebouncedPreloadFiltersRoute,
   FiltersRoute: FiltersRoute,
   IntentPreloadingRoute: IntentPreloadingRoute,
   PaginationRoute: PaginationRoute,
@@ -252,6 +283,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/basic",
+        "/debounced-preload-filters",
         "/filters",
         "/intent-preloading",
         "/pagination",
@@ -263,6 +295,9 @@ export const routeTree = rootRoute
     },
     "/basic": {
       "filePath": "basic.tsx"
+    },
+    "/debounced-preload-filters": {
+      "filePath": "debounced-preload-filters.tsx"
     },
     "/filters": {
       "filePath": "filters.tsx"
