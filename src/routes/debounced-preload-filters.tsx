@@ -198,7 +198,7 @@ function RouteComponent() {
 			<PaginationNav
 				prevOffset={data.prevOffset ?? undefined}
 				nextOffset={data.nextOffset ?? undefined}
-				to="/filters"
+				to="/debounced-preload-filters"
 			/>
 		</div>
 	);
