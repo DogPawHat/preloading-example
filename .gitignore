@@ -6,6 +6,9 @@ dist-ssr
 .nitro
 *.local
 .tanstack-start
-local.db
-local.db:*
+.tanstack
 .env
+*.db-shm
+*.db-wal
+*.db
+!pokemon-with-types.db

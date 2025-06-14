@@ -24,6 +24,7 @@ const searchParamsSchema = v.object({
 	offset: v.optional(v.number(), 0),
 });
 
+// Gold standard
 export const Route = createFileRoute({
 	validateSearch: searchParamsSchema,
 	loaderDeps: ({ search }) => ({
@@ -106,6 +107,7 @@ function RouteComponent() {
 				</TableBody>
 			</Table>
 			<PaginationNav
+				prefetch="intent"
 				prevOffset={data.prevOffset ?? undefined}
 				nextOffset={data.nextOffset ?? undefined}
 				to="/pagination"

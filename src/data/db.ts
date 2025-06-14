@@ -8,9 +8,7 @@ import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "./schema";
 
 const client = createClient({
-	// biome-ignore lint/style/noNonNullAssertion: <explanation>
-	url: process.env.TURSO_DATABASE_URL!,
-	authToken: process.env.TURSO_AUTH_TOKEN,
+	url: "file:./pokemon-with-types.db",
 });
 
 const db = drizzle({ client, schema });

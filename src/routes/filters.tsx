@@ -27,6 +27,7 @@ const searchParamsSchema = v.object({
 	name: v.optional(v.string(), ""),
 });
 
+// Now we add in filtering, this is the basic version that does no preloading
 function FilterSubmitContextProvider(props: {
 	initialName: string;
 	handleSubmit: (nameFilter: string) => void;
@@ -169,6 +170,7 @@ function RouteComponent() {
 			)}
 
 			<PaginationNav
+				prefetch="intent"
 				prevOffset={data.prevOffset ?? undefined}
 				nextOffset={data.nextOffset ?? undefined}
 				to="/filters"

@@ -3,6 +3,7 @@ import { cn } from "~/lib/utils";
 import { Button } from "./ui/button";
 
 export function PaginationNav(props: {
+	prefetch?: "intent" | false;
 	prevOffset: number | undefined;
 	nextOffset: number | undefined;
 	to: keyof FileRoutesByPath;
@@ -17,6 +18,7 @@ export function PaginationNav(props: {
 				asChild
 			>
 				<Link
+					preload={props.prefetch}
 					to={props.to}
 					search={{ offset: props.prevOffset }}
 					disabled={props.prevOffset == null}
@@ -32,6 +34,7 @@ export function PaginationNav(props: {
 				asChild
 			>
 				<Link
+					preload={props.prefetch}
 					to={props.to}
 					search={{ offset: props.nextOffset }}
 					disabled={props.nextOffset == null}

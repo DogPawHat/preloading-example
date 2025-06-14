@@ -20,6 +20,8 @@ const searchParamsSchema = v.object({
 	offset: v.optional(v.number(), 0),
 });
 
+// Barely better than basic
+// If the component tree is large, the speedup would actually be important
 export const Route = createFileRoute({
 	validateSearch: searchParamsSchema,
 	loaderDeps: ({ search }) => ({

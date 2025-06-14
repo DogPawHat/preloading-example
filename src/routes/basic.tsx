@@ -20,6 +20,7 @@ const searchParamsSchema = v.object({
 	offset: v.optional(v.number(), 0),
 });
 
+// Complete shite
 export const Route = createFileRoute({
 	validateSearch: searchParamsSchema,
 	component: RouteComponent,
