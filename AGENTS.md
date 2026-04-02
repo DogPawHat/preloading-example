@@ -1,5 +1,3 @@
-<!--VITE PLUS START-->
-
 # Vite+ Rules For This Repo
 
 This project uses Vite+ and the `vp` CLI.
@@ -25,7 +23,6 @@ For GitHub Actions, prefer `voidzero-dev/setup-vp` and run:
 
 - [ ] Run `vp install` after pulling remote changes and before getting started.
 - [ ] Run `vp check` and `vp test` to validate changes.
-<!--VITE PLUS END-->
 
 <!-- intent-skills:start -->
 
