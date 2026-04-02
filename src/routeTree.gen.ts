@@ -8,11 +8,7 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import type { CreateFileRoute, FileRoutesByPath } from '@tanstack/react-router'
-
-// Import Routes
-
-import { Route as rootRoute } from './routes/__root'
+import { Route as rootRouteImport } from './routes/__root'
 import { Route as PreloadingRouteImport } from './routes/preloading'
 import { Route as PaginationRouteImport } from './routes/pagination'
 import { Route as IntentPreloadingRouteImport } from './routes/intent-preloading'
@@ -21,173 +17,41 @@ import { Route as DebouncedPreloadFiltersRouteImport } from './routes/debounced-
 import { Route as BasicRouteImport } from './routes/basic'
 import { Route as IndexRouteImport } from './routes/index'
 
-// Create/Update Routes
-
 const PreloadingRoute = PreloadingRouteImport.update({
   id: '/preloading',
   path: '/preloading',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
 const PaginationRoute = PaginationRouteImport.update({
   id: '/pagination',
   path: '/pagination',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
 const IntentPreloadingRoute = IntentPreloadingRouteImport.update({
   id: '/intent-preloading',
   path: '/intent-preloading',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
 const FiltersRoute = FiltersRouteImport.update({
   id: '/filters',
   path: '/filters',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
 const DebouncedPreloadFiltersRoute = DebouncedPreloadFiltersRouteImport.update({
   id: '/debounced-preload-filters',
   path: '/debounced-preload-filters',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
 const BasicRoute = BasicRouteImport.update({
   id: '/basic',
   path: '/basic',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/basic': {
-      id: '/basic'
-      path: '/basic'
-      fullPath: '/basic'
-      preLoaderRoute: typeof BasicRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/debounced-preload-filters': {
-      id: '/debounced-preload-filters'
-      path: '/debounced-preload-filters'
-      fullPath: '/debounced-preload-filters'
-      preLoaderRoute: typeof DebouncedPreloadFiltersRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/filters': {
-      id: '/filters'
-      path: '/filters'
-      fullPath: '/filters'
-      preLoaderRoute: typeof FiltersRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/intent-preloading': {
-      id: '/intent-preloading'
-      path: '/intent-preloading'
-      fullPath: '/intent-preloading'
-      preLoaderRoute: typeof IntentPreloadingRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/pagination': {
-      id: '/pagination'
-      path: '/pagination'
-      fullPath: '/pagination'
-      preLoaderRoute: typeof PaginationRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/preloading': {
-      id: '/preloading'
-      path: '/preloading'
-      fullPath: '/preloading'
-      preLoaderRoute: typeof PreloadingRouteImport
-      parentRoute: typeof rootRoute
-    }
-  }
-}
-
-// Add type-safety to the createFileRoute function across the route tree
-
-declare module './routes/index' {
-  const createFileRoute: CreateFileRoute<
-    '/',
-    FileRoutesByPath['/']['parentRoute'],
-    FileRoutesByPath['/']['id'],
-    FileRoutesByPath['/']['path'],
-    FileRoutesByPath['/']['fullPath']
-  >
-}
-declare module './routes/basic' {
-  const createFileRoute: CreateFileRoute<
-    '/basic',
-    FileRoutesByPath['/basic']['parentRoute'],
-    FileRoutesByPath['/basic']['id'],
-    FileRoutesByPath['/basic']['path'],
-    FileRoutesByPath['/basic']['fullPath']
-  >
-}
-declare module './routes/debounced-preload-filters' {
-  const createFileRoute: CreateFileRoute<
-    '/debounced-preload-filters',
-    FileRoutesByPath['/debounced-preload-filters']['parentRoute'],
-    FileRoutesByPath['/debounced-preload-filters']['id'],
-    FileRoutesByPath['/debounced-preload-filters']['path'],
-    FileRoutesByPath['/debounced-preload-filters']['fullPath']
-  >
-}
-declare module './routes/filters' {
-  const createFileRoute: CreateFileRoute<
-    '/filters',
-    FileRoutesByPath['/filters']['parentRoute'],
-    FileRoutesByPath['/filters']['id'],
-    FileRoutesByPath['/filters']['path'],
-    FileRoutesByPath['/filters']['fullPath']
-  >
-}
-declare module './routes/intent-preloading' {
-  const createFileRoute: CreateFileRoute<
-    '/intent-preloading',
-    FileRoutesByPath['/intent-preloading']['parentRoute'],
-    FileRoutesByPath['/intent-preloading']['id'],
-    FileRoutesByPath['/intent-preloading']['path'],
-    FileRoutesByPath['/intent-preloading']['fullPath']
-  >
-}
-declare module './routes/pagination' {
-  const createFileRoute: CreateFileRoute<
-    '/pagination',
-    FileRoutesByPath['/pagination']['parentRoute'],
-    FileRoutesByPath['/pagination']['id'],
-    FileRoutesByPath['/pagination']['path'],
-    FileRoutesByPath['/pagination']['fullPath']
-  >
-}
-declare module './routes/preloading' {
-  const createFileRoute: CreateFileRoute<
-    '/preloading',
-    FileRoutesByPath['/preloading']['parentRoute'],
-    FileRoutesByPath['/preloading']['id'],
-    FileRoutesByPath['/preloading']['path'],
-    FileRoutesByPath['/preloading']['fullPath']
-  >
-}
-
-// Create and export the route tree
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -198,7 +62,6 @@ export interface FileRoutesByFullPath {
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
 }
-
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/basic': typeof BasicRoute
@@ -208,9 +71,8 @@ export interface FileRoutesByTo {
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
+  __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/basic': typeof BasicRoute
   '/debounced-preload-filters': typeof DebouncedPreloadFiltersRoute
@@ -219,7 +81,6 @@ export interface FileRoutesById {
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -250,7 +111,6 @@ export interface FileRouteTypes {
     | '/preloading'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BasicRoute: typeof BasicRoute
@@ -259,6 +119,60 @@ export interface RootRouteChildren {
   IntentPreloadingRoute: typeof IntentPreloadingRoute
   PaginationRoute: typeof PaginationRoute
   PreloadingRoute: typeof PreloadingRoute
+}
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/preloading': {
+      id: '/preloading'
+      path: '/preloading'
+      fullPath: '/preloading'
+      preLoaderRoute: typeof PreloadingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pagination': {
+      id: '/pagination'
+      path: '/pagination'
+      fullPath: '/pagination'
+      preLoaderRoute: typeof PaginationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/intent-preloading': {
+      id: '/intent-preloading'
+      path: '/intent-preloading'
+      fullPath: '/intent-preloading'
+      preLoaderRoute: typeof IntentPreloadingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/filters': {
+      id: '/filters'
+      path: '/filters'
+      fullPath: '/filters'
+      preLoaderRoute: typeof FiltersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/debounced-preload-filters': {
+      id: '/debounced-preload-filters'
+      path: '/debounced-preload-filters'
+      fullPath: '/debounced-preload-filters'
+      preLoaderRoute: typeof DebouncedPreloadFiltersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/basic': {
+      id: '/basic'
+      path: '/basic'
+      fullPath: '/basic'
+      preLoaderRoute: typeof BasicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -270,47 +184,15 @@ const rootRouteChildren: RootRouteChildren = {
   PaginationRoute: PaginationRoute,
   PreloadingRoute: PreloadingRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/basic",
-        "/debounced-preload-filters",
-        "/filters",
-        "/intent-preloading",
-        "/pagination",
-        "/preloading"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/basic": {
-      "filePath": "basic.tsx"
-    },
-    "/debounced-preload-filters": {
-      "filePath": "debounced-preload-filters.tsx"
-    },
-    "/filters": {
-      "filePath": "filters.tsx"
-    },
-    "/intent-preloading": {
-      "filePath": "intent-preloading.tsx"
-    },
-    "/pagination": {
-      "filePath": "pagination.tsx"
-    },
-    "/preloading": {
-      "filePath": "preloading.tsx"
-    }
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }
-ROUTE_MANIFEST_END */
