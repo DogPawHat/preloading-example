@@ -8,7 +8,7 @@ import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "./schema";
 
 const client = createClient({
-  url: "file:./pokemon-with-types.db",
+  url: "file:./db/pokemon-with-types.db",
 });
 
 const db = drizzle({ client, schema });
