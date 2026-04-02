@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "varlock run -- vp dev",
-    "build": "varlock run -- vp build",
+    "dev": "vp dev",
+    "build": "vp build",
     "prepare": "vp config",
     "knip": "knip",
     "db:restore": "node src/data/seed.ts",

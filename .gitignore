@@ -11,3 +11,6 @@ dist-ssr
 *.db-shm
 *.db-wal
 *.db
+
+# Local Netlify folder
+.netlify
