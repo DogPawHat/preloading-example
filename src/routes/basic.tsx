@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import * as v from "valibot";
 import { PaginationNav } from "~/components/pagination-nav";
 import {
@@ -12,6 +11,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { POKEMON_LIMIT, getPokemonListQueryKey, getServerPokemonListQueryFn } from "~/util/pokemon";
+import { useServerFn } from "@tanstack/react-start";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),

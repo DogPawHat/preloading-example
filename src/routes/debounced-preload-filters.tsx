@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useDebouncedCallback } from "@tanstack/react-pacer";
 import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { useCallback } from "react";
 import { useState } from "react";
 import * as v from "valibot";
@@ -63,7 +62,6 @@ function PreloadFilterSubmitContextProvider(props: {
   const queryClient = useQueryClient();
   const { pokemonListOptions: serverPokemonListOptions } = Route.useRouteContext();
   const [nameFilter, setNameFilter] = useState(props.initialName);
-  const getFilteredPokemonListQueryFn = useServerFn(getServerFilteredPokemonListQueryFn);
 
   const debouncedNameFilter = useDebouncedCallback(
     (newNameFilter: string) => {
@@ -73,7 +71,7 @@ function PreloadFilterSubmitContextProvider(props: {
           serverPokemonListOptions.queryKey[2].offset,
           newNameFilter,
         ),
-        queryFn: getFilteredPokemonListQueryFn,
+        queryFn: getServerFilteredPokemonListQueryFn,
       });
     },
     {
@@ -105,24 +103,23 @@ function RouteComponent() {
   const navigate = Route.useNavigate();
   const { pokemonListOptions: serverPokemonListOptions } = Route.useRouteContext();
   const queryClient = useQueryClient();
-  const getFilteredPokemonListQueryFn = useServerFn(getServerFilteredPokemonListQueryFn);
 
   const { data } = useSuspenseQuery({
     ...serverPokemonListOptions,
-    queryFn: getFilteredPokemonListQueryFn,
+    queryFn: getServerFilteredPokemonListQueryFn,
   });
 
   if (data.prevOffset !== null) {
     void queryClient.prefetchQuery({
       ...serverPokemonListOptions,
-      queryFn: getFilteredPokemonListQueryFn,
+      queryFn: getServerFilteredPokemonListQueryFn,
     });
   }
 
   if (data.nextOffset !== null) {
     void queryClient.prefetchQuery({
       ...serverPokemonListOptions,
-      queryFn: getFilteredPokemonListQueryFn,
+      queryFn: getServerFilteredPokemonListQueryFn,
     });
   }
 
