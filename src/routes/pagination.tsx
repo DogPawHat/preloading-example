@@ -45,15 +45,17 @@ function RouteComponent() {
   const { offset: currentOffset } = Route.useSearch();
   const { pokemonListOptions: serverPokemonListOptions } = Route.useRouteContext();
   const queryClient = useQueryClient();
+  const getPokemonListQueryFn = useServerFn(getServerPokemonListQueryFn);
 
   const { data } = useSuspenseQuery({
     ...serverPokemonListOptions,
-    queryFn: useServerFn(getServerPokemonListQueryFn),
+    queryFn: getPokemonListQueryFn,
   });
 
   if (data.prevOffset !== null) {
     void queryClient.prefetchQuery({
       ...serverPokemonListOptions,
+      queryFn: getPokemonListQueryFn,
       queryKey: getPokemonListQueryKey("pagination", data.prevOffset),
     });
   }
@@ -61,6 +63,7 @@ function RouteComponent() {
   if (data.nextOffset !== null) {
     void queryClient.prefetchQuery({
       ...serverPokemonListOptions,
+      queryFn: getPokemonListQueryFn,
       queryKey: getPokemonListQueryKey("pagination", data.nextOffset),
     });
   }
