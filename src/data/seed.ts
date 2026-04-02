@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { ENV } from "varlock/env";
+import { env } from "~env";
 import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "./schema.js";
 
@@ -29,8 +29,8 @@ const seedData = JSON.parse(readFileSync(seedDataPath, "utf8")) as SeedData;
 
 const db = drizzle({
   connection: {
-    url: ENV.TURSO_DATABASE_URL,
-    authToken: ENV.TURSO_AUTH_TOKEN,
+    url: env.TURSO_DATABASE_URL,
+    authToken: env.TURSO_AUTH_TOKEN,
   },
   schema,
 });

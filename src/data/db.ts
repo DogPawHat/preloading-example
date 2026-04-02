@@ -1,12 +1,12 @@
 import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/libsql";
-import { ENV } from "varlock/env";
+import { env } from "~env";
 import { relations } from "./relations.js";
 
 const db = drizzle({
   connection: {
-    url: ENV.TURSO_DATABASE_URL,
-    authToken: ENV.TURSO_AUTH_TOKEN,
+    url: env.TURSO_DATABASE_URL,
+    authToken: env.TURSO_AUTH_TOKEN,
   },
   relations,
 });

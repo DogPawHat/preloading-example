@@ -1,12 +1,12 @@
 import { defineConfig } from "drizzle-kit";
-import { ENV } from "varlock/env";
+import { env } from "./env.js";
 
 export default defineConfig({
   schema: "./src/data/schema.ts",
   out: "./migrations",
   dialect: "turso",
   dbCredentials: {
-    url: ENV.TURSO_DATABASE_URL,
-    authToken: ENV.TURSO_AUTH_TOKEN,
+    url: env.TURSO_DATABASE_URL,
+    authToken: env.TURSO_AUTH_TOKEN,
   },
 });
