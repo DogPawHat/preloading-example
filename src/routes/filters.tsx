@@ -24,18 +24,15 @@ const searchParamsSchema = v.object({
   name: v.optional(v.string(), ""),
 });
 
-// Now we add in filtering, this is the basic version that does no preloading
 function FilterSubmitContextProvider(props: {
   initialName: string;
   handleSubmit: (nameFilter: string) => void;
   children: React.ReactNode;
 }) {
   const [nameFilter, setNameFilter] = useState(props.initialName);
-
   const handleSubmit = useCallback(() => {
     props.handleSubmit(nameFilter);
   }, [nameFilter, props]);
-
   return (
     <FilterSubmitContext.Provider
       value={{ handleSubmit, nameFilter, updateNameFilter: setNameFilter }}
@@ -44,23 +41,16 @@ function FilterSubmitContextProvider(props: {
     </FilterSubmitContext.Provider>
   );
 }
+
 export const Route = createFileRoute("/filters")({
   validateSearch: searchParamsSchema,
-  loaderDeps: ({ search }) => ({
-    offset: search.offset,
-    name: search.name,
-  }),
+  loaderDeps: ({ search }) => ({ offset: search.offset, name: search.name }),
   context: ({ deps }) => {
-    const newKey = getFilteredPokemonListQueryKey("filters", deps.offset, deps.name);
-
     const pokemonListOptions = queryOptions({
-      queryKey: newKey,
+      queryKey: getFilteredPokemonListQueryKey("filters", deps.offset, deps.name),
       queryFn: getServerFilteredPokemonListQueryFn,
     });
-
-    return {
-      pokemonListOptions,
-    };
+    return { pokemonListOptions };
   },
   loader: ({ context }) => {
     void context.queryClient.prefetchQuery(context.pokemonListOptions);
@@ -93,49 +83,74 @@ function RouteComponent() {
     });
   }
 
-  // Use the filtered results directly from the server
   const filteredPokemon = data.pokemon;
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">
-        National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT} (Filtered)
-      </h1>
+    <div className="p-6 max-w-4xl mx-auto">
+      <div className="mb-6">
+        <div
+          className="text-7xl font-bold"
+          style={{ fontFamily: "'Bebas Neue', sans-serif", color: "#0a0a0a", lineHeight: 1 }}
+        >
+          GEAR 4
+        </div>
+        <div
+          className="text-xs font-bold uppercase tracking-[0.3em] mt-1 text-[#ff2d2d]"
+          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+        >
+          FILTERED + PREFETCH
+        </div>
+        <p
+          className="text-xs mt-1 text-[#888]"
+          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+        >
+          Filtered queries with adjacent page prefetch.
+        </p>
+        <div className="h-1 bg-[#ff2d2d] w-16 mt-3" />
+      </div>
 
-      {/* Filter UI */}
-      <div className="mb-6 p-4 border rounded-lg bg-gray-50">
-        <h2 className="text-lg font-semibold mb-3">Filters</h2>
+      <div className="mb-6 p-4 border-3 border-[#0a0a0a] bg-[#f5f5f5]">
+        <h3
+          className="text-xs font-bold uppercase tracking-[0.3em] mb-3"
+          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+        >
+          FILTER
+        </h3>
         <FilterSubmitContextProvider
           key={`filter-submit-context-provider-${nameFilter}`}
           initialName={nameFilter}
           handleSubmit={(nameFilter) => {
-            void navigate({
-              search: { name: nameFilter },
-            });
+            void navigate({ search: { name: nameFilter } });
           }}
         >
           <FilterForm />
         </FilterSubmitContextProvider>
       </div>
 
+      <h2
+        className="text-sm font-bold uppercase tracking-wider mb-4"
+        style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+      >
+        Pokémon {currentOffset + 1}–{currentOffset + POKEMON_LIMIT}
+      </h2>
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>#</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Details</TableHead>
+          <TableRow className="border-b-3 border-[#0a0a0a]">
+            <TableHead className="text-xs font-bold uppercase tracking-wider">#</TableHead>
+            <TableHead className="text-xs font-bold uppercase tracking-wider">Name</TableHead>
+            <TableHead className="text-xs font-bold uppercase tracking-wider">Types</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredPokemon.map((pokemon) => (
-            <TableRow key={pokemon.name}>
-              <TableCell>{pokemon.id}</TableCell>
-              <TableCell className="capitalize">{pokemon.name}</TableCell>
+          {filteredPokemon.map((pokemon, i) => (
+            <TableRow key={pokemon.name} className={i % 2 === 0 ? "bg-[#f5f5f5]" : ""}>
+              <TableCell className="font-bold text-[#888]">{pokemon.id}</TableCell>
+              <TableCell className="capitalize font-bold">{pokemon.name}</TableCell>
               <TableCell>
                 {pokemon.types.map((type) => (
                   <span
                     key={type.name}
-                    className="inline-block px-2 py-1 mr-1 text-sm font-medium rounded-full bg-gray-100"
+                    className="inline-block px-2 py-0.5 mr-1 text-xs font-bold uppercase bg-[#0a0a0a] text-white"
                   >
                     {type.name}
                   </span>
@@ -147,8 +162,8 @@ function RouteComponent() {
       </Table>
 
       {filteredPokemon.length === 0 && nameFilter && (
-        <div className="text-center py-8 text-gray-500">
-          No Pokemon found matching "{nameFilter}"
+        <div className="text-center py-8 text-[#888] font-bold uppercase tracking-wider text-sm">
+          No results for "{nameFilter}"
         </div>
       )}
 
