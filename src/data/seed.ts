@@ -35,28 +35,28 @@ mkdirSync(dirname(dbPath), { recursive: true });
 const client = createClient({ url: `file:${dbPath}` });
 const db = drizzle({ client, schema });
 
-const schemaStatements = [
-  `CREATE TABLE "pokemon" (
-    "id" integer PRIMARY KEY NOT NULL,
-    "name" text NOT NULL,
-    "dex_id" integer NOT NULL
-  )`,
-  `CREATE TABLE "types" (
-    "id" integer PRIMARY KEY NOT NULL,
-    "name" text NOT NULL
-  )`,
-  `CREATE TABLE "pokemon_types" (
-    "id" integer PRIMARY KEY NOT NULL,
-    "pokemon_id" integer NOT NULL REFERENCES "pokemon"("id"),
-    "type_id" integer NOT NULL REFERENCES "types"("id")
-  )`,
-  `CREATE INDEX "idx_pt_pokemon" ON "pokemon_types" ("pokemon_id")`,
-  `CREATE INDEX "idx_pt_type" ON "pokemon_types" ("type_id")`,
-];
+// const schemaStatements = [
+//   `CREATE TABLE "pokemon" (
+//     "id" integer PRIMARY KEY NOT NULL,
+//     "name" text NOT NULL,
+//     "dex_id" integer NOT NULL
+//   )`,
+//   `CREATE TABLE "types" (
+//     "id" integer PRIMARY KEY NOT NULL,
+//     "name" text NOT NULL
+//   )`,
+//   `CREATE TABLE "pokemon_types" (
+//     "id" integer PRIMARY KEY NOT NULL,
+//     "pokemon_id" integer NOT NULL REFERENCES "pokemon"("id"),
+//     "type_id" integer NOT NULL REFERENCES "types"("id")
+//   )`,
+//   `CREATE INDEX "idx_pt_pokemon" ON "pokemon_types" ("pokemon_id")`,
+//   `CREATE INDEX "idx_pt_type" ON "pokemon_types" ("type_id")`,
+// ];
 
-for (const statement of schemaStatements) {
-  await client.execute(statement);
-}
+// for (const statement of schemaStatements) {
+//   await client.execute(statement);
+// }
 
 const BATCH_SIZE = 500;
 

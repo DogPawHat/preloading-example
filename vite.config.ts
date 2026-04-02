@@ -2,6 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite-plus";
 import react from "@vitejs/plugin-react";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import { varlockVitePlugin } from "@varlock/vite-integration";
 
 export default defineConfig({
   staged: {
@@ -17,5 +18,5 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  plugins: [tanstackStart({}), react(), tailwindcss()],
+  plugins: [varlockVitePlugin(), tanstackStart({}), react(), tailwindcss()],
 });
