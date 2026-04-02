@@ -1,14 +1,14 @@
 import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/libsql";
 import { ENV } from "varlock/env";
-import * as schema from "~/data/schema.js";
+import { relations } from "./relations.js";
 
 const db = drizzle({
   connection: {
     url: ENV.TURSO_DATABASE_URL,
-    authToken: ENV.TURSO_AUTH_READ_TOKEN,
+    authToken: ENV.TURSO_AUTH_TOKEN,
   },
-  schema,
+  relations,
 });
 
 const preparedGetPokemonAtOffset = db.query.pokemon
@@ -18,19 +18,15 @@ const preparedGetPokemonAtOffset = db.query.pokemon
       name: true,
       dexId: true,
     },
-    orderBy: (pokemon, { asc }) => [asc(pokemon.dexId)],
+    orderBy: {
+      dexId: "asc",
+    },
     limit: sql.placeholder("limit"),
     offset: sql.placeholder("offset"),
     with: {
       types: {
-        orderBy: (types, { asc }) => [asc(types.typeId)],
-        columns: {},
-        with: {
-          type: {
-            columns: {
-              name: true,
-            },
-          },
+        columns: {
+          name: true,
         },
       },
     },
@@ -44,21 +40,19 @@ const preparedGetFilteredPokemonAtOffset = db.query.pokemon
       name: true,
       dexId: true,
     },
-    where: (pokemon, { sql }) =>
-      sql`lower(${pokemon.name}) like lower(${sql.placeholder("nameFilter")})`,
-    orderBy: (pokemon, { asc }) => [asc(pokemon.dexId)],
+    where: {
+      RAW: (pokemon, { sql }) =>
+        sql`lower(${pokemon.name}) like lower(${sql.placeholder("nameFilter")})`,
+    },
+    orderBy: {
+      dexId: "asc",
+    },
     limit: sql.placeholder("limit"),
     offset: sql.placeholder("offset"),
     with: {
       types: {
-        orderBy: (types, { asc }) => [asc(types.typeId)],
-        columns: {},
-        with: {
-          type: {
-            columns: {
-              name: true,
-            },
-          },
+        columns: {
+          name: true,
         },
       },
     },

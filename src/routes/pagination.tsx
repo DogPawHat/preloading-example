@@ -89,10 +89,10 @@ function RouteComponent() {
               <TableCell>
                 {pokemon.types.map((type) => (
                   <span
-                    key={type.type.name}
+                    key={type.name}
                     className="inline-block px-2 py-1 mr-1 text-sm font-medium rounded-full bg-gray-100"
                   >
-                    {type.type.name}
+                    {type.name}
                   </span>
                 ))}
               </TableCell>

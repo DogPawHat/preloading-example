@@ -1,8 +1,5 @@
-import { config } from "dotenv";
 import { defineConfig } from "drizzle-kit";
 import { ENV } from "varlock/env";
-
-config({ path: ".env.local" });
 
 export default defineConfig({
   schema: "./src/data/schema.ts",
@@ -10,6 +7,6 @@ export default defineConfig({
   dialect: "turso",
   dbCredentials: {
     url: ENV.TURSO_DATABASE_URL,
-    authToken: ENV.TURSO_AUTH_READ_TOKEN,
+    authToken: ENV.TURSO_AUTH_TOKEN,
   },
 });
