@@ -3,6 +3,7 @@ import { defineConfig } from "vite-plus";
 import react from "@vitejs/plugin-react";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { varlockVitePlugin } from "@varlock/vite-integration";
+import netlify from "@netlify/vite-plugin-tanstack-start";
 
 export default defineConfig({
   staged: {
@@ -18,5 +19,5 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  plugins: [varlockVitePlugin(), tanstackStart({}), react(), tailwindcss()],
+  plugins: [varlockVitePlugin(), tanstackStart({}), netlify(), react(), tailwindcss()],
 });
