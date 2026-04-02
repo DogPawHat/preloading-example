@@ -8,7 +8,10 @@
     "start": "node .output/server/index.mjs",
     "prepare": "vp config",
     "knip": "knip",
-    "db:restore": "tsx src/data/seed.ts"
+    "db:restore": "node src/data/seed.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@libsql/client": "^0.17.2",
@@ -42,7 +45,6 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "brew": "^0.0.8",
-    "dotenv": "^17.4.0",
     "drizzle-kit": "^0.31.10",
     "install": "^0.13.0",
     "knip": "^6.2.0",

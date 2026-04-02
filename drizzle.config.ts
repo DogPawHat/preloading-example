@@ -5,8 +5,8 @@ import { ENV } from "varlock/env";
 config({ path: ".env.local" });
 
 export default defineConfig({
-  out: "./drizzle",
   schema: "./src/data/schema.ts",
+  out: "./migrations",
   dialect: "turso",
   dbCredentials: {
     url: ENV.TURSO_DATABASE_URL,
