@@ -43,6 +43,7 @@ function FilterSubmitContextProvider(props: {
     </FilterSubmitContext.Provider>
   );
 }
+
 export const Route = createFileRoute("/filters")({
   validateSearch: searchParamsSchema,
   loaderDeps: ({ search }) => ({
@@ -50,7 +51,11 @@ export const Route = createFileRoute("/filters")({
     name: search.name,
   }),
   context: ({ deps }) => {
-    const newKey = getFilteredPokemonListQueryKey("filters", deps.offset, deps.name);
+    const newKey = getFilteredPokemonListQueryKey(
+      "filters",
+      deps.offset,
+      deps.name,
+    );
 
     const pokemonListOptions = queryOptions({
       queryKey: newKey,
@@ -78,67 +83,89 @@ function RouteComponent() {
   const filteredPokemon = data.pokemon;
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">
-        National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT} (Filtered)
-      </h1>
-
-      {/* Filter UI */}
-      <div className="mb-6 p-4 border rounded-lg bg-gray-50">
-        <h2 className="text-lg font-semibold mb-3">Filters</h2>
-        <FilterSubmitContextProvider
-          key={`filter-submit-context-provider-${nameFilter}`}
-          initialName={nameFilter}
-          handleSubmit={(nameFilter) => {
-            void navigate({
-              search: { name: nameFilter },
-            });
-          }}
-        >
-          <FilterForm />
-        </FilterSubmitContextProvider>
-      </div>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>#</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Details</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredPokemon.map((pokemon) => (
-            <TableRow key={pokemon.name}>
-              <TableCell>{pokemon.id}</TableCell>
-              <TableCell className="capitalize">{pokemon.name}</TableCell>
-              <TableCell>
-                {pokemon.types.map((type) => (
-                  <span
-                    key={type.name}
-                    className="inline-block px-2 py-1 mr-1 text-sm font-medium rounded-full bg-gray-100"
-                  >
-                    {type.name}
-                  </span>
-                ))}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-      {filteredPokemon.length === 0 && nameFilter && (
-        <div className="text-center py-8 text-gray-500">
-          No Pokemon found matching "{nameFilter}"
+    <main className="min-h-screen bg-warm p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="section-header">
+          <span className="section-header__title">05_filters</span>
+          <span className="text-charcoal-muted text-sm">
+            // Search with prefetch
+          </span>
         </div>
-      )}
 
-      <PaginationNav
-        prefetch="viewport"
-        prevOffset={data.prevOffset ?? undefined}
-        nextOffset={data.nextOffset ?? undefined}
-        to="/filters"
-      />
-    </div>
+        {/* Filter UI */}
+        <div className="console-card mb-6">
+          <h2 className="text-sm font-semibold mb-4 text-charcoal uppercase tracking-wider">
+            Filters
+          </h2>
+          <FilterSubmitContextProvider
+            key={`filter-submit-context-provider-${nameFilter}`}
+            initialName={nameFilter}
+            handleSubmit={(newNameFilter) => {
+              void navigate({
+                search: { name: newNameFilter },
+              });
+            }}
+          >
+            <FilterForm />
+          </FilterSubmitContextProvider>
+        </div>
+
+        <div className="console-card">
+          <h1 className="text-lg font-mono text-charcoal mb-4">
+            National Pokédex: Pokémon {currentOffset + 1}-
+            {currentOffset + POKEMON_LIMIT}
+            {nameFilter && (
+              <span className="text-charcoal-muted">
+                {" "}
+                (filtered: "{nameFilter}")
+              </span>
+            )}
+          </h1>
+
+          <Table className="data-table">
+            <TableHeader>
+              <TableRow>
+                <TableHead>#</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Details</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredPokemon.map((pokemon) => (
+                <TableRow key={pokemon.name}>
+                  <TableCell className="font-mono text-charcoal-muted">
+                    {pokemon.id}
+                  </TableCell>
+                  <TableCell className="capitalize text-charcoal">
+                    {pokemon.name}
+                  </TableCell>
+                  <TableCell>
+                    {pokemon.types.map((type) => (
+                      <span key={type.name} className="type-badge">
+                        {type.name}
+                      </span>
+                    ))}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          {filteredPokemon.length === 0 && nameFilter && (
+            <div className="text-center py-8 text-charcoal-muted font-mono">
+              No Pokemon found matching "{nameFilter}"
+            </div>
+          )}
+
+          <PaginationNav
+            prefetch="viewport"
+            prevOffset={data.prevOffset ?? undefined}
+            nextOffset={data.nextOffset ?? undefined}
+            to="/filters"
+            currentOffset={currentOffset}
+          />
+        </div>
+      </div>
+    </main>
   );
 }

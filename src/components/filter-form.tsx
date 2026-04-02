@@ -24,7 +24,10 @@ export function FilterForm() {
           submitContext.handleSubmit();
         }}
       >
-        <Label htmlFor="name-filter" className="text-sm font-medium">
+        <Label
+          htmlFor="name-filter"
+          className="text-xs font-mono uppercase tracking-wider text-charcoal-light"
+        >
           Filter by Name
         </Label>
         <Input
@@ -33,7 +36,7 @@ export function FilterForm() {
           placeholder="Enter Pokemon name..."
           value={submitContext.nameFilter}
           onChange={(e) => submitContext.updateNameFilter(e.target.value)}
-          className="mt-1"
+          className="mt-2 bg-warm border-hairline focus:border-amber focus:ring-0 rounded-none font-mono text-sm"
         />
         <Button type="submit" className="mt-2">
           Submit

@@ -47,43 +47,50 @@ function RouteComponent() {
   const { data } = useSuspenseQuery(pokemonListOptions);
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">
-        National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
-      </h1>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>#</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Details</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.pokemon.map((pokemon) => (
-            <TableRow key={pokemon.name}>
-              <TableCell>{pokemon.id}</TableCell>
-              <TableCell className="capitalize">{pokemon.name}</TableCell>
-              <TableCell>
-                {pokemon.types.map((type) => (
-                  <span
-                    key={type.name}
-                    className="inline-block px-2 py-1 mr-1 text-sm font-medium rounded-full bg-gray-100"
-                  >
-                    {type.name}
-                  </span>
-                ))}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <PaginationNav
-        prefetch="intent"
-        prevOffset={data.prevOffset ?? undefined}
-        nextOffset={data.nextOffset ?? undefined}
-        to="/intent-preloading"
-      />
-    </div>
+    <main className="min-h-screen bg-warm p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="section-header">
+          <span className="section-header__title">03_intent-preloading</span>
+          <span className="text-charcoal-muted text-sm">// Hover-based prefetch</span>
+        </div>
+
+        <div className="console-card mb-6">
+          <h1 className="text-lg font-mono text-charcoal mb-4">
+            National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
+          </h1>
+          <Table className="data-table">
+            <TableHeader>
+              <TableRow>
+                <TableHead>#</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Details</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data.pokemon.map((pokemon) => (
+                <TableRow key={pokemon.name}>
+                  <TableCell className="font-mono text-charcoal-muted">{pokemon.id}</TableCell>
+                  <TableCell className="capitalize text-charcoal">{pokemon.name}</TableCell>
+                  <TableCell>
+                    {pokemon.types.map((type) => (
+                      <span key={type.name} className="type-badge">
+                        {type.name}
+                      </span>
+                    ))}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <PaginationNav
+            prefetch="intent"
+            prevOffset={data.prevOffset ?? undefined}
+            nextOffset={data.nextOffset ?? undefined}
+            to="/intent-preloading"
+            currentOffset={currentOffset}
+          />
+        </div>
+      </div>
+    </main>
   );
 }
