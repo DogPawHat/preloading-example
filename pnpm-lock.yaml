@@ -48,12 +48,6 @@ importers:
       '@tanstack/react-start':
         specifier: 1.167.16
         version: 1.167.16(@voidzero-dev/vite-plus-core@0.1.15(@types/node@25.5.0)(esbuild@0.27.5)(jiti@2.6.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3))(crossws@0.4.4(srvx@0.11.14))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@varlock/1password-plugin':
-        specifier: ^0.3.2
-        version: 0.3.2(varlock@0.7.0)
-      '@varlock/vite-integration':
-        specifier: ^0.2.8
-        version: 0.2.8(@voidzero-dev/vite-plus-core@0.1.15(@types/node@25.5.0)(esbuild@0.27.5)(jiti@2.6.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3))(varlock@0.7.0)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -2322,19 +2316,6 @@ packages:
   '@typespec/ts-http-runtime@0.3.4':
     resolution: {integrity: sha512-CI0NhTrz4EBaa0U+HaaUZrJhPoso8sG7ZFya8uQoBA57fjzrjRSv87ekCjLZOFExN+gXE/z0xuN2QfH4H2HrLQ==}
     engines: {node: '>=20.0.0'}
-
-  '@varlock/1password-plugin@0.3.2':
-    resolution: {integrity: sha512-moOC4gYgi36BTqUHoi6OySF5Q46WxjS4hb38Yl6c8sbX8JeDdkodL34GfCOfo6rRI1o2yb8E6BsCpjfp9TQOJw==}
-    engines: {node: '>=22'}
-    peerDependencies:
-      varlock: ^0.7.0
-
-  '@varlock/vite-integration@0.2.8':
-    resolution: {integrity: sha512-thWLJuOTwH17hkF+hQ2SfWT7kiiEtlZacnpI/f4JJ+wRQsYqycO+6OYKhhHqE0uMj8YGc8lXIaEVCW3ICXKPHw==}
-    engines: {node: '>=22'}
-    peerDependencies:
-      varlock: ^0.7.0
-      vite: '>=5'
 
   '@vercel/nft@0.29.4':
     resolution: {integrity: sha512-6lLqMNX3TuycBPABycx7A9F1bHQR7kiQln6abjFbPrf5C/05qHM9M5E4PeTE59c7z8g6vHnx1Ioihb2AQl7BTA==}
@@ -5070,11 +5051,6 @@ packages:
     resolution: {integrity: sha512-OljLrQ9SQdOUqTaQxqL5dEfZWrXExyyWsozYlAWFawPVNuD83igl7uJD2RTkNMbniIYgt8l81eCJGIdQF7avLQ==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  varlock@0.7.0:
-    resolution: {integrity: sha512-jxJIATMakPT1SyTJTPOZiT4zbQS/NhNHF5bvEnE5KR8dnUpUL4N1bGEpdxICkw8xNrkTY7P3GojxLsgN2KeVOA==}
-    engines: {bun: '>=1.3.3', node: '>=22'}
-    hasBin: true
-
   vite-plus@0.1.15:
     resolution: {integrity: sha512-PBUvTq4D4BJcuusCA3mrSQmXcGVdPX9CIPpS7Y6+T+LbDsrmAZ+ITl9FzuE6zXvpT6Nht9cpHtwOLJw7m3adog==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -7250,15 +7226,6 @@ snapshots:
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
-
-  '@varlock/1password-plugin@0.3.2(varlock@0.7.0)':
-    dependencies:
-      varlock: 0.7.0
-
-  '@varlock/vite-integration@0.2.8(@voidzero-dev/vite-plus-core@0.1.15(@types/node@25.5.0)(esbuild@0.27.5)(jiti@2.6.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3))(varlock@0.7.0)':
-    dependencies:
-      varlock: 0.7.0
-      vite: '@voidzero-dev/vite-plus-core@0.1.15(@types/node@25.5.0)(esbuild@0.27.5)(jiti@2.6.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3)'
 
   '@vercel/nft@0.29.4':
     dependencies:
@@ -10103,8 +10070,6 @@ snapshots:
       spdx-expression-parse: 3.0.1
 
   validate-npm-package-name@5.0.1: {}
-
-  varlock@0.7.0: {}
 
   vite-plus@0.1.15(@opentelemetry/api@1.9.0)(@types/node@25.5.0)(@voidzero-dev/vite-plus-core@0.1.15(@types/node@25.5.0)(esbuild@0.27.5)(jiti@2.6.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3))(esbuild@0.27.5)(jiti@2.6.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3):
     dependencies:
