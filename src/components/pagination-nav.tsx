@@ -3,7 +3,7 @@ import { cn } from "~/lib/utils";
 import { Button } from "./ui/button";
 
 export function PaginationNav(props: {
-  prefetch?: "intent" | false;
+  prefetch?: "intent" | "viewport" | false;
   prevOffset: number | undefined;
   nextOffset: number | undefined;
   to: keyof FileRoutesByPath;

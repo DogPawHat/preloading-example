@@ -17,7 +17,7 @@ import {
 import {
   POKEMON_LIMIT,
   getFilteredPokemonListQueryKey,
-  getServerFilteredPokemonListQueryFn,
+  getFilteredPokemonListQueryFn,
 } from "~/util/pokemon";
 
 const searchParamsSchema = v.object({
@@ -40,7 +40,7 @@ export const Route = createFileRoute("/debounced-preload-filters")({
 
     const pokemonListOptions = queryOptions({
       queryKey: newKey,
-      queryFn: getServerFilteredPokemonListQueryFn,
+      queryFn: getFilteredPokemonListQueryFn,
     });
 
     return {
@@ -71,7 +71,7 @@ function PreloadFilterSubmitContextProvider(props: {
           serverPokemonListOptions.queryKey[2].offset,
           newNameFilter,
         ),
-        queryFn: getServerFilteredPokemonListQueryFn,
+        queryFn: getFilteredPokemonListQueryFn,
       });
     },
     {
@@ -101,27 +101,9 @@ function PreloadFilterSubmitContextProvider(props: {
 function RouteComponent() {
   const { offset: currentOffset, name: nameFilter } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const { pokemonListOptions: serverPokemonListOptions } = Route.useRouteContext();
-  const queryClient = useQueryClient();
+  const { pokemonListOptions } = Route.useRouteContext();
 
-  const { data } = useSuspenseQuery({
-    ...serverPokemonListOptions,
-    queryFn: getServerFilteredPokemonListQueryFn,
-  });
-
-  if (data.prevOffset !== null) {
-    void queryClient.prefetchQuery({
-      ...serverPokemonListOptions,
-      queryFn: getServerFilteredPokemonListQueryFn,
-    });
-  }
-
-  if (data.nextOffset !== null) {
-    void queryClient.prefetchQuery({
-      ...serverPokemonListOptions,
-      queryFn: getServerFilteredPokemonListQueryFn,
-    });
-  }
+  const { data } = useSuspenseQuery(pokemonListOptions);
 
   // Use the filtered results directly from the server
   const filteredPokemon = data.pokemon;
@@ -182,6 +164,7 @@ function RouteComponent() {
       )}
 
       <PaginationNav
+        prefetch="viewport"
         prevOffset={data.prevOffset ?? undefined}
         nextOffset={data.nextOffset ?? undefined}
         to="/debounced-preload-filters"

@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { Button } from "./ui/button";
 
 export const FilterSubmitContext = createContext<{
   handleSubmit: () => void;
@@ -34,6 +35,9 @@ export function FilterForm() {
           onChange={(e) => submitContext.updateNameFilter(e.target.value)}
           className="mt-1"
         />
+        <Button type="submit" className="mt-2">
+          Submit
+        </Button>
       </form>
     </div>
   );

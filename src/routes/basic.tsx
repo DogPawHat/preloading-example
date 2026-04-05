@@ -10,8 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { POKEMON_LIMIT, getPokemonListQueryKey, getServerPokemonListQueryFn } from "~/util/pokemon";
-import { useServerFn } from "@tanstack/react-start";
+import { POKEMON_LIMIT, getPokemonListQueryFn, getPokemonListQueryKey } from "~/util/pokemon";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -25,7 +24,6 @@ export const Route = createFileRoute("/basic")({
 
 function RouteComponent() {
   const { offset: currentOffset } = Route.useSearch();
-  const getPokemonListQueryFn = useServerFn(getServerPokemonListQueryFn);
 
   const { data } = useSuspenseQuery({
     queryKey: getPokemonListQueryKey("suspense", currentOffset),

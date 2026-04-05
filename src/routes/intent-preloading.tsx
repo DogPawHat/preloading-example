@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import * as v from "valibot";
 import { PaginationNav } from "~/components/pagination-nav";
 import {
@@ -11,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { POKEMON_LIMIT, getPokemonListQueryKey, getServerPokemonListQueryFn } from "~/util/pokemon";
+import { POKEMON_LIMIT, getPokemonListQueryKey, getPokemonListQueryFn } from "~/util/pokemon";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -28,7 +27,7 @@ export const Route = createFileRoute("/intent-preloading")({
 
     const pokemonListOptions = queryOptions({
       queryKey: newKey,
-      queryFn: getServerPokemonListQueryFn,
+      queryFn: getPokemonListQueryFn,
     });
 
     return {
@@ -43,12 +42,9 @@ export const Route = createFileRoute("/intent-preloading")({
 
 function RouteComponent() {
   const { offset: currentOffset } = Route.useSearch();
-  const { pokemonListOptions: serverPokemonListOptions } = Route.useRouteContext();
+  const { pokemonListOptions } = Route.useRouteContext();
 
-  const { data } = useSuspenseQuery({
-    ...serverPokemonListOptions,
-    queryFn: useServerFn(getServerPokemonListQueryFn),
-  });
+  const { data } = useSuspenseQuery(pokemonListOptions);
 
   return (
     <div className="p-4">

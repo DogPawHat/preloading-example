@@ -99,7 +99,6 @@
       ]
     },
     "TypeScript": {
-      "language_servers": ["tsgo"],
       "format_on_save": "on",
       "prettier": {
         "allowed": false

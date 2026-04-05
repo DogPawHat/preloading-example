@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { PaginationNav } from "~/components/pagination-nav";
 import {
@@ -11,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { POKEMON_LIMIT, getPokemonListQueryKey, getServerPokemonListQueryFn } from "~/util/pokemon";
+import { POKEMON_LIMIT, getPokemonListQueryKey, getPokemonListQueryFn } from "~/util/pokemon";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -28,7 +27,7 @@ export const Route = createFileRoute("/pagination")({
 
     const pokemonListOptions = queryOptions({
       queryKey: newKey,
-      queryFn: getServerPokemonListQueryFn,
+      queryFn: getPokemonListQueryFn,
     });
 
     return {
@@ -43,30 +42,9 @@ export const Route = createFileRoute("/pagination")({
 
 function RouteComponent() {
   const { offset: currentOffset } = Route.useSearch();
-  const { pokemonListOptions: serverPokemonListOptions } = Route.useRouteContext();
-  const queryClient = useQueryClient();
-  const getPokemonListQueryFn = useServerFn(getServerPokemonListQueryFn);
+  const { pokemonListOptions } = Route.useRouteContext();
 
-  const { data } = useSuspenseQuery({
-    ...serverPokemonListOptions,
-    queryFn: getPokemonListQueryFn,
-  });
-
-  if (data.prevOffset !== null) {
-    void queryClient.prefetchQuery({
-      ...serverPokemonListOptions,
-      queryFn: getPokemonListQueryFn,
-      queryKey: getPokemonListQueryKey("pagination", data.prevOffset),
-    });
-  }
-
-  if (data.nextOffset !== null) {
-    void queryClient.prefetchQuery({
-      ...serverPokemonListOptions,
-      queryFn: getPokemonListQueryFn,
-      queryKey: getPokemonListQueryKey("pagination", data.nextOffset),
-    });
-  }
+  const { data } = useSuspenseQuery(pokemonListOptions);
 
   return (
     <div className="p-4">
@@ -101,7 +79,7 @@ function RouteComponent() {
         </TableBody>
       </Table>
       <PaginationNav
-        prefetch="intent"
+        prefetch="viewport"
         prevOffset={data.prevOffset ?? undefined}
         nextOffset={data.nextOffset ?? undefined}
         to="/pagination"

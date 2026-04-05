@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import * as v from "valibot";
 import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
@@ -16,7 +15,7 @@ import {
 import {
   POKEMON_LIMIT,
   getFilteredPokemonListQueryKey,
-  getServerFilteredPokemonListQueryFn,
+  getFilteredPokemonListQueryFn,
 } from "~/util/pokemon";
 
 const searchParamsSchema = v.object({
@@ -55,7 +54,7 @@ export const Route = createFileRoute("/filters")({
 
     const pokemonListOptions = queryOptions({
       queryKey: newKey,
-      queryFn: getServerFilteredPokemonListQueryFn,
+      queryFn: getFilteredPokemonListQueryFn,
     });
 
     return {
@@ -71,27 +70,9 @@ export const Route = createFileRoute("/filters")({
 function RouteComponent() {
   const { offset: currentOffset, name: nameFilter } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const { pokemonListOptions: serverPokemonListOptions } = Route.useRouteContext();
-  const queryClient = useQueryClient();
+  const { pokemonListOptions } = Route.useRouteContext();
 
-  const { data } = useSuspenseQuery({
-    ...serverPokemonListOptions,
-    queryFn: useServerFn(getServerFilteredPokemonListQueryFn),
-  });
-
-  if (data.prevOffset !== null) {
-    void queryClient.prefetchQuery({
-      ...serverPokemonListOptions,
-      queryKey: getFilteredPokemonListQueryKey("filters", data.prevOffset, nameFilter),
-    });
-  }
-
-  if (data.nextOffset !== null) {
-    void queryClient.prefetchQuery({
-      ...serverPokemonListOptions,
-      queryKey: getFilteredPokemonListQueryKey("filters", data.nextOffset, nameFilter),
-    });
-  }
+  const { data } = useSuspenseQuery(pokemonListOptions);
 
   // Use the filtered results directly from the server
   const filteredPokemon = data.pokemon;
@@ -153,7 +134,7 @@ function RouteComponent() {
       )}
 
       <PaginationNav
-        prefetch="intent"
+        prefetch="viewport"
         prevOffset={data.prevOffset ?? undefined}
         nextOffset={data.nextOffset ?? undefined}
         to="/filters"
