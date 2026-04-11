@@ -1,10 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useDebouncedCallback } from "@tanstack/react-pacer";
-import {
-  queryOptions,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { useState } from "react";
 import * as v from "valibot";
@@ -64,8 +60,7 @@ function PreloadFilterSubmitContextProvider(props: {
   children: React.ReactNode;
 }) {
   const queryClient = useQueryClient();
-  const { pokemonListOptions: serverPokemonListOptions } =
-    Route.useRouteContext();
+  const { pokemonListOptions: serverPokemonListOptions } = Route.useRouteContext();
   const [nameFilter, setNameFilter] = useState(props.initialName);
 
   const debouncedNameFilter = useDebouncedCallback(
@@ -97,9 +92,7 @@ function PreloadFilterSubmitContextProvider(props: {
   }, [nameFilter, props]);
 
   return (
-    <FilterSubmitContext.Provider
-      value={{ handleSubmit, nameFilter, updateNameFilter }}
-    >
+    <FilterSubmitContext.Provider value={{ handleSubmit, nameFilter, updateNameFilter }}>
       {props.children}
     </FilterSubmitContext.Provider>
   );
@@ -120,9 +113,7 @@ function RouteComponent() {
       <div className="max-w-4xl mx-auto">
         <div className="section-header">
           <span className="section-header__title">06_debounced</span>
-          <span className="text-charcoal-muted text-sm">
-            // Advanced filter prefetch
-          </span>
+          <span className="text-charcoal-muted text-sm">// Advanced filter prefetch</span>
         </div>
 
         {/* Filter UI */}
@@ -147,14 +138,8 @@ function RouteComponent() {
 
         <div className="console-card">
           <h1 className="text-lg font-mono text-charcoal mb-4">
-            National Pokédex: Pokémon {currentOffset + 1}-
-            {currentOffset + POKEMON_LIMIT}
-            {nameFilter && (
-              <span className="text-charcoal-muted">
-                {" "}
-                (filtered: "{nameFilter}")
-              </span>
-            )}
+            National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
+            {nameFilter && <span className="text-charcoal-muted"> (filtered: "{nameFilter}")</span>}
           </h1>
 
           <Table className="data-table">
@@ -168,12 +153,8 @@ function RouteComponent() {
             <TableBody>
               {filteredPokemon.map((pokemon) => (
                 <TableRow key={pokemon.name}>
-                  <TableCell className="font-mono text-charcoal-muted">
-                    {pokemon.id}
-                  </TableCell>
-                  <TableCell className="capitalize text-charcoal">
-                    {pokemon.name}
-                  </TableCell>
+                  <TableCell className="font-mono text-charcoal-muted">{pokemon.id}</TableCell>
+                  <TableCell className="capitalize text-charcoal">{pokemon.name}</TableCell>
                   <TableCell>
                     {pokemon.types.map((type) => (
                       <span key={type.name} className="type-badge">
@@ -197,7 +178,6 @@ function RouteComponent() {
             prevOffset={data.prevOffset ?? undefined}
             nextOffset={data.nextOffset ?? undefined}
             to="/debounced-preload-filters"
-            currentOffset={currentOffset}
           />
         </div>
       </div>

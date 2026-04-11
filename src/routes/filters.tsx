@@ -51,11 +51,7 @@ export const Route = createFileRoute("/filters")({
     name: search.name,
   }),
   context: ({ deps }) => {
-    const newKey = getFilteredPokemonListQueryKey(
-      "filters",
-      deps.offset,
-      deps.name,
-    );
+    const newKey = getFilteredPokemonListQueryKey("filters", deps.offset, deps.name);
 
     const pokemonListOptions = queryOptions({
       queryKey: newKey,
@@ -87,9 +83,7 @@ function RouteComponent() {
       <div className="max-w-4xl mx-auto">
         <div className="section-header">
           <span className="section-header__title">05_filters</span>
-          <span className="text-charcoal-muted text-sm">
-            // Search with prefetch
-          </span>
+          <span className="text-charcoal-muted text-sm">// Search with prefetch</span>
         </div>
 
         {/* Filter UI */}
@@ -112,14 +106,8 @@ function RouteComponent() {
 
         <div className="console-card">
           <h1 className="text-lg font-mono text-charcoal mb-4">
-            National Pokédex: Pokémon {currentOffset + 1}-
-            {currentOffset + POKEMON_LIMIT}
-            {nameFilter && (
-              <span className="text-charcoal-muted">
-                {" "}
-                (filtered: "{nameFilter}")
-              </span>
-            )}
+            National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
+            {nameFilter && <span className="text-charcoal-muted"> (filtered: "{nameFilter}")</span>}
           </h1>
 
           <Table className="data-table">
@@ -133,12 +121,8 @@ function RouteComponent() {
             <TableBody>
               {filteredPokemon.map((pokemon) => (
                 <TableRow key={pokemon.name}>
-                  <TableCell className="font-mono text-charcoal-muted">
-                    {pokemon.id}
-                  </TableCell>
-                  <TableCell className="capitalize text-charcoal">
-                    {pokemon.name}
-                  </TableCell>
+                  <TableCell className="font-mono text-charcoal-muted">{pokemon.id}</TableCell>
+                  <TableCell className="capitalize text-charcoal">{pokemon.name}</TableCell>
                   <TableCell>
                     {pokemon.types.map((type) => (
                       <span key={type.name} className="type-badge">
@@ -162,7 +146,6 @@ function RouteComponent() {
             prevOffset={data.prevOffset ?? undefined}
             nextOffset={data.nextOffset ?? undefined}
             to="/filters"
-            currentOffset={currentOffset}
           />
         </div>
       </div>

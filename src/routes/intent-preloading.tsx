@@ -87,7 +87,6 @@ function RouteComponent() {
             prevOffset={data.prevOffset ?? undefined}
             nextOffset={data.nextOffset ?? undefined}
             to="/intent-preloading"
-            currentOffset={currentOffset}
           />
         </div>
       </div>
