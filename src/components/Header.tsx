@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
+import { StatusDot } from "~/components/console/status-dot";
 
 interface NavItemProps {
   to: string;
@@ -14,18 +15,15 @@ function NavItem({ to, label, preload, search }: NavItemProps) {
   const currentPath = state.location.pathname;
   const isActive = currentPath === to;
 
-  // Determine cache status based on query keys
-  // This is a simplified check - in reality you'd check specific query keys
   const hasCachedData = queryClient.getQueryCache().getAll().length > 0;
   const isFetching = state.isLoading;
 
-  // Show status dot for certain routes
   const showStatus = to !== "/";
-  let statusClass = "status-dot--idle";
+  let status: "cached" | "fetching" | "idle" = "idle";
   if (isFetching) {
-    statusClass = "status-dot--fetching";
+    status = "fetching";
   } else if (hasCachedData && isActive) {
-    statusClass = "status-dot--cached";
+    status = "cached";
   }
 
   return (
@@ -35,7 +33,7 @@ function NavItem({ to, label, preload, search }: NavItemProps) {
       preload={preload}
       className={`nav-link ${isActive ? "nav-link-active" : ""}`}
     >
-      {showStatus && <span className={`status-dot ${statusClass}`} />}
+      {showStatus && <StatusDot status={status} />}
       <span>{label}</span>
     </Link>
   );
@@ -43,7 +41,7 @@ function NavItem({ to, label, preload, search }: NavItemProps) {
 
 export default function Header() {
   return (
-    <header className="bg-warm border-b border-hairline">
+    <header className="bg-[var(--bg-secondary)] border-b border-[var(--border-default)]">
       <nav className="flex flex-row items-center">
         <NavItem to="/" label="~/home" />
         <NavItem to="/basic" label="01_basic" />

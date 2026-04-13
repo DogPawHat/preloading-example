@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Button } from "./ui/button";
+import { Button } from "~/components/ui/button";
 
 export const FilterSubmitContext = createContext<{
   handleSubmit: () => void;
@@ -26,7 +26,7 @@ export function FilterForm() {
       >
         <Label
           htmlFor="name-filter"
-          className="text-xs font-mono uppercase tracking-wider text-charcoal-light"
+          className="text-xs font-mono uppercase tracking-wider text-[var(--text-secondary)]"
         >
           Filter by Name
         </Label>
@@ -36,7 +36,7 @@ export function FilterForm() {
           placeholder="Enter Pokemon name..."
           value={submitContext.nameFilter}
           onChange={(e) => submitContext.updateNameFilter(e.target.value)}
-          className="mt-2 bg-warm border-hairline focus:border-amber focus:ring-0 rounded-none font-mono text-sm"
+          className="mt-2 bg-[var(--bg-secondary)] border-[var(--border-default)] focus:border-[var(--accent-default)] focus:ring-0 rounded-none font-mono text-sm"
         />
         <Button type="submit" className="mt-2">
           Submit

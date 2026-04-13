@@ -20,7 +20,14 @@ export function PaginationNav(props: PaginationNavProps) {
         search={{ offset: prevOffset }}
         disabled={prevOffset == null}
         className={cn(
-          "code-button",
+          "inline-flex items-center gap-2",
+          "px-3 py-2",
+          "border border-[var(--border-default)]",
+          "bg-[var(--bg-secondary)]",
+          "font-mono text-sm",
+          "text-[var(--text-primary)]",
+          "transition-all duration-fast ease-default",
+          "hover:border-[var(--accent-default)] hover:bg-[var(--accent-subtle)]",
           prevOffset == null && "opacity-50 cursor-not-allowed pointer-events-none",
         )}
       >
@@ -29,7 +36,7 @@ export function PaginationNav(props: PaginationNavProps) {
       </Link>
 
       {/* Separator */}
-      <span className="px-2 text-charcoal-muted">|</span>
+      <span className="px-2 text-[var(--text-muted)]">|</span>
 
       {/* Next button */}
       <Link
@@ -38,7 +45,14 @@ export function PaginationNav(props: PaginationNavProps) {
         search={{ offset: nextOffset }}
         disabled={nextOffset == null}
         className={cn(
-          "code-button",
+          "inline-flex items-center gap-2",
+          "px-3 py-2",
+          "border border-[var(--border-default)]",
+          "bg-[var(--bg-secondary)]",
+          "font-mono text-sm",
+          "text-[var(--text-primary)]",
+          "transition-all duration-fast ease-default",
+          "hover:border-[var(--accent-default)] hover:bg-[var(--accent-subtle)]",
           nextOffset == null && "opacity-50 cursor-not-allowed pointer-events-none",
         )}
       >

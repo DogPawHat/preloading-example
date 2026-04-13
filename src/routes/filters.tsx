@@ -4,14 +4,9 @@ import { useCallback, useState } from "react";
 import * as v from "valibot";
 import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
 import { PaginationNav } from "~/components/pagination-nav";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
+import { ConsoleCard } from "~/components/console/console-card";
+import { SectionHeader } from "~/components/console/section-header";
+import { PokemonTable } from "~/components/console/pokemon-table";
 import {
   POKEMON_LIMIT,
   getFilteredPokemonListQueryKey,
@@ -23,7 +18,6 @@ const searchParamsSchema = v.object({
   name: v.optional(v.string(), ""),
 });
 
-// Now we add in filtering, this is the basic version that does no preloading
 function FilterSubmitContextProvider(props: {
   initialName: string;
   handleSubmit: (nameFilter: string) => void;
@@ -75,20 +69,16 @@ function RouteComponent() {
 
   const { data } = useSuspenseQuery(pokemonListOptions);
 
-  // Use the filtered results directly from the server
   const filteredPokemon = data.pokemon;
 
   return (
-    <main className="min-h-screen bg-warm p-6">
+    <main className="min-h-screen bg-[var(--bg-primary)] p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="section-header">
-          <span className="section-header__title">05_filters</span>
-          <span className="text-charcoal-muted text-sm">// Search with prefetch</span>
-        </div>
+        <SectionHeader title="05_filters" subtitle="// Search with prefetch" />
 
         {/* Filter UI */}
-        <div className="console-card mb-6">
-          <h2 className="text-sm font-semibold mb-4 text-charcoal uppercase tracking-wider">
+        <ConsoleCard className="mb-6">
+          <h2 className="text-sm font-semibold mb-4 text-[var(--text-primary)] uppercase tracking-wider">
             Filters
           </h2>
           <FilterSubmitContextProvider
@@ -102,42 +92,24 @@ function RouteComponent() {
           >
             <FilterForm />
           </FilterSubmitContextProvider>
-        </div>
+        </ConsoleCard>
 
-        <div className="console-card">
-          <h1 className="text-lg font-mono text-charcoal mb-4">
+        <ConsoleCard>
+          <h1 className="text-lg font-mono text-[var(--text-primary)] mb-4">
             National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
-            {nameFilter && <span className="text-charcoal-muted"> (filtered: "{nameFilter}")</span>}
+            {nameFilter && (
+              <span className="text-[var(--text-muted)]">
+                {" "}
+                (filtered: &quot;{nameFilter}&quot;)
+              </span>
+            )}
           </h1>
 
-          <Table className="data-table">
-            <TableHeader>
-              <TableRow>
-                <TableHead>#</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Details</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredPokemon.map((pokemon) => (
-                <TableRow key={pokemon.name}>
-                  <TableCell className="font-mono text-charcoal-muted">{pokemon.id}</TableCell>
-                  <TableCell className="capitalize text-charcoal">{pokemon.name}</TableCell>
-                  <TableCell>
-                    {pokemon.types.map((type) => (
-                      <span key={type.name} className="type-badge">
-                        {type.name}
-                      </span>
-                    ))}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <PokemonTable pokemon={filteredPokemon} />
 
           {filteredPokemon.length === 0 && nameFilter && (
-            <div className="text-center py-8 text-charcoal-muted font-mono">
-              No Pokemon found matching "{nameFilter}"
+            <div className="text-center py-8 text-[var(--text-muted)] font-mono">
+              No Pokemon found matching &quot;{nameFilter}&quot;
             </div>
           )}
 
@@ -147,7 +119,7 @@ function RouteComponent() {
             nextOffset={data.nextOffset ?? undefined}
             to="/filters"
           />
-        </div>
+        </ConsoleCard>
       </div>
     </main>
   );
