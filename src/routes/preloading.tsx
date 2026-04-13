@@ -43,12 +43,12 @@ function RouteComponent() {
   });
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] p-6">
+    <main className="min-h-screen bg-(--bg-primary) p-6">
       <div className="max-w-4xl mx-auto">
         <SectionHeader title="02_preloading" subtitle="// Route-level prefetch" />
 
         <ConsoleCard className="mb-6">
-          <h1 className="text-lg font-mono text-[var(--text-primary)] mb-4">
+          <h1 className="text-lg font-mono text-(--text-primary) mb-4">
             National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
           </h1>
           <PokemonTable pokemon={data.pokemon} />

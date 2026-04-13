@@ -41,7 +41,7 @@ function NavItem({ to, label, preload, search }: NavItemProps) {
 
 export default function Header() {
   return (
-    <header className="bg-[var(--bg-secondary)] border-b border-[var(--border-default)]">
+    <header className="bg-(--bg-secondary) border-b border-(--border-default)">
       <nav className="flex flex-row items-center">
         <NavItem to="/" label="~/home" />
         <NavItem to="/basic" label="01_basic" />

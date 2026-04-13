@@ -22,13 +22,10 @@ export function ConsoleCard({ children, className, hover = false }: ConsoleCardP
   return (
     <div
       className={cn(
-        "bg-[var(--bg-card)]",
-        "border border-[var(--border-default)]",
+        "bg-(--bg-card)",
+        "border border-(--border-default)",
         "p-6",
-        hover && [
-          "transition-colors duration-fast ease-default",
-          "hover:border-[var(--border-strong)]",
-        ],
+        hover && ["transition-colors duration-fast ease-default", "hover:border-(--border-strong)"],
         className,
       )}
     >

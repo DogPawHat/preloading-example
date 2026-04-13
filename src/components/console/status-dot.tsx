@@ -20,15 +20,12 @@ export function StatusDot({ status, className }: StatusDotProps) {
       className={cn(
         "inline-block w-2 h-2 rounded-full flex-shrink-0",
         status === "cached" && [
-          "bg-[var(--status-cached)]",
+          "bg-(--status-cached)",
           "shadow-[0_0_0_2px_oklch(65%_0.2_145/0.2)]",
         ],
-        status === "fetching" && ["bg-[var(--status-fetching)]", "animate-pulse-dot"],
-        status === "idle" && "bg-[var(--status-idle)]",
-        status === "error" && [
-          "bg-[var(--status-error)]",
-          "shadow-[0_0_0_2px_oklch(60%_0.2_25/0.2)]",
-        ],
+        status === "fetching" && ["bg-(--status-fetching)", "animate-pulse-dot"],
+        status === "idle" && "bg-(--status-idle)",
+        status === "error" && ["bg-(--status-error)", "shadow-[0_0_0_2px_oklch(60%_0.2_25/0.2)]"],
         className,
       )}
       aria-hidden="true"
@@ -47,7 +44,7 @@ export function StatusDotWithLabel({
   return (
     <span className={cn("inline-flex items-center gap-2", className)}>
       <StatusDot status={status} />
-      <span className="text-sm text-[var(--text-muted)]">{label}</span>
+      <span className="text-sm text-(--text-muted)">{label}</span>
     </span>
   );
 }

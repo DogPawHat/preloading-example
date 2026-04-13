@@ -33,11 +33,11 @@ export function PokemonTable({ pokemon, className }: PokemonTableProps) {
   return (
     <Table className={cn("w-full border-collapse", "text-sm", "font-mono", className)}>
       <TableHeader>
-        <TableRow className="border-b border-[var(--border-strong)]">
+        <TableRow className="border-b border-(--border-strong)">
           <TableHead
             className={cn(
               "text-left py-3 px-3",
-              "font-semibold text-[var(--text-secondary)]",
+              "font-semibold text-(--text-secondary)",
               "uppercase text-xs tracking-wider",
             )}
           >
@@ -46,7 +46,7 @@ export function PokemonTable({ pokemon, className }: PokemonTableProps) {
           <TableHead
             className={cn(
               "text-left py-3 px-3",
-              "font-semibold text-[var(--text-secondary)]",
+              "font-semibold text-(--text-secondary)",
               "uppercase text-xs tracking-wider",
             )}
           >
@@ -55,7 +55,7 @@ export function PokemonTable({ pokemon, className }: PokemonTableProps) {
           <TableHead
             className={cn(
               "text-left py-3 px-3",
-              "font-semibold text-[var(--text-secondary)]",
+              "font-semibold text-(--text-secondary)",
               "uppercase text-xs tracking-wider",
             )}
           >
@@ -68,15 +68,13 @@ export function PokemonTable({ pokemon, className }: PokemonTableProps) {
           <TableRow
             key={p.name}
             className={cn(
-              "border-b border-[var(--border-default)]",
+              "border-b border-(--border-default)",
               "transition-colors duration-fast ease-default",
-              "hover:bg-[var(--bg-secondary)]",
+              "hover:bg-(--bg-secondary)",
             )}
           >
-            <TableCell className="py-3 px-3 font-mono text-[var(--text-muted)]">{p.id}</TableCell>
-            <TableCell className="py-3 px-3 capitalize text-[var(--text-primary)]">
-              {p.name}
-            </TableCell>
+            <TableCell className="py-3 px-3 font-mono text-(--text-muted)">{p.id}</TableCell>
+            <TableCell className="py-3 px-3 capitalize text-(--text-primary)">{p.name}</TableCell>
             <TableCell className="py-3 px-3">
               {p.types.map((type) => (
                 <TypeBadge key={type.name} type={type.name} />

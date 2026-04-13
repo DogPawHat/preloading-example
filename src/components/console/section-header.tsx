@@ -25,7 +25,7 @@ export function SectionHeader({ title, subtitle, className }: SectionHeaderProps
       className={cn(
         "flex items-center gap-3",
         "py-3",
-        "border-b border-[var(--border-default)]",
+        "border-b border-(--border-default)",
         "mb-4",
         className,
       )}
@@ -34,13 +34,13 @@ export function SectionHeader({ title, subtitle, className }: SectionHeaderProps
         className={cn(
           "text-base font-semibold",
           "uppercase tracking-wider",
-          "text-[var(--text-secondary)]",
+          "text-(--text-secondary)",
           "font-mono",
         )}
       >
         {title}
       </span>
-      {subtitle && <span className="text-sm text-[var(--text-muted)] font-mono">{subtitle}</span>}
+      {subtitle && <span className="text-sm text-(--text-muted) font-mono">{subtitle}</span>}
     </div>
   );
 }

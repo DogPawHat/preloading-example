@@ -21,7 +21,7 @@ function ExampleItem({ number, title, path, description, codeSnippet }: ExampleI
         <div className="example-card__number">Example {number}</div>
         <h3 className="example-card__title">{title}</h3>
         <p className="example-card__description">{description}</p>
-        <div className="mt-4 p-3 bg-[var(--bg-secondary)] border border-[var(--border-default)] font-mono text-xs text-[var(--text-muted)] overflow-x-auto">
+        <div className="mt-4 p-3 bg-(--bg-secondary) border border-(--border-default) font-mono text-xs text-(--text-muted) overflow-x-auto">
           <code>{codeSnippet}</code>
         </div>
       </div>
@@ -82,25 +82,25 @@ function LandingPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)]">
+    <main className="min-h-screen bg-(--bg-primary)">
       {/* Hero Section */}
-      <section className="border-b border-[var(--border-default)] bg-[var(--bg-card)]">
+      <section className="border-b border-(--border-default) bg-(--bg-card)">
         <div className="max-w-5xl mx-auto px-6 py-16">
           <div className="flex items-center gap-3 mb-6">
             <StatusDot status="cached" />
-            <span className="text-[var(--text-muted)] text-sm font-mono uppercase tracking-wider">
+            <span className="text-(--text-muted) text-sm font-mono uppercase tracking-wider">
               TanStack Router Demo
             </span>
           </div>
-          <h1 className="text-4xl font-mono font-semibold text-[var(--text-primary)] mb-4">
+          <h1 className="text-4xl font-mono font-semibold text-(--text-primary) mb-4">
             Prefetching Patterns
           </h1>
-          <p className="text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+          <p className="text-lg text-(--text-secondary) max-w-2xl leading-relaxed">
             A developer console for exploring data prefetching techniques in modern React
             applications. Learn how different patterns affect perceived performance and user
             experience.
           </p>
-          <div className="mt-8 flex items-center gap-4 text-sm text-[var(--text-muted)]">
+          <div className="mt-8 flex items-center gap-4 text-sm text-(--text-muted)">
             <StatusDotWithLabel status="cached" label="Cached" />
             <StatusDotWithLabel status="fetching" label="Fetching" />
             <StatusDotWithLabel status="idle" label="Idle" />
@@ -110,13 +110,11 @@ function LandingPage() {
 
       {/* Examples Grid */}
       <section className="max-w-5xl mx-auto px-6 py-12">
-        <div className="flex items-center gap-3 py-3 border-b border-[var(--border-default)] mb-4">
-          <span className="text-base font-semibold uppercase tracking-wider text-[var(--text-secondary)] font-mono">
+        <div className="flex items-center gap-3 py-3 border-b border-(--border-default) mb-4">
+          <span className="text-base font-semibold uppercase tracking-wider text-(--text-secondary) font-mono">
             Examples
           </span>
-          <span className="text-[var(--text-muted)] text-sm font-mono">
-            // Select one to explore
-          </span>
+          <span className="text-(--text-muted) text-sm font-mono">// Select one to explore</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -128,8 +126,8 @@ function LandingPage() {
 
       {/* Concepts Section */}
       <section className="max-w-5xl mx-auto px-6 pb-16">
-        <div className="flex items-center gap-3 py-3 border-b border-[var(--border-default)] mb-4">
-          <span className="text-base font-semibold uppercase tracking-wider text-[var(--text-secondary)] font-mono">
+        <div className="flex items-center gap-3 py-3 border-b border-(--border-default) mb-4">
+          <span className="text-base font-semibold uppercase tracking-wider text-(--text-secondary) font-mono">
             Key Concepts
           </span>
         </div>
@@ -137,28 +135,24 @@ function LandingPage() {
         <ConsoleCard>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h4 className="font-mono font-semibold text-[var(--text-primary)] mb-2">
-                Route Loaders
-              </h4>
-              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+              <h4 className="font-mono font-semibold text-(--text-primary) mb-2">Route Loaders</h4>
+              <p className="text-sm text-(--text-secondary) leading-relaxed">
                 Loaders run before the route component renders, making them ideal for initiating
                 data fetches early in the navigation lifecycle.
               </p>
             </div>
             <div>
-              <h4 className="font-mono font-semibold text-[var(--text-primary)] mb-2">
+              <h4 className="font-mono font-semibold text-(--text-primary) mb-2">
                 Intent Preloading
               </h4>
-              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+              <p className="text-sm text-(--text-secondary) leading-relaxed">
                 By observing user intent (hover, focus), we can predict navigation and preload data
                 before the click event fires.
               </p>
             </div>
             <div>
-              <h4 className="font-mono font-semibold text-[var(--text-primary)] mb-2">
-                Query Caching
-              </h4>
-              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+              <h4 className="font-mono font-semibold text-(--text-primary) mb-2">Query Caching</h4>
+              <p className="text-sm text-(--text-secondary) leading-relaxed">
                 TanStack Query maintains a cache of fetched data. Subsequent requests for the same
                 data return instantly from cache.
               </p>
@@ -168,12 +162,12 @@ function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[var(--border-default)] bg-[var(--bg-card)]">
-        <div className="max-w-5xl mx-auto px-6 py-6 text-sm text-[var(--text-muted)]">
+      <footer className="border-t border-(--border-default) bg-(--bg-card)">
+        <div className="max-w-5xl mx-auto px-6 py-6 text-sm text-(--text-muted)">
           <p>
-            Built with <span className="text-[var(--accent-default)]">TanStack Router</span> +{" "}
-            <span className="text-[var(--accent-default)]">TanStack Query</span> +{" "}
-            <span className="text-[var(--accent-default)]">TanStack Start</span>
+            Built with <span className="text-(--accent-default)">TanStack Router</span> +{" "}
+            <span className="text-(--accent-default)">TanStack Query</span> +{" "}
+            <span className="text-(--accent-default)">TanStack Start</span>
           </p>
         </div>
       </footer>

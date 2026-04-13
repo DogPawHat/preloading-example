@@ -101,16 +101,16 @@ function RouteComponent() {
   const filteredPokemon = data.pokemon;
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] p-6">
+    <main className="min-h-screen bg-(--bg-primary) p-6">
       <div className="max-w-4xl mx-auto">
         <SectionHeader title="06_debounced" subtitle="// Advanced filter prefetch" />
 
         {/* Filter UI */}
         <ConsoleCard className="mb-6">
-          <h2 className="text-sm font-semibold mb-4 text-[var(--text-primary)] uppercase tracking-wider">
+          <h2 className="text-sm font-semibold mb-4 text-(--text-primary) uppercase tracking-wider">
             Filters
           </h2>
-          <p className="text-sm text-[var(--text-muted)] mb-4">
+          <p className="text-sm text-(--text-muted) mb-4">
             Preloads results while typing (debounced 100ms)
           </p>
           <PreloadFilterSubmitContextProvider
@@ -126,20 +126,17 @@ function RouteComponent() {
         </ConsoleCard>
 
         <ConsoleCard>
-          <h1 className="text-lg font-mono text-[var(--text-primary)] mb-4">
+          <h1 className="text-lg font-mono text-(--text-primary) mb-4">
             National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
             {nameFilter && (
-              <span className="text-[var(--text-muted)]">
-                {" "}
-                (filtered: &quot;{nameFilter}&quot;)
-              </span>
+              <span className="text-(--text-muted)"> (filtered: &quot;{nameFilter}&quot;)</span>
             )}
           </h1>
 
           <PokemonTable pokemon={filteredPokemon} />
 
           {filteredPokemon.length === 0 && nameFilter && (
-            <div className="text-center py-8 text-[var(--text-muted)] font-mono">
+            <div className="text-center py-8 text-(--text-muted) font-mono">
               No Pokemon found matching &quot;{nameFilter}&quot;
             </div>
           )}

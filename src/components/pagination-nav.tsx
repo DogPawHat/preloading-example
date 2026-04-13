@@ -22,12 +22,12 @@ export function PaginationNav(props: PaginationNavProps) {
         className={cn(
           "inline-flex items-center gap-2",
           "px-3 py-2",
-          "border border-[var(--border-default)]",
-          "bg-[var(--bg-secondary)]",
+          "border border-(--border-default)",
+          "bg-(--bg-secondary)",
           "font-mono text-sm",
-          "text-[var(--text-primary)]",
+          "text-(--text-primary)",
           "transition-all duration-fast ease-default",
-          "hover:border-[var(--accent-default)] hover:bg-[var(--accent-subtle)]",
+          "hover:border-(--accent-default) hover:bg-(--accent-subtle)",
           prevOffset == null && "opacity-50 cursor-not-allowed pointer-events-none",
         )}
       >
@@ -36,7 +36,7 @@ export function PaginationNav(props: PaginationNavProps) {
       </Link>
 
       {/* Separator */}
-      <span className="px-2 text-[var(--text-muted)]">|</span>
+      <span className="px-2 text-(--text-muted)">|</span>
 
       {/* Next button */}
       <Link
@@ -47,12 +47,12 @@ export function PaginationNav(props: PaginationNavProps) {
         className={cn(
           "inline-flex items-center gap-2",
           "px-3 py-2",
-          "border border-[var(--border-default)]",
-          "bg-[var(--bg-secondary)]",
+          "border border-(--border-default)",
+          "bg-(--bg-secondary)",
           "font-mono text-sm",
-          "text-[var(--text-primary)]",
+          "text-(--text-primary)",
           "transition-all duration-fast ease-default",
-          "hover:border-[var(--accent-default)] hover:bg-[var(--accent-subtle)]",
+          "hover:border-(--accent-default) hover:bg-(--accent-subtle)",
           nextOffset == null && "opacity-50 cursor-not-allowed pointer-events-none",
         )}
       >
