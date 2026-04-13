@@ -108,59 +108,6 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Examples Grid */}
-      <section className="max-w-5xl mx-auto px-6 py-12">
-        <div className="flex items-center gap-3 py-3 border-b border-(--border-default) mb-4">
-          <span className="text-base font-semibold uppercase tracking-wider text-(--text-secondary) font-mono">
-            Examples
-          </span>
-          <span className="text-(--text-muted) text-sm font-mono">// Select one to explore</span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {examples.map((example) => (
-            <ExampleItem key={example.number} {...example} />
-          ))}
-        </div>
-      </section>
-
-      {/* Concepts Section */}
-      <section className="max-w-5xl mx-auto px-6 pb-16">
-        <div className="flex items-center gap-3 py-3 border-b border-(--border-default) mb-4">
-          <span className="text-base font-semibold uppercase tracking-wider text-(--text-secondary) font-mono">
-            Key Concepts
-          </span>
-        </div>
-
-        <ConsoleCard>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h4 className="font-mono font-semibold text-(--text-primary) mb-2">Route Loaders</h4>
-              <p className="text-sm text-(--text-secondary) leading-relaxed">
-                Loaders run before the route component renders, making them ideal for initiating
-                data fetches early in the navigation lifecycle.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-mono font-semibold text-(--text-primary) mb-2">
-                Intent Preloading
-              </h4>
-              <p className="text-sm text-(--text-secondary) leading-relaxed">
-                By observing user intent (hover, focus), we can predict navigation and preload data
-                before the click event fires.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-mono font-semibold text-(--text-primary) mb-2">Query Caching</h4>
-              <p className="text-sm text-(--text-secondary) leading-relaxed">
-                TanStack Query maintains a cache of fetched data. Subsequent requests for the same
-                data return instantly from cache.
-              </p>
-            </div>
-          </div>
-        </ConsoleCard>
-      </section>
-
       {/* Footer */}
       <footer className="border-t border-(--border-default) bg-(--bg-card)">
         <div className="max-w-5xl mx-auto px-6 py-6 text-sm text-(--text-muted)">
