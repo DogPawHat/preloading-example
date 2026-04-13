@@ -1,18 +1,21 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Suspense, useCallback, useState } from "react";
+import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { useDebouncedCallback } from "@tanstack/react-pacer";
-import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { useCallback, useState } from "react";
+import { queryOptions, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
 import { PaginationNav } from "~/components/pagination-nav";
 import { ConsoleCard } from "~/components/console/console-card";
 import { SectionHeader } from "~/components/console/section-header";
-import { PokemonTable } from "~/components/console/pokemon-table";
+import { PokemonTableSkeleton } from "~/components/console/pokemon-table-skeleton";
 import {
   POKEMON_LIMIT,
   getFilteredPokemonListQueryKey,
   getFilteredPokemonListQueryFn,
 } from "~/util/pokemon";
+import { lazily } from "~/util/lazily";
+
+const { PokemonTable } = lazily(() => import("~/components/console/pokemon-table"));
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -94,11 +97,6 @@ function PreloadFilterSubmitContextProvider(props: {
 function RouteComponent() {
   const { offset: currentOffset, name: nameFilter } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const { pokemonListOptions } = Route.useRouteContext();
-
-  const { data } = useSuspenseQuery(pokemonListOptions);
-
-  const filteredPokemon = data.pokemon;
 
   return (
     <main className="min-h-screen bg-(--bg-primary) p-6">
@@ -133,22 +131,46 @@ function RouteComponent() {
             )}
           </h1>
 
-          <PokemonTable pokemon={filteredPokemon} />
-
-          {filteredPokemon.length === 0 && nameFilter && (
-            <div className="text-center py-8 text-(--text-muted) font-mono">
-              No Pokemon found matching &quot;{nameFilter}&quot;
-            </div>
-          )}
-
-          <PaginationNav
-            prefetch="viewport"
-            prevOffset={data.prevOffset ?? undefined}
-            nextOffset={data.nextOffset ?? undefined}
-            to="/debounced-preload-filters"
-          />
+          <div className="min-h-[500px]">
+            <Suspense fallback={<PokemonTableSkeleton rowCount={POKEMON_LIMIT} />}>
+              <PokemonTableContent nameFilter={nameFilter} />
+            </Suspense>
+          </div>
+          <PaginationNavOutlet />
         </ConsoleCard>
       </div>
     </main>
+  );
+}
+
+function PokemonTableContent({ nameFilter }: { nameFilter: string }) {
+  const { pokemonListOptions } = useRouteContext({ from: "/debounced-preload-filters" });
+  const { data } = useSuspenseQuery(pokemonListOptions);
+  const filteredPokemon = data.pokemon;
+
+  return (
+    <>
+      <PokemonTable pokemon={filteredPokemon} />
+
+      {filteredPokemon.length === 0 && nameFilter && (
+        <div className="text-center py-4 text-(--text-muted) font-mono text-sm">
+          No Pokémon found matching &quot;{nameFilter}&quot;
+        </div>
+      )}
+    </>
+  );
+}
+
+function PaginationNavOutlet() {
+  const { pokemonListOptions } = useRouteContext({ from: "/debounced-preload-filters" });
+  const { data, isPending } = useQuery(pokemonListOptions);
+
+  return (
+    <PaginationNav
+      prefetch="viewport"
+      prevOffset={isPending ? undefined : (data?.prevOffset ?? undefined)}
+      nextOffset={isPending ? undefined : (data?.nextOffset ?? undefined)}
+      to="/debounced-preload-filters"
+    />
   );
 }
