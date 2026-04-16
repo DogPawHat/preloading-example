@@ -1,15 +1,27 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { renderServerComponent } from "@tanstack/react-start/rsc";
 
 import Header from "~/components/header";
 
 import type { QueryClient } from "@tanstack/react-query";
 import appCss from "~/styles/global.css?url";
+import { createServerFn } from "@tanstack/react-start";
 
 interface MyRouterContext {
   queryClient: QueryClient;
 }
+
+const getHead = createServerFn({ method: "GET" }).handler(async () => {
+  return {
+    head: await renderServerComponent(
+      <head>
+        <HeadContent />
+      </head>,
+    ),
+  };
+});
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => ({
@@ -37,6 +49,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
     ],
   }),
+  loader: () => {
+    return getHead();
+  },
   component: RootComponent,
 });
 
@@ -49,11 +64,11 @@ function RootComponent() {
 }
 
 function RootDocument(props: Readonly<{ children: React.ReactNode }>) {
+  const { head } = Route.useLoaderData();
+
   return (
     <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
+      {head}
       <body>
         <Header />
         {props.children}
