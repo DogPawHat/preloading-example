@@ -1,7 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "tags": ["-lintignore"],
-  "drizzle": {
-    "config": []
-  }
+  "ignoreDependencies": ["@typescript/native-preview"],
+  "ignoreFiles": ["drizzle.config.ts", ".agents/skills/**/*.mjs"],
+  "drizzle": false
 }
