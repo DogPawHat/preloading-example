@@ -6,6 +6,11 @@
       "sourceType": "github",
       "computedHash": "65085998d643c3b64ff323ca74d76496b47484046b030730c00c03a0208bf410"
     },
+    "agent-browser": {
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github",
+      "computedHash": "c19a532a3777698b80b35270939a1dc559da451381971b3e1e78174d1ab54863"
+    },
     "animate": {
       "source": "pbakaus/impeccable",
       "sourceType": "github",
