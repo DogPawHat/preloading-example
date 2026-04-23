@@ -1,19 +1,36 @@
 import { NavItem } from "./nav-item";
 import { ThemeToggle } from "./theme-toggle";
 
+const navItems = [
+  { to: "/", label: "~/home" },
+  { to: "/basic", label: "01_basic" },
+  { to: "/preloading", label: "02_preloading" },
+  { to: "/intent-preloading", label: "03_intent-preloading", preload: "intent" as const },
+  { to: "/pagination", label: "04_pagination" },
+  { to: "/filters", label: "05_filters" },
+  { to: "/debounced-preload-filters", label: "06_debounced-filters" },
+];
+
 export function Header() {
   return (
-    <header className="bg-(--bg-secondary) border-b border-(--border-default)">
-      <nav className="flex flex-row items-center">
-        <NavItem to="/" label="~/home" />
-        <NavItem to="/basic" label="01_basic" />
-        <NavItem to="/preloading" label="02_preloading" />
-        <NavItem to="/intent-preloading" label="03_intent-preloading" preload="intent" />
-        <NavItem to="/pagination" label="04_pagination" />
-        <NavItem to="/filters" label="05_filters" />
-        <NavItem to="/debounced-preload-filters" label="06_debounced-filters" />
-        <ThemeToggle />
-      </nav>
+    <header className="sticky top-0 z-40 bg-(--bg-secondary) border-b border-(--border-default)">
+      <div className="flex items-center">
+        <nav
+          className="flex flex-1 flex-row items-center overflow-x-auto scrollbar-thin"
+          aria-label="Main navigation"
+        >
+          {navItems.map((item) => (
+            <NavItem key={item.to} to={item.to} label={item.label} preload={item.preload} />
+          ))}
+        </nav>
+        <div className="relative flex-hteshrink-0">
+          <div
+            className="pointer-events-none absolute -left-6 top-0 bottom-0 w-6 bg-linear-to-l from-(--bg-secondary) to-transparent"
+            aria-hidden="true"
+          />
+          <ThemeToggle />
+        </div>
+      </div>
     </header>
   );
 }

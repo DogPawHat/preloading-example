@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react";
 import rsc from "@vitejs/plugin-rsc";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import netlify from "@netlify/vite-plugin-tanstack-start";
+import { devtools } from "@tanstack/devtools-vite";
 
 export default defineConfig({
   staged: {
@@ -20,6 +21,7 @@ export default defineConfig({
     port: 3000,
   },
   plugins: [
+    devtools(),
     tanstackStart({
       rsc: {
         enabled: true,

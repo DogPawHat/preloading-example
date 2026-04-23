@@ -1,7 +1,6 @@
 "use client";
 
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
 import { StatusDot } from "~/components/console/status-dot";
 
 interface NavItemProps {
@@ -13,20 +12,12 @@ interface NavItemProps {
 
 export function NavItem({ to, label, preload, search }: NavItemProps) {
   const state = useRouterState();
-  const queryClient = useQueryClient();
   const currentPath = state.location.pathname;
   const isActive = currentPath === to;
-
-  const hasCachedData = queryClient.getQueryCache().getAll().length > 0;
-  const isFetching = state.isLoading;
+  const isLoading = state.isLoading && isActive;
 
   const showStatus = to !== "/";
-  let status: "cached" | "fetching" | "idle" = "idle";
-  if (isFetching) {
-    status = "fetching";
-  } else if (hasCachedData && isActive) {
-    status = "cached";
-  }
+  const status = isLoading ? "fetching" : isActive ? "cached" : "idle";
 
   return (
     <Link
@@ -34,9 +25,17 @@ export function NavItem({ to, label, preload, search }: NavItemProps) {
       search={search}
       preload={preload}
       className={`nav-link ${isActive ? "nav-link-active" : ""}`}
+      aria-current={isActive ? "page" : undefined}
     >
       {showStatus && <StatusDot status={status} />}
       <span>{label}</span>
+      {showStatus && (
+        <span className="sr-only">
+          {status === "fetching" && "— loading"}
+          {status === "cached" && "— cached"}
+          {status === "idle" && "— idle"}
+        </span>
+      )}
     </Link>
   );
 }

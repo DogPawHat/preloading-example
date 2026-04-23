@@ -6,6 +6,53 @@ import { routerWithQueryClient } from "@tanstack/react-router-with-query";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen.ts";
 
+function DefaultErrorComponent() {
+  return (
+    <div className="min-h-screen bg-(--bg-primary) p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-(--bg-card) border border-(--status-error) p-6">
+          <h1 className="text-lg font-mono font-semibold text-(--status-error) mb-2">Error</h1>
+          <p className="text-sm font-mono text-(--text-secondary)">
+            Something went wrong. Try refreshing the page.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DefaultPendingComponent() {
+  return (
+    <div className="min-h-screen bg-(--bg-primary) p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-(--bg-card) border border-(--border-default) p-6">
+          <div className="flex items-center gap-3">
+            <span className="inline-block w-2 h-2 rounded-full bg-(--status-fetching) animate-pulse-dot" />
+            <span className="text-sm font-mono text-(--text-muted)">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DefaultNotFoundComponent() {
+  return (
+    <div className="min-h-screen bg-(--bg-primary) p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-(--bg-card) border border-(--border-default) p-6">
+          <h1 className="text-lg font-mono font-semibold text-(--text-primary) mb-2">
+            404 — Not Found
+          </h1>
+          <p className="text-sm font-mono text-(--text-secondary)">
+            The page you are looking for does not exist.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function getRouter() {
   const queryClient = new QueryClient();
 
@@ -17,9 +64,9 @@ export function getRouter() {
       defaultStructuralSharing: true,
       defaultPreloadStaleTime: 0,
       defaultPendingMs: 0,
-      defaultErrorComponent: () => <div>Error</div>,
-      defaultPendingComponent: () => <div>Loading...</div>,
-      defaultNotFoundComponent: () => <div>Not Found</div>,
+      defaultErrorComponent: DefaultErrorComponent,
+      defaultPendingComponent: DefaultPendingComponent,
+      defaultNotFoundComponent: DefaultNotFoundComponent,
       context: {
         queryClient,
       },
