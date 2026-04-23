@@ -8,8 +8,8 @@ import { PaginationNav } from "~/components/pagination-nav";
 import { ConsoleCard } from "~/components/console/console-card";
 import { SectionHeader } from "~/components/console/section-header";
 import { PokemonTableSkeleton } from "~/components/console/pokemon-table-skeleton";
+import { POKEMON_LIMIT } from "~/constants";
 import {
-  POKEMON_LIMIT,
   getFilteredPokemonListQueryKey,
   getFilteredPokemonListQueryFn,
 } from "~/util/pokemon";

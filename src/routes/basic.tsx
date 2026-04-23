@@ -6,7 +6,8 @@ import { PaginationNav } from "~/components/pagination-nav";
 import { ConsoleCard } from "~/components/console/console-card";
 import { SectionHeader } from "~/components/console/section-header";
 import { PokemonTableSkeleton } from "~/components/console/pokemon-table-skeleton";
-import { POKEMON_LIMIT, getPokemonListQueryFn, getPokemonListQueryKey } from "~/util/pokemon";
+import { POKEMON_LIMIT } from "~/constants";
+import { getPokemonListQueryFn, getPokemonListQueryKey } from "~/util/pokemon";
 import { lazily } from "~/util/lazily";
 
 const { PokemonTable } = lazily(() => import("~/components/console/pokemon-table"));

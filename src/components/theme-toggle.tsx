@@ -74,7 +74,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={cycleTheme}
-      className="flex items-center gap-2 px-3 py-2 text-sm font-mono text-(--text-secondary) transition-colors duration-fast ease-default hover:text-(--accent-default) hover:bg-(--accent-subtle) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring-color) focus-visible:ring-offset-2 focus-visible:ring-offset-(--bg-secondary) flex-shrink-0"
+      className="flex items-center gap-2 px-3 py-2 text-sm font-mono text-(--text-secondary) transition-colors duration-fast ease-default hover:text-(--accent-default) hover:bg-(--accent-subtle) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring-color) focus-visible:ring-offset-2 focus-visible:ring-offset-(--bg-secondary) shrink-0"
       title={`Theme: ${resolved} (click to cycle)`}
       aria-label={`Current theme: ${resolved}. Click to cycle.`}
     >

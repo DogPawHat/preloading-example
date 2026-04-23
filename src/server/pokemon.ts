@@ -1,8 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import * as v from "valibot";
 import { DB } from "~/data/db";
-
-export const POKEMON_LIMIT = 10;
+import { POKEMON_LIMIT } from "~/constants";
 
 const PokemonListParamsSchema = v.object({
   offset: v.optional(v.number()),

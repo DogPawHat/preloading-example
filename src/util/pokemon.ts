@@ -1,8 +1,6 @@
 import type { QueryFunctionContext } from "@tanstack/react-query";
 import { getServerPokemonList, getServerFilteredPokemonList } from "~/server/pokemon";
 
-export const POKEMON_LIMIT = 10;
-
 export const getPokemonListQueryKey = (location: string, offset: number) => {
   return ["pokemon-list", location, { offset }] as const;
 };
