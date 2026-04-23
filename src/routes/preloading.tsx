@@ -2,6 +2,16 @@ import { Suspense } from "react";
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
+import { QueryTrace } from "~/components/console/query-trace";
+import {
+  formatPokemonListQueryKey,
+  getCacheStatus,
+  getFetchStatus,
+  getLoadingCacheStatus,
+  getLoadingFetchStatus,
+  getLoadingPreloadStatus,
+  getPreloadStatus,
+} from "~/components/console/query-trace-utils";
 import { PaginationNav } from "~/components/pagination-nav";
 import { ConsoleCard } from "~/components/console/console-card";
 import { SectionHeader } from "~/components/console/section-header";
@@ -9,11 +19,19 @@ import { PokemonTableSkeleton } from "~/components/console/pokemon-table-skeleto
 import { POKEMON_LIMIT } from "~/constants";
 import { getPokemonListQueryKey, getPokemonListQueryFn } from "~/util/pokemon";
 import { lazily } from "~/util/lazily";
+import { is } from "drizzle-orm";
 
 const { PokemonTable } = lazily(() => import("~/components/console/pokemon-table"));
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
+});
+
+const getPreloadingQueryTraceProps = (currentOffset: number) => ({
+  behaviorDescription:
+    "Route-level preload: the loader starts the Pokémon query before this route renders, so the table can use cached data on arrival.",
+  queryKeys: [formatPokemonListQueryKey("preloading", currentOffset)],
+  strategyDescription: "loader prefetchQuery",
 });
 
 export const Route = createFileRoute("/preloading")({
@@ -52,8 +70,20 @@ function RouteComponent() {
             National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
           </h1>
           <div className="min-h-[500px]">
-            <Suspense fallback={<PokemonTableSkeleton rowCount={POKEMON_LIMIT} />}>
-              <PokemonTableContent />
+            <Suspense
+              fallback={
+                <>
+                  <QueryTrace
+                    {...getPreloadingQueryTraceProps(currentOffset)}
+                    cacheStatus={getLoadingCacheStatus()}
+                    fetchStatus={getLoadingFetchStatus()}
+                    preloadStatus={getLoadingPreloadStatus()}
+                  />
+                  <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
+                </>
+              }
+            >
+              <PokemonTableContent currentOffset={currentOffset} />
             </Suspense>
           </div>
           <PaginationNavOutlet />
@@ -63,21 +93,31 @@ function RouteComponent() {
   );
 }
 
-function PokemonTableContent() {
+function PokemonTableContent({ currentOffset }: { currentOffset: number }) {
   const { pokemonListOptions } = useRouteContext({ from: "/preloading" });
-  const { data } = useSuspenseQuery(pokemonListOptions);
+  const { data, dataUpdatedAt, fetchStatus, status } = useSuspenseQuery(pokemonListOptions);
 
-  return <PokemonTable pokemon={data.pokemon} />;
+  return (
+    <>
+      <QueryTrace
+        {...getPreloadingQueryTraceProps(currentOffset)}
+        cacheStatus={getCacheStatus(dataUpdatedAt)}
+        fetchStatus={getFetchStatus(fetchStatus, status)}
+        preloadStatus={getPreloadStatus(dataUpdatedAt)}
+      />
+      <PokemonTable pokemon={data.pokemon} />
+    </>
+  );
 }
 
 function PaginationNavOutlet() {
   const { pokemonListOptions } = useRouteContext({ from: "/preloading" });
-  const { data, isPending } = useQuery(pokemonListOptions);
+  const { data } = useQuery(pokemonListOptions);
 
   return (
     <PaginationNav
-      prevOffset={isPending ? undefined : (data?.prevOffset ?? undefined)}
-      nextOffset={isPending ? undefined : (data?.nextOffset ?? undefined)}
+      prevOffset={data?.prevOffset ?? null}
+      nextOffset={data?.nextOffset ?? null}
       to="/preloading"
     />
   );

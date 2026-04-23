@@ -2,6 +2,16 @@ import { Suspense, useCallback, useState } from "react";
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
+import { QueryTrace } from "~/components/console/query-trace";
+import {
+  formatFilteredPokemonListQueryKey,
+  getCacheStatus,
+  getFetchStatus,
+  getLoadingCacheStatus,
+  getLoadingFetchStatus,
+  getLoadingPreloadStatus,
+  getPreloadStatus,
+} from "~/components/console/query-trace-utils";
 import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
 import { PaginationNav } from "~/components/pagination-nav";
 import { ConsoleCard } from "~/components/console/console-card";
@@ -16,6 +26,13 @@ const { PokemonTable } = lazily(() => import("~/components/console/pokemon-table
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
   name: v.optional(v.string(), ""),
+});
+
+const getFiltersQueryTraceProps = (currentOffset: number, nameFilter: string) => ({
+  behaviorDescription:
+    "Submitted search preload: the route loader prefetches the filtered Pokémon query after the search params change.",
+  queryKeys: [formatFilteredPokemonListQueryKey("filters", currentOffset, nameFilter)],
+  strategyDescription: "filter submit updates search params + loader prefetchQuery",
 });
 
 function FilterSubmitContextProvider(props: {
@@ -98,8 +115,20 @@ function RouteComponent() {
           </h1>
 
           <div className="min-h-[500px]">
-            <Suspense fallback={<PokemonTableSkeleton rowCount={POKEMON_LIMIT} />}>
-              <PokemonTableContent nameFilter={nameFilter} />
+            <Suspense
+              fallback={
+                <>
+                  <QueryTrace
+                    {...getFiltersQueryTraceProps(currentOffset, nameFilter)}
+                    cacheStatus={getLoadingCacheStatus()}
+                    fetchStatus={getLoadingFetchStatus()}
+                    preloadStatus={getLoadingPreloadStatus()}
+                  />
+                  <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
+                </>
+              }
+            >
+              <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
             </Suspense>
           </div>
           <PaginationNavOutlet />
@@ -109,13 +138,25 @@ function RouteComponent() {
   );
 }
 
-function PokemonTableContent({ nameFilter }: { nameFilter: string }) {
+function PokemonTableContent({
+  currentOffset,
+  nameFilter,
+}: {
+  currentOffset: number;
+  nameFilter: string;
+}) {
   const { pokemonListOptions } = useRouteContext({ from: "/filters" });
-  const { data } = useSuspenseQuery(pokemonListOptions);
+  const { data, dataUpdatedAt, fetchStatus, status } = useSuspenseQuery(pokemonListOptions);
   const filteredPokemon = data.pokemon;
 
   return (
     <>
+      <QueryTrace
+        {...getFiltersQueryTraceProps(currentOffset, nameFilter)}
+        cacheStatus={getCacheStatus(dataUpdatedAt)}
+        fetchStatus={getFetchStatus(fetchStatus, status)}
+        preloadStatus={getPreloadStatus(dataUpdatedAt)}
+      />
       <PokemonTable pokemon={filteredPokemon} />
 
       {filteredPokemon.length === 0 && nameFilter && (
@@ -129,13 +170,13 @@ function PokemonTableContent({ nameFilter }: { nameFilter: string }) {
 
 function PaginationNavOutlet() {
   const { pokemonListOptions } = useRouteContext({ from: "/filters" });
-  const { data, isPending } = useQuery(pokemonListOptions);
+  const { data } = useQuery(pokemonListOptions);
 
   return (
     <PaginationNav
       prefetch="viewport"
-      prevOffset={isPending ? undefined : (data?.prevOffset ?? undefined)}
-      nextOffset={isPending ? undefined : (data?.nextOffset ?? undefined)}
+      prevOffset={data?.prevOffset ?? null}
+      nextOffset={data?.nextOffset ?? null}
       to="/filters"
     />
   );

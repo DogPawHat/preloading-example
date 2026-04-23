@@ -3,8 +3,8 @@ import { cn } from "~/lib/utils";
 
 interface PaginationNavProps {
   prefetch?: "intent" | "viewport" | "render" | false;
-  prevOffset: number | undefined;
-  nextOffset: number | undefined;
+  prevOffset: number | null;
+  nextOffset: number | null;
   to: keyof FileRoutesByPath;
 }
 

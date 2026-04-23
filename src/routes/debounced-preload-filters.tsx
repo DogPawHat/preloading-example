@@ -3,6 +3,16 @@ import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { useDebouncedCallback } from "@tanstack/react-pacer";
 import { queryOptions, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
+import { QueryTrace } from "~/components/console/query-trace";
+import {
+  formatFilteredPokemonListQueryKey,
+  getCacheStatus,
+  getFetchStatus,
+  getLoadingCacheStatus,
+  getLoadingFetchStatus,
+  getLoadingPreloadStatus,
+  getPreloadStatus,
+} from "~/components/console/query-trace-utils";
 import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
 import { PaginationNav } from "~/components/pagination-nav";
 import { ConsoleCard } from "~/components/console/console-card";
@@ -17,6 +27,15 @@ const { PokemonTable } = lazily(() => import("~/components/console/pokemon-table
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
   name: v.optional(v.string(), ""),
+});
+
+const getDebouncedQueryTraceProps = (currentOffset: number, nameFilter: string) => ({
+  behaviorDescription:
+    "Debounced preload: typing starts filtered Pokémon prefetches before submit, then the route loader confirms the submitted query.",
+  queryKeys: [
+    formatFilteredPokemonListQueryKey("debounced-preload-filters", currentOffset, nameFilter),
+  ],
+  strategyDescription: "100ms debounced prefetchQuery + loader prefetchQuery",
 });
 
 export const Route = createFileRoute("/debounced-preload-filters")({
@@ -129,8 +148,20 @@ function RouteComponent() {
           </h1>
 
           <div className="min-h-[500px]">
-            <Suspense fallback={<PokemonTableSkeleton rowCount={POKEMON_LIMIT} />}>
-              <PokemonTableContent nameFilter={nameFilter} />
+            <Suspense
+              fallback={
+                <>
+                  <QueryTrace
+                    {...getDebouncedQueryTraceProps(currentOffset, nameFilter)}
+                    cacheStatus={getLoadingCacheStatus()}
+                    fetchStatus={getLoadingFetchStatus()}
+                    preloadStatus={getLoadingPreloadStatus()}
+                  />
+                  <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
+                </>
+              }
+            >
+              <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
             </Suspense>
           </div>
           <PaginationNavOutlet />
@@ -140,13 +171,25 @@ function RouteComponent() {
   );
 }
 
-function PokemonTableContent({ nameFilter }: { nameFilter: string }) {
+function PokemonTableContent({
+  currentOffset,
+  nameFilter,
+}: {
+  currentOffset: number;
+  nameFilter: string;
+}) {
   const { pokemonListOptions } = useRouteContext({ from: "/debounced-preload-filters" });
-  const { data } = useSuspenseQuery(pokemonListOptions);
+  const { data, dataUpdatedAt, fetchStatus, status } = useSuspenseQuery(pokemonListOptions);
   const filteredPokemon = data.pokemon;
 
   return (
     <>
+      <QueryTrace
+        {...getDebouncedQueryTraceProps(currentOffset, nameFilter)}
+        cacheStatus={getCacheStatus(dataUpdatedAt)}
+        fetchStatus={getFetchStatus(fetchStatus, status)}
+        preloadStatus={getPreloadStatus(dataUpdatedAt)}
+      />
       <PokemonTable pokemon={filteredPokemon} />
 
       {filteredPokemon.length === 0 && nameFilter && (
@@ -160,13 +203,13 @@ function PokemonTableContent({ nameFilter }: { nameFilter: string }) {
 
 function PaginationNavOutlet() {
   const { pokemonListOptions } = useRouteContext({ from: "/debounced-preload-filters" });
-  const { data, isPending } = useQuery(pokemonListOptions);
+  const { data } = useQuery(pokemonListOptions);
 
   return (
     <PaginationNav
       prefetch="viewport"
-      prevOffset={isPending ? undefined : (data?.prevOffset ?? undefined)}
-      nextOffset={isPending ? undefined : (data?.nextOffset ?? undefined)}
+      prevOffset={data?.prevOffset ?? null}
+      nextOffset={data?.nextOffset ?? null}
       to="/debounced-preload-filters"
     />
   );
