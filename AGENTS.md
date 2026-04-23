@@ -25,20 +25,11 @@ For GitHub Actions, prefer `voidzero-dev/setup-vp` and run:
 - [ ] Run `vp check` and `vp test` to validate changes.
 
 <!-- intent-skills:start -->
+## Skill Loading
 
-# Skill mappings - when working in these areas, load the linked skill file into context.
-
-skills:
-
-- task: "TanStack Start app setup, router wiring, route tree generation, and SSR entry points"
-  load: "node_modules/@tanstack/react-start/skills/react-start/SKILL.md"
-- task: "Vite+ commands, project scripts, and repo tooling workflow"
-  load: "node_modules/vite-plus/skills/vite-plus/SKILL.md"
-- task: "link preloading, intent prefetching, pagination navigation, and route-to-route transitions"
-  # To load this skill, run: vp dlx @tanstack/intent@latest list | grep navigation
-- task: "search params, validateSearch, URL-driven filters, and pagination state in routes"
-  # To load this skill, run: vp dlx @tanstack/intent@latest list | grep search-params
-- task: "route loaders, loaderDeps, query prefetching, and route-level data loading"
-  # To load this skill, run: vp dlx @tanstack/intent@latest list | grep data-loading
-- task: "useServerFn, createServerFn, and server-backed data fetching in TanStack Start" # To load this skill, run: vp dlx @tanstack/intent@latest list | grep server-functions
+Before substantial work:
+- Skill check: run `npx @tanstack/intent@latest list`, or use skills already listed in context.
+- Skill guidance: if one local skill clearly matches the task, run `npx @tanstack/intent@latest load <package>#<skill>` and follow the returned `SKILL.md`.
+- Monorepos: when working across packages, run the skill check from the workspace root and prefer the local skill for the package being changed.
+- Multiple matches: prefer the most specific local skill for the package or concern you are changing; load additional skills only when the task spans multiple packages or concerns.
 <!-- intent-skills:end -->
