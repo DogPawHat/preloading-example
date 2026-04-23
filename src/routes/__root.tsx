@@ -1,13 +1,13 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import type { QueryClient } from "@tanstack/react-query";
+import { createServerFn } from "@tanstack/react-start";
 import { renderServerComponent } from "@tanstack/react-start/rsc";
 
-import Header from "~/components/header";
+import { Header } from "~/components/header";
 
-import type { QueryClient } from "@tanstack/react-query";
 import appCss from "~/styles/global.css?url";
-import { createServerFn } from "@tanstack/react-start";
 
 interface MyRouterContext {
   queryClient: QueryClient;

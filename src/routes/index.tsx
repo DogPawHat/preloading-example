@@ -1,86 +1,26 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { renderServerComponent } from "@tanstack/react-start/rsc";
 import { StatusDot } from "~/components/console/status-dot";
-import { ConsoleCard } from "~/components/console/console-card";
 
 export const Route = createFileRoute("/")({
-  component: LandingPage,
+  loader: async () => {
+    const landingPage = await getLandingPage();
+    return { landingPage };
+  },
+  component: LandingPageComponent,
 });
 
-interface ExampleItemProps {
-  number: string;
-  title: string;
-  path: string;
-  description: string;
-  codeSnippet: string;
+const getLandingPage = createServerFn({ method: "GET" }).handler(async () => {
+  return renderServerComponent(<LandingPageDocument />);
+});
+
+function LandingPageComponent() {
+  const { landingPage } = Route.useLoaderData();
+  return <>{landingPage}</>;
 }
 
-function ExampleItem({ number, title, path, description, codeSnippet }: ExampleItemProps) {
-  return (
-    <Link to={path} className="block no-underline">
-      <div className="example-card">
-        <div className="example-card__number">Example {number}</div>
-        <h3 className="example-card__title">{title}</h3>
-        <p className="example-card__description">{description}</p>
-        <div className="mt-4 p-3 bg-(--bg-secondary) border border-(--border-default) font-mono text-xs text-(--text-muted) overflow-x-auto">
-          <code>{codeSnippet}</code>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-function LandingPage() {
-  const examples: ExampleItemProps[] = [
-    {
-      number: "01",
-      title: "Basic",
-      path: "/basic",
-      description:
-        "Baseline implementation with no prefetching. Data loads only when the route renders, demonstrating the default behavior without optimizations.",
-      codeSnippet: "useSuspenseQuery({ queryKey, queryFn })",
-    },
-    {
-      number: "02",
-      title: "Preloading",
-      path: "/preloading",
-      description:
-        "Route-level prefetch using loader and queryOptions. Data begins loading as soon as navigation starts, reducing perceived latency.",
-      codeSnippet: "loader: ({ context }) => {\n  void context.queryClient.prefetchQuery(...)\n}",
-    },
-    {
-      number: "03",
-      title: "Intent Preloading",
-      path: "/intent-preloading",
-      description:
-        "Hover-based prefetch using preload='intent' on Links. Data starts loading when the user hovers over a link, anticipating their next action.",
-      codeSnippet: "<Link preload='intent' to='/route'>...</Link>",
-    },
-    {
-      number: "04",
-      title: "Pagination",
-      path: "/pagination",
-      description:
-        "Preloading next and previous pages in paginated lists. Adjacent pages are prefetched so navigation feels instant.",
-      codeSnippet: "preload={props.prefetch}\nto={props.to}\nsearch={{ offset: props.nextOffset }}",
-    },
-    {
-      number: "05",
-      title: "Filters",
-      path: "/filters",
-      description:
-        "Search with URL-driven state and prefetching. Filter changes update the URL and trigger data refetching with intelligent caching.",
-      codeSnippet: "validateSearch: searchParamsSchema",
-    },
-    {
-      number: "06",
-      title: "Debounced Preload Filters",
-      path: "/debounced-preload-filters",
-      description:
-        "Advanced filter prefetch with debouncing. Prevents excessive prefetch requests while typing by waiting for a pause in input.",
-      codeSnippet: "useDebounce(value, delay)\n// Preload only after pause",
-    },
-  ];
-
+function LandingPageDocument() {
   return (
     <main className="min-h-screen bg-(--bg-primary)">
       {/* Hero Section */}
