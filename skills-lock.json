@@ -6,11 +6,6 @@
       "sourceType": "github",
       "computedHash": "65085998d643c3b64ff323ca74d76496b47484046b030730c00c03a0208bf410"
     },
-    "agent-browser": {
-      "source": "vercel-labs/agent-browser",
-      "sourceType": "github",
-      "computedHash": "6bee044f51bfe9bcc20e2a779ca2a31fae5c6b0095ad30b264ecef9a27cb3ce6"
-    },
     "animate": {
       "source": "pbakaus/impeccable",
       "sourceType": "github",
@@ -50,11 +45,6 @@
       "source": "pbakaus/impeccable",
       "sourceType": "github",
       "computedHash": "669a671f855be8773e4c2936e54d4243fbd1d273f87633158544efe3dbc4d825"
-    },
-    "frontend-design": {
-      "source": "anthropics/skills",
-      "sourceType": "github",
-      "computedHash": "063a0e6448123cd359ad0044cc46b0e490cc7964d45ef4bb9fd842bd2ffbca67"
     },
     "impeccable": {
       "source": "pbakaus/impeccable",
