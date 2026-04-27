@@ -1,6 +1,6 @@
 import { Suspense, useCallback, useState } from "react";
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
-import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { QueryTrace } from "~/components/console/query-trace";
 import {
@@ -114,10 +114,10 @@ function RouteComponent() {
             )}
           </h1>
 
-          <div className="min-h-[500px]">
-            <Suspense
-              fallback={
-                <>
+          <Suspense
+            fallback={
+              <>
+                <div className="min-h-125">
                   <QueryTrace
                     {...getFiltersQueryTraceProps(currentOffset, nameFilter)}
                     cacheStatus={getLoadingCacheStatus()}
@@ -125,13 +125,13 @@ function RouteComponent() {
                     preloadStatus={getLoadingPreloadStatus()}
                   />
                   <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
-                </>
-              }
-            >
-              <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
-            </Suspense>
-          </div>
-          <PaginationNavOutlet />
+                </div>
+                <PaginationNav prevOffset={null} nextOffset={null} to="/filters" />
+              </>
+            }
+          >
+            <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
+          </Suspense>
         </ConsoleCard>
       </div>
     </main>
@@ -151,33 +151,27 @@ function PokemonTableContent({
 
   return (
     <>
-      <QueryTrace
-        {...getFiltersQueryTraceProps(currentOffset, nameFilter)}
-        cacheStatus={getCacheStatus(dataUpdatedAt)}
-        fetchStatus={getFetchStatus(fetchStatus, status)}
-        preloadStatus={getPreloadStatus(dataUpdatedAt)}
+      <div className="min-h-125">
+        <QueryTrace
+          {...getFiltersQueryTraceProps(currentOffset, nameFilter)}
+          cacheStatus={getCacheStatus(dataUpdatedAt)}
+          fetchStatus={getFetchStatus(fetchStatus, status)}
+          preloadStatus={getPreloadStatus(dataUpdatedAt)}
+        />
+        <PokemonTable pokemon={filteredPokemon} />
+
+        {filteredPokemon.length === 0 && nameFilter && (
+          <div className="text-center py-4 text-(--text-muted) font-mono text-sm">
+            No Pokémon found matching &quot;{nameFilter}&quot;
+          </div>
+        )}
+      </div>
+      <PaginationNav
+        prefetch="viewport"
+        prevOffset={data.prevOffset}
+        nextOffset={data.nextOffset}
+        to="/filters"
       />
-      <PokemonTable pokemon={filteredPokemon} />
-
-      {filteredPokemon.length === 0 && nameFilter && (
-        <div className="text-center py-4 text-(--text-muted) font-mono text-sm">
-          No Pokémon found matching &quot;{nameFilter}&quot;
-        </div>
-      )}
     </>
-  );
-}
-
-function PaginationNavOutlet() {
-  const { pokemonListOptions } = useRouteContext({ from: "/filters" });
-  const { data } = useQuery(pokemonListOptions);
-
-  return (
-    <PaginationNav
-      prefetch="viewport"
-      prevOffset={data?.prevOffset ?? null}
-      nextOffset={data?.nextOffset ?? null}
-      to="/filters"
-    />
   );
 }

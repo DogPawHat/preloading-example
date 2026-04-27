@@ -1,7 +1,7 @@
 import { Suspense, useCallback, useState } from "react";
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { useDebouncedCallback } from "@tanstack/react-pacer";
-import { queryOptions, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { QueryTrace } from "~/components/console/query-trace";
 import {
@@ -147,10 +147,10 @@ function RouteComponent() {
             )}
           </h1>
 
-          <div className="min-h-[500px]">
-            <Suspense
-              fallback={
-                <>
+          <Suspense
+            fallback={
+              <>
+                <div className="min-h-125">
                   <QueryTrace
                     {...getDebouncedQueryTraceProps(currentOffset, nameFilter)}
                     cacheStatus={getLoadingCacheStatus()}
@@ -158,13 +158,17 @@ function RouteComponent() {
                     preloadStatus={getLoadingPreloadStatus()}
                   />
                   <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
-                </>
-              }
-            >
-              <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
-            </Suspense>
-          </div>
-          <PaginationNavOutlet />
+                </div>
+                <PaginationNav
+                  prevOffset={null}
+                  nextOffset={null}
+                  to="/debounced-preload-filters"
+                />
+              </>
+            }
+          >
+            <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
+          </Suspense>
         </ConsoleCard>
       </div>
     </main>
@@ -184,33 +188,27 @@ function PokemonTableContent({
 
   return (
     <>
-      <QueryTrace
-        {...getDebouncedQueryTraceProps(currentOffset, nameFilter)}
-        cacheStatus={getCacheStatus(dataUpdatedAt)}
-        fetchStatus={getFetchStatus(fetchStatus, status)}
-        preloadStatus={getPreloadStatus(dataUpdatedAt)}
+      <div className="min-h-125">
+        <QueryTrace
+          {...getDebouncedQueryTraceProps(currentOffset, nameFilter)}
+          cacheStatus={getCacheStatus(dataUpdatedAt)}
+          fetchStatus={getFetchStatus(fetchStatus, status)}
+          preloadStatus={getPreloadStatus(dataUpdatedAt)}
+        />
+        <PokemonTable pokemon={filteredPokemon} />
+
+        {filteredPokemon.length === 0 && nameFilter && (
+          <div className="text-center py-4 text-(--text-muted) font-mono text-sm">
+            No Pokémon found matching &quot;{nameFilter}&quot;
+          </div>
+        )}
+      </div>
+      <PaginationNav
+        prefetch="viewport"
+        prevOffset={data.prevOffset}
+        nextOffset={data.nextOffset}
+        to="/debounced-preload-filters"
       />
-      <PokemonTable pokemon={filteredPokemon} />
-
-      {filteredPokemon.length === 0 && nameFilter && (
-        <div className="text-center py-4 text-(--text-muted) font-mono text-sm">
-          No Pokémon found matching &quot;{nameFilter}&quot;
-        </div>
-      )}
     </>
-  );
-}
-
-function PaginationNavOutlet() {
-  const { pokemonListOptions } = useRouteContext({ from: "/debounced-preload-filters" });
-  const { data } = useQuery(pokemonListOptions);
-
-  return (
-    <PaginationNav
-      prefetch="viewport"
-      prevOffset={data?.prevOffset ?? null}
-      nextOffset={data?.nextOffset ?? null}
-      to="/debounced-preload-filters"
-    />
   );
 }

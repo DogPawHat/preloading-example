@@ -6,9 +6,9 @@ const navItems = [
   { to: "/basic", label: "01_basic" },
   { to: "/preloading", label: "02_preloading" },
   { to: "/intent-preloading", label: "03_intent-preloading", preload: "intent" as const },
-  { to: "/pagination", label: "04_pagination" },
-  { to: "/filters", label: "05_filters" },
-  { to: "/debounced-preload-filters", label: "06_debounced-filters" },
+  { to: "/pagination", label: "04_pagination", preload: "intent" as const },
+  { to: "/filters", label: "05_filters", preload: "intent" as const },
+  { to: "/debounced-preload-filters", label: "06_debounced-filters", preload: "intent" as const },
 ];
 
 export function Header() {

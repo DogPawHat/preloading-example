@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
-import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { QueryTrace } from "~/components/console/query-trace";
 import {
@@ -68,10 +68,10 @@ function RouteComponent() {
           <h1 className="text-lg font-mono text-(--text-primary) mb-4">
             National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
           </h1>
-          <div className="min-h-[500px]">
-            <Suspense
-              fallback={
-                <>
+          <Suspense
+            fallback={
+              <>
+                <div className="min-h-125">
                   <QueryTrace
                     {...getPreloadingQueryTraceProps(currentOffset)}
                     cacheStatus={getLoadingCacheStatus()}
@@ -79,13 +79,13 @@ function RouteComponent() {
                     preloadStatus={getLoadingPreloadStatus()}
                   />
                   <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
-                </>
-              }
-            >
-              <PokemonTableContent currentOffset={currentOffset} />
-            </Suspense>
-          </div>
-          <PaginationNavOutlet />
+                </div>
+                <PaginationNav prevOffset={null} nextOffset={null} to="/preloading" />
+              </>
+            }
+          >
+            <PokemonTableContent currentOffset={currentOffset} />
+          </Suspense>
         </ConsoleCard>
       </div>
     </main>
@@ -98,26 +98,16 @@ function PokemonTableContent({ currentOffset }: { currentOffset: number }) {
 
   return (
     <>
-      <QueryTrace
-        {...getPreloadingQueryTraceProps(currentOffset)}
-        cacheStatus={getCacheStatus(dataUpdatedAt)}
-        fetchStatus={getFetchStatus(fetchStatus, status)}
-        preloadStatus={getPreloadStatus(dataUpdatedAt)}
-      />
-      <PokemonTable pokemon={data.pokemon} />
+      <div className="min-h-125">
+        <QueryTrace
+          {...getPreloadingQueryTraceProps(currentOffset)}
+          cacheStatus={getCacheStatus(dataUpdatedAt)}
+          fetchStatus={getFetchStatus(fetchStatus, status)}
+          preloadStatus={getPreloadStatus(dataUpdatedAt)}
+        />
+        <PokemonTable pokemon={data.pokemon} />
+      </div>
+      <PaginationNav prevOffset={data.prevOffset} nextOffset={data.nextOffset} to="/preloading" />
     </>
-  );
-}
-
-function PaginationNavOutlet() {
-  const { pokemonListOptions } = useRouteContext({ from: "/preloading" });
-  const { data } = useQuery(pokemonListOptions);
-
-  return (
-    <PaginationNav
-      prevOffset={data?.prevOffset ?? null}
-      nextOffset={data?.nextOffset ?? null}
-      to="/preloading"
-    />
   );
 }
