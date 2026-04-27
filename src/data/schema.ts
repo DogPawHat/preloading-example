@@ -1,12 +1,12 @@
-import { sqliteTable, index, integer, text } from "drizzle-orm/sqlite-core";
+import { pgTable, index, integer, text } from "drizzle-orm/pg-core";
 
-export const pokemon = sqliteTable("pokemon", {
+export const pokemon = pgTable("pokemon", {
   id: integer().primaryKey(),
   name: text().notNull(),
   dexId: integer("dex_id").notNull(),
 });
 
-export const pokemonTypes = sqliteTable(
+export const pokemonTypes = pgTable(
   "pokemon_types",
   {
     id: integer().primaryKey(),
@@ -20,7 +20,7 @@ export const pokemonTypes = sqliteTable(
   (table) => [index("idx_pt_type").on(table.typeId), index("idx_pt_pokemon").on(table.pokemonId)],
 );
 
-export const types = sqliteTable("types", {
+export const types = pgTable("types", {
   id: integer().primaryKey(),
   name: text().notNull(),
 });

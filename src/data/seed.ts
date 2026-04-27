@@ -1,9 +1,11 @@
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { env } from "~env";
-import { drizzle } from "drizzle-orm/libsql";
+import { env } from "~/env.js";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import * as schema from "./schema.js";
+import { relations } from "./relations.js";
 
 type SeedData = {
   pokemon: Array<{
@@ -27,12 +29,10 @@ const seedDataPath = resolve(currentDir, "./seed-data.json");
 
 const seedData = JSON.parse(readFileSync(seedDataPath, "utf8")) as SeedData;
 
+const client = postgres(env.DATABASE_URL, { prepare: false });
 const db = drizzle({
-  connection: {
-    url: env.TURSO_DATABASE_URL,
-    authToken: env.TURSO_AUTH_TOKEN,
-  },
-  schema,
+  client,
+  relations,
 });
 
 const BATCH_SIZE = 500;

@@ -1,0 +1,223 @@
+{
+  "version": "8",
+  "dialect": "postgres",
+  "id": "1054bff9-3e73-462f-a401-f2752e04bfee",
+  "prevIds": ["00000000-0000-0000-0000-000000000000"],
+  "ddl": [
+    {
+      "isRlsEnabled": false,
+      "name": "pokemon",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "pokemon_types",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "types",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "pokemon"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "pokemon"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "dex_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "pokemon"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "pokemon_types"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "pokemon_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "pokemon_types"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "type_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "pokemon_types"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "types"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "types"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "type_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "idx_pt_type",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "pokemon_types"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "pokemon_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "idx_pt_pokemon",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "pokemon_types"
+    },
+    {
+      "nameExplicit": false,
+      "columns": ["pokemon_id"],
+      "schemaTo": "public",
+      "tableTo": "pokemon",
+      "columnsTo": ["id"],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "pokemon_types_pokemon_id_pokemon_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "pokemon_types"
+    },
+    {
+      "nameExplicit": false,
+      "columns": ["type_id"],
+      "schemaTo": "public",
+      "tableTo": "types",
+      "columnsTo": ["id"],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "pokemon_types_type_id_types_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "pokemon_types"
+    },
+    {
+      "columns": ["id"],
+      "nameExplicit": false,
+      "name": "pokemon_pkey",
+      "schema": "public",
+      "table": "pokemon",
+      "entityType": "pks"
+    },
+    {
+      "columns": ["id"],
+      "nameExplicit": false,
+      "name": "pokemon_types_pkey",
+      "schema": "public",
+      "table": "pokemon_types",
+      "entityType": "pks"
+    },
+    {
+      "columns": ["id"],
+      "nameExplicit": false,
+      "name": "types_pkey",
+      "schema": "public",
+      "table": "types",
+      "entityType": "pks"
+    }
+  ],
+  "renames": []
+}

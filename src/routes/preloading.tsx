@@ -19,7 +19,6 @@ import { PokemonTableSkeleton } from "~/components/console/pokemon-table-skeleto
 import { POKEMON_LIMIT } from "~/constants";
 import { getPokemonListQueryKey, getPokemonListQueryFn } from "~/util/pokemon";
 import { lazily } from "~/util/lazily";
-import { is } from "drizzle-orm";
 
 const { PokemonTable } = lazily(() => import("~/components/console/pokemon-table"));
 

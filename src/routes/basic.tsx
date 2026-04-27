@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { QueryTrace } from "~/components/console/query-trace";
 import {
@@ -48,27 +48,31 @@ function RouteComponent() {
           <h1 className="text-lg font-mono text-(--text-primary) mb-4">
             National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
           </h1>
-          <div className="min-h-[500px]">
-            <Suspense
-              fallback={
-                <>
+          <Suspense
+            fallback={
+              <>
+                <PokemonTableShell>
                   <QueryTrace
                     {...getBasicQueryTraceProps(currentOffset)}
                     cacheStatus={getLoadingCacheStatus()}
                     fetchStatus={getLoadingFetchStatus()}
                   />
                   <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
-                </>
-              }
-            >
-              <PokemonTableContent currentOffset={currentOffset} />
-            </Suspense>
-          </div>
-          <PaginationNavOutlet />
+                </PokemonTableShell>
+                <PaginationNav prevOffset={null} nextOffset={null} to="/basic" />
+              </>
+            }
+          >
+            <PokemonTableContent currentOffset={currentOffset} />
+          </Suspense>
         </ConsoleCard>
       </div>
     </main>
   );
+}
+
+function PokemonTableShell({ children }: { children: React.ReactNode }) {
+  return <div className="min-h-125">{children}</div>;
 }
 
 function PokemonTableContent({ currentOffset }: { currentOffset: number }) {
@@ -80,28 +84,15 @@ function PokemonTableContent({ currentOffset }: { currentOffset: number }) {
 
   return (
     <>
-      <QueryTrace
-        {...getBasicQueryTraceProps(currentOffset)}
-        cacheStatus={getCacheStatus(dataUpdatedAt)}
-        fetchStatus={getFetchStatus(fetchStatus, isFetching ? "pending" : "success")}
-      />
-      <PokemonTable pokemon={data.pokemon} />
+      <PokemonTableShell>
+        <QueryTrace
+          {...getBasicQueryTraceProps(currentOffset)}
+          cacheStatus={getCacheStatus(dataUpdatedAt)}
+          fetchStatus={getFetchStatus(fetchStatus, isFetching ? "pending" : "success")}
+        />
+        <PokemonTable pokemon={data.pokemon} />
+      </PokemonTableShell>
+      <PaginationNav prevOffset={data.prevOffset} nextOffset={data.nextOffset} to="/basic" />
     </>
-  );
-}
-
-function PaginationNavOutlet() {
-  const { offset: currentOffset } = Route.useSearch();
-  const { data } = useQuery({
-    queryKey: getPokemonListQueryKey("suspense", currentOffset),
-    queryFn: getPokemonListQueryFn,
-  });
-
-  return (
-    <PaginationNav
-      prevOffset={data?.prevOffset ?? null}
-      nextOffset={data?.nextOffset ?? null}
-      to="/basic"
-    />
   );
 }
