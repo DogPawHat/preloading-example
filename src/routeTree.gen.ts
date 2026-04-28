@@ -11,11 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PreloadingRouteImport } from './routes/preloading'
 import { Route as PaginationRouteImport } from './routes/pagination'
+import { Route as LiveQueryRouteImport } from './routes/live-query'
 import { Route as IntentPreloadingRouteImport } from './routes/intent-preloading'
 import { Route as FiltersRouteImport } from './routes/filters'
 import { Route as DebouncedPreloadFiltersRouteImport } from './routes/debounced-preload-filters'
 import { Route as BasicRouteImport } from './routes/basic'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiShapesTypesRouteImport } from './routes/api/shapes/types'
+import { Route as ApiShapesPokemonTypesRouteImport } from './routes/api/shapes/pokemon-types'
+import { Route as ApiShapesPokemonRouteImport } from './routes/api/shapes/pokemon'
 
 const PreloadingRoute = PreloadingRouteImport.update({
   id: '/preloading',
@@ -25,6 +29,11 @@ const PreloadingRoute = PreloadingRouteImport.update({
 const PaginationRoute = PaginationRouteImport.update({
   id: '/pagination',
   path: '/pagination',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveQueryRoute = LiveQueryRouteImport.update({
+  id: '/live-query',
+  path: '/live-query',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IntentPreloadingRoute = IntentPreloadingRouteImport.update({
@@ -52,6 +61,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiShapesTypesRoute = ApiShapesTypesRouteImport.update({
+  id: '/api/shapes/types',
+  path: '/api/shapes/types',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiShapesPokemonTypesRoute = ApiShapesPokemonTypesRouteImport.update({
+  id: '/api/shapes/pokemon-types',
+  path: '/api/shapes/pokemon-types',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiShapesPokemonRoute = ApiShapesPokemonRouteImport.update({
+  id: '/api/shapes/pokemon',
+  path: '/api/shapes/pokemon',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -59,8 +83,12 @@ export interface FileRoutesByFullPath {
   '/debounced-preload-filters': typeof DebouncedPreloadFiltersRoute
   '/filters': typeof FiltersRoute
   '/intent-preloading': typeof IntentPreloadingRoute
+  '/live-query': typeof LiveQueryRoute
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
+  '/api/shapes/pokemon': typeof ApiShapesPokemonRoute
+  '/api/shapes/pokemon-types': typeof ApiShapesPokemonTypesRoute
+  '/api/shapes/types': typeof ApiShapesTypesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -68,8 +96,12 @@ export interface FileRoutesByTo {
   '/debounced-preload-filters': typeof DebouncedPreloadFiltersRoute
   '/filters': typeof FiltersRoute
   '/intent-preloading': typeof IntentPreloadingRoute
+  '/live-query': typeof LiveQueryRoute
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
+  '/api/shapes/pokemon': typeof ApiShapesPokemonRoute
+  '/api/shapes/pokemon-types': typeof ApiShapesPokemonTypesRoute
+  '/api/shapes/types': typeof ApiShapesTypesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -78,8 +110,12 @@ export interface FileRoutesById {
   '/debounced-preload-filters': typeof DebouncedPreloadFiltersRoute
   '/filters': typeof FiltersRoute
   '/intent-preloading': typeof IntentPreloadingRoute
+  '/live-query': typeof LiveQueryRoute
   '/pagination': typeof PaginationRoute
   '/preloading': typeof PreloadingRoute
+  '/api/shapes/pokemon': typeof ApiShapesPokemonRoute
+  '/api/shapes/pokemon-types': typeof ApiShapesPokemonTypesRoute
+  '/api/shapes/types': typeof ApiShapesTypesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -89,8 +125,12 @@ export interface FileRouteTypes {
     | '/debounced-preload-filters'
     | '/filters'
     | '/intent-preloading'
+    | '/live-query'
     | '/pagination'
     | '/preloading'
+    | '/api/shapes/pokemon'
+    | '/api/shapes/pokemon-types'
+    | '/api/shapes/types'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -98,8 +138,12 @@ export interface FileRouteTypes {
     | '/debounced-preload-filters'
     | '/filters'
     | '/intent-preloading'
+    | '/live-query'
     | '/pagination'
     | '/preloading'
+    | '/api/shapes/pokemon'
+    | '/api/shapes/pokemon-types'
+    | '/api/shapes/types'
   id:
     | '__root__'
     | '/'
@@ -107,8 +151,12 @@ export interface FileRouteTypes {
     | '/debounced-preload-filters'
     | '/filters'
     | '/intent-preloading'
+    | '/live-query'
     | '/pagination'
     | '/preloading'
+    | '/api/shapes/pokemon'
+    | '/api/shapes/pokemon-types'
+    | '/api/shapes/types'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -117,8 +165,12 @@ export interface RootRouteChildren {
   DebouncedPreloadFiltersRoute: typeof DebouncedPreloadFiltersRoute
   FiltersRoute: typeof FiltersRoute
   IntentPreloadingRoute: typeof IntentPreloadingRoute
+  LiveQueryRoute: typeof LiveQueryRoute
   PaginationRoute: typeof PaginationRoute
   PreloadingRoute: typeof PreloadingRoute
+  ApiShapesPokemonRoute: typeof ApiShapesPokemonRoute
+  ApiShapesPokemonTypesRoute: typeof ApiShapesPokemonTypesRoute
+  ApiShapesTypesRoute: typeof ApiShapesTypesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -135,6 +187,13 @@ declare module '@tanstack/react-router' {
       path: '/pagination'
       fullPath: '/pagination'
       preLoaderRoute: typeof PaginationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live-query': {
+      id: '/live-query'
+      path: '/live-query'
+      fullPath: '/live-query'
+      preLoaderRoute: typeof LiveQueryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/intent-preloading': {
@@ -172,6 +231,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/shapes/types': {
+      id: '/api/shapes/types'
+      path: '/api/shapes/types'
+      fullPath: '/api/shapes/types'
+      preLoaderRoute: typeof ApiShapesTypesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/shapes/pokemon-types': {
+      id: '/api/shapes/pokemon-types'
+      path: '/api/shapes/pokemon-types'
+      fullPath: '/api/shapes/pokemon-types'
+      preLoaderRoute: typeof ApiShapesPokemonTypesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/shapes/pokemon': {
+      id: '/api/shapes/pokemon'
+      path: '/api/shapes/pokemon'
+      fullPath: '/api/shapes/pokemon'
+      preLoaderRoute: typeof ApiShapesPokemonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -181,8 +261,12 @@ const rootRouteChildren: RootRouteChildren = {
   DebouncedPreloadFiltersRoute: DebouncedPreloadFiltersRoute,
   FiltersRoute: FiltersRoute,
   IntentPreloadingRoute: IntentPreloadingRoute,
+  LiveQueryRoute: LiveQueryRoute,
   PaginationRoute: PaginationRoute,
   PreloadingRoute: PreloadingRoute,
+  ApiShapesPokemonRoute: ApiShapesPokemonRoute,
+  ApiShapesPokemonTypesRoute: ApiShapesPokemonTypesRoute,
+  ApiShapesTypesRoute: ApiShapesTypesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

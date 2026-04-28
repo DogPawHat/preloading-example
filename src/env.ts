@@ -4,6 +4,8 @@ import * as v from "valibot";
 export const env = createEnv({
   server: {
     DATABASE_URL: v.pipe(v.string(), v.url(), v.minLength(1)),
+    ELECTRIC_SOURCE: v.pipe(v.string(), v.minLength(1)),
+    ELECTRIC_SECRET: v.pipe(v.string(), v.minLength(1)),
   },
 
   /**
