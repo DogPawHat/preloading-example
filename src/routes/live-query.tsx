@@ -18,6 +18,7 @@ const searchParamsSchema = v.object({
 });
 
 export const Route = createFileRoute("/live-query")({
+  ssr: false,
   validateSearch: searchParamsSchema,
   component: RouteComponent,
 });

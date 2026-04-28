@@ -40,6 +40,7 @@ function FilterSubmitContextProvider(props: {
 }
 
 export const Route = createFileRoute("/live-query-filters")({
+  ssr: false,
   validateSearch: searchParamsSchema,
   component: RouteComponent,
 });
