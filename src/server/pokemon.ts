@@ -22,8 +22,6 @@ const innerGetPokemonList = async (offset: number) => {
   // Remove the extra item if it exists
   const results = hasMore ? pokemon.slice(0, -1) : pokemon;
 
-  console.log("results", results);
-
   return {
     pokemon: results,
     nextOffset: hasMore ? offset + POKEMON_LIMIT : null,
@@ -49,8 +47,6 @@ const innerGetFilteredPokemonList = async (offset: number, nameFilter: string) =
 
   // Remove the extra item if it exists
   const results = hasMore ? pokemon.slice(0, -1) : pokemon;
-
-  console.log("filtered results", results, "filter:", nameFilter);
 
   return {
     pokemon: results,
