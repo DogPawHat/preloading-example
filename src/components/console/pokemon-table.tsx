@@ -59,7 +59,7 @@ export function PokemonTable({ pokemon, className }: PokemonTableProps) {
               "uppercase text-xs tracking-wider",
             )}
           >
-            Details
+            Types
           </TableHead>
         </TableRow>
       </TableHeader>

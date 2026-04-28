@@ -3,18 +3,9 @@ import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { useDebouncedCallback } from "@tanstack/react-pacer";
 import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
-import { QueryTrace } from "~/components/console/query-trace";
-import {
-  formatFilteredPokemonListQueryKey,
-  getCacheStatus,
-  getFetchStatus,
-  getLoadingCacheStatus,
-  getLoadingFetchStatus,
-  getLoadingPreloadStatus,
-  getPreloadStatus,
-} from "~/components/console/query-trace-utils";
 import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
 import { PaginationNav } from "~/components/pagination-nav";
+import { StrategyPageLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
 import { SectionHeader } from "~/components/console/section-header";
 import { PokemonTableSkeleton } from "~/components/console/pokemon-table-skeleton";
@@ -27,15 +18,6 @@ const { PokemonTable } = lazily(() => import("~/components/console/pokemon-table
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
   name: v.optional(v.string(), ""),
-});
-
-const getDebouncedQueryTraceProps = (currentOffset: number, nameFilter: string) => ({
-  behaviorDescription:
-    "Debounced preload: typing starts filtered Pokémon prefetches before submit, then the route loader confirms the submitted query.",
-  queryKeys: [
-    formatFilteredPokemonListQueryKey("debounced-preload-filters", currentOffset, nameFilter),
-  ],
-  strategyDescription: "100ms debounced prefetchQuery + loader prefetchQuery",
 });
 
 export const Route = createFileRoute("/debounced-preload-filters")({
@@ -116,85 +98,72 @@ function RouteComponent() {
 
   return (
     <main className="min-h-screen bg-(--bg-primary) p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeader title="06_debounced" subtitle="// Advanced filter prefetch" />
 
-        {/* Filter UI */}
-        <ConsoleCard className="mb-6">
-          <h2 className="text-sm font-semibold mb-4 text-(--text-primary) uppercase tracking-wider">
-            Filters
-          </h2>
-          <p className="text-sm text-(--text-muted) mb-4">
-            Preloads results while typing (debounced 100ms)
-          </p>
-          <PreloadFilterSubmitContextProvider
-            initialName={nameFilter}
-            handleSubmit={(newNameFilter) => {
-              void navigate({
-                search: { name: newNameFilter },
-              });
-            }}
-          >
-            <FilterForm />
-          </PreloadFilterSubmitContextProvider>
-        </ConsoleCard>
+        <StrategyPageLayout
+          articleEyebrow="Debounced search"
+          articleTitle="Debounced filter prefetch"
+        >
+          {/* Filter UI */}
+          <ConsoleCard className="mb-6">
+            <h2 className="text-sm font-semibold mb-4 text-(--text-primary) uppercase tracking-wider">
+              Filters
+            </h2>
+            <p className="text-sm text-(--text-muted) mb-4">
+              Preloads results while typing (debounced 100ms)
+            </p>
+            <PreloadFilterSubmitContextProvider
+              initialName={nameFilter}
+              handleSubmit={(newNameFilter) => {
+                void navigate({
+                  search: { name: newNameFilter },
+                });
+              }}
+            >
+              <FilterForm />
+            </PreloadFilterSubmitContextProvider>
+          </ConsoleCard>
 
-        <ConsoleCard>
-          <h1 className="text-lg font-mono text-(--text-primary) mb-4">
-            National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
-            {nameFilter && (
-              <span className="text-(--text-muted)"> (filtered: &quot;{nameFilter}&quot;)</span>
-            )}
-          </h1>
+          <ConsoleCard>
+            <h1 className="text-lg font-mono text-(--text-primary) mb-4">
+              National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
+              {nameFilter && (
+                <span className="text-(--text-muted)"> (filtered: &quot;{nameFilter}&quot;)</span>
+              )}
+            </h1>
 
-          <Suspense
-            fallback={
-              <>
-                <div className="min-h-125">
-                  <QueryTrace
-                    {...getDebouncedQueryTraceProps(currentOffset, nameFilter)}
-                    cacheStatus={getLoadingCacheStatus()}
-                    fetchStatus={getLoadingFetchStatus()}
-                    preloadStatus={getLoadingPreloadStatus()}
+            <Suspense
+              fallback={
+                <>
+                  <div className="min-h-125">
+                    <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
+                  </div>
+                  <PaginationNav
+                    prevOffset={null}
+                    nextOffset={null}
+                    to="/debounced-preload-filters"
                   />
-                  <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
-                </div>
-                <PaginationNav
-                  prevOffset={null}
-                  nextOffset={null}
-                  to="/debounced-preload-filters"
-                />
-              </>
-            }
-          >
-            <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
-          </Suspense>
-        </ConsoleCard>
+                </>
+              }
+            >
+              <PokemonTableContent nameFilter={nameFilter} />
+            </Suspense>
+          </ConsoleCard>
+        </StrategyPageLayout>
       </div>
     </main>
   );
 }
 
-function PokemonTableContent({
-  currentOffset,
-  nameFilter,
-}: {
-  currentOffset: number;
-  nameFilter: string;
-}) {
+function PokemonTableContent({ nameFilter }: { nameFilter: string }) {
   const { pokemonListOptions } = useRouteContext({ from: "/debounced-preload-filters" });
-  const { data, dataUpdatedAt, fetchStatus, status } = useSuspenseQuery(pokemonListOptions);
+  const { data } = useSuspenseQuery(pokemonListOptions);
   const filteredPokemon = data.pokemon;
 
   return (
     <>
       <div className="min-h-125">
-        <QueryTrace
-          {...getDebouncedQueryTraceProps(currentOffset, nameFilter)}
-          cacheStatus={getCacheStatus(dataUpdatedAt)}
-          fetchStatus={getFetchStatus(fetchStatus, status)}
-          preloadStatus={getPreloadStatus(dataUpdatedAt)}
-        />
         <PokemonTable pokemon={filteredPokemon} />
 
         {filteredPokemon.length === 0 && nameFilter && (

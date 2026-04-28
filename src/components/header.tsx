@@ -9,6 +9,8 @@ const navItems = [
   { to: "/pagination", label: "04_pagination", preload: "intent" as const },
   { to: "/filters", label: "05_filters", preload: "intent" as const },
   { to: "/debounced-preload-filters", label: "06_debounced-filters", preload: "intent" as const },
+  { to: "/live-query", label: "07_live-query", preload: "intent" as const },
+  { to: "/live-query-filters", label: "08_live-query-filters", preload: "intent" as const },
 ];
 
 export function Header() {

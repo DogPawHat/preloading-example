@@ -1,5 +1,6 @@
 import { BasicIndex, createCollection } from "@tanstack/react-db";
 import { electricCollectionOptions } from "@tanstack/electric-db-collection";
+import { snakeCamelMapper } from "@electric-sql/client";
 
 import { pokemonSelectSchema, typesSelectSchema, pokemonTypesSelectSchema } from "~/data/schema";
 
@@ -7,6 +8,7 @@ export const pokemonCollection = createCollection(
   electricCollectionOptions({
     shapeOptions: {
       url: "http://localhost:3000/api/shapes/pokemon",
+      columnMapper: snakeCamelMapper(),
     },
     getKey: (item) => item.id,
     schema: pokemonSelectSchema,
@@ -19,6 +21,7 @@ export const typesCollection = createCollection(
   electricCollectionOptions({
     shapeOptions: {
       url: "http://localhost:3000/api/shapes/types",
+      columnMapper: snakeCamelMapper(),
     },
     getKey: (item) => item.id,
     schema: typesSelectSchema,
@@ -30,6 +33,7 @@ export const pokemonTypesCollection = createCollection(
   electricCollectionOptions({
     shapeOptions: {
       url: "http://localhost:3000/api/shapes/pokemon-types",
+      columnMapper: snakeCamelMapper(),
     },
     getKey: (item) => item.id,
     schema: pokemonTypesSelectSchema,
