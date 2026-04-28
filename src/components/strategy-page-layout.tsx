@@ -1,3 +1,4 @@
+import { ChapterPager } from "~/components/chapter-navigation";
 import { StrategyArticle } from "~/components/strategy-article";
 
 interface StrategyPageLayoutProps {
@@ -12,9 +13,12 @@ export function StrategyPageLayout({
   children,
 }: StrategyPageLayoutProps) {
   return (
-    <div className="grid gap-8 xl:grid-cols-[minmax(0,0.9fr)_minmax(34rem,1.1fr)] xl:items-start">
-      <StrategyArticle eyebrow={articleEyebrow} title={articleTitle} />
-      <div className="min-w-0">{children}</div>
-    </div>
+    <>
+      <div className="grid gap-8 xl:grid-cols-[minmax(0,0.9fr)_minmax(34rem,1.1fr)] xl:items-start">
+        <StrategyArticle eyebrow={articleEyebrow} title={articleTitle} />
+        <div className="min-w-0">{children}</div>
+      </div>
+      <ChapterPager />
+    </>
   );
 }
