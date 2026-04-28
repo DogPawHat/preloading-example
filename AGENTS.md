@@ -7,7 +7,7 @@ This project uses Vite+ and the `vp` CLI.
 - Do not use `pnpm`, `npm`, or Yarn directly for installs, updates, or package execution.
 - Do not use raw tool CLIs like `vite`, `vitest`, `oxlint`, or `oxfmt`; use the matching `vp` command instead.
 - Use `vp run <script>` when you need a package script that shares a name with a built-in Vite+ command.
-- Use `vp dlx` instead of `npx` for one-off package binaries.
+- Use `vpx` instead of `npx` for one-off package binaries.
 - Import JavaScript modules from `vite-plus` rather than `vite` or `vitest`.
 
 ## CI Notes
