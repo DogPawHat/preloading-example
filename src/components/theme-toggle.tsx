@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import * as React from "react";
 
 type Theme = "system" | "light" | "dark";
 
@@ -15,17 +15,17 @@ function getResolvedTheme(theme: Theme): "light" | "dark" {
 }
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("system");
-  const [isClicked, setIsClicked] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [theme, setTheme] = React.useState<Theme>("system");
+  const [isClicked, setIsClicked] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setMounted(true);
     const saved = localStorage.getItem("theme") as Theme | null;
     if (saved) setTheme(saved);
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const root = document.documentElement;
     if (theme === "system") {
       root.removeAttribute("data-theme");
@@ -36,7 +36,7 @@ export function ThemeToggle() {
     }
   }, [theme]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const handler = () => {
       if (theme === "system") {
@@ -48,7 +48,7 @@ export function ThemeToggle() {
     return () => media.removeEventListener("change", handler);
   }, [theme]);
 
-  const cycleTheme = useCallback(() => {
+  const cycleTheme = React.useCallback(() => {
     setIsClicked(true);
     setTimeout(() => setIsClicked(false), 150);
     setTheme((prev) => (prev === "system" ? "light" : prev === "light" ? "dark" : "system"));

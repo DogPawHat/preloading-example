@@ -1,16 +1,16 @@
-import { createContext, useContext } from "react";
+import * as React from "react";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
 
-export const FilterSubmitContext = createContext<{
+export const FilterSubmitContext = React.createContext<{
   handleSubmit: () => void;
   updateNameFilter: (nameFilter: string) => void;
   nameFilter: string;
 } | null>(null);
 
 export function FilterForm() {
-  const submitContext = useContext(FilterSubmitContext);
+  const submitContext = React.useContext(FilterSubmitContext);
 
   if (!submitContext) {
     throw new Error("FilterSubmitContext not found");

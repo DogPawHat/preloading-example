@@ -1,4 +1,4 @@
-import { Suspense, type ComponentProps, type ReactNode } from "react";
+import * as React from "react";
 import { POKEMON_LIMIT } from "~/constants";
 import { lazily } from "~/lib/lazily";
 import { PaginationNav } from "~/components/pagination-nav";
@@ -13,9 +13,9 @@ interface Pokemon {
 }
 
 interface PokedexTableSectionProps {
-  children: ReactNode;
+  children: React.ReactNode;
   currentOffset: number;
-  fallbackPagination: ReactNode;
+  fallbackPagination: React.ReactNode;
   nameFilter?: string;
 }
 
@@ -30,7 +30,7 @@ export function PokedexTableSection(props: PokedexTableSectionProps) {
           <span className="text-(--text-muted)"> (filtered: &quot;{nameFilter}&quot;)</span>
         )}
       </h1>
-      <Suspense
+      <React.Suspense
         fallback={
           <>
             <PokedexTableShell>
@@ -41,14 +41,14 @@ export function PokedexTableSection(props: PokedexTableSectionProps) {
         }
       >
         {children}
-      </Suspense>
+      </React.Suspense>
     </>
   );
 }
 
 interface PokedexTableResultsProps {
   nameFilter?: string;
-  pagination: ReactNode;
+  pagination: React.ReactNode;
   pokemon: Pokemon[];
 }
 
@@ -76,7 +76,7 @@ interface PokedexPaginationProps {
   nextOffset: number | null;
   prefetch?: "intent" | "viewport" | "render" | false;
   prevOffset: number | null;
-  to: ComponentProps<typeof PaginationNav>["to"];
+  to: React.ComponentProps<typeof PaginationNav>["to"];
 }
 
 export function PokedexPagination(props: PokedexPaginationProps) {
@@ -93,6 +93,6 @@ export function PokedexPagination(props: PokedexPaginationProps) {
   );
 }
 
-function PokedexTableShell({ children }: { children: ReactNode }) {
+function PokedexTableShell({ children }: { children: React.ReactNode }) {
   return <div className="min-h-125">{children}</div>;
 }

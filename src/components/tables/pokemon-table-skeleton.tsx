@@ -1,4 +1,4 @@
-import { Suspense, type ReactNode } from "react";
+import * as React from "react";
 import {
   Table,
   TableBody,
@@ -99,7 +99,7 @@ interface PokemonTableContainerProps {
   /**
    * The actual PokemonTable component with data
    */
-  children: ReactNode;
+  children: React.ReactNode;
   /**
    * Number of rows expected (for skeleton sizing)
    */
@@ -125,8 +125,8 @@ export function PokemonTableContainer({
   className,
 }: PokemonTableContainerProps) {
   return (
-    <Suspense fallback={<PokemonTableSkeleton rowCount={rowCount} className={className} />}>
+    <React.Suspense fallback={<PokemonTableSkeleton rowCount={rowCount} className={className} />}>
       {children}
-    </Suspense>
+    </React.Suspense>
   );
 }
