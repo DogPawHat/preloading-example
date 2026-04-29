@@ -1,5 +1,5 @@
 import type { QueryFunctionContext } from "@tanstack/react-query";
-import { getServerPokemonList, getServerFilteredPokemonList } from "~/server/pokemon";
+import { getServerPokemonList, getServerFilteredPokemonList } from "~/server/pokemon.functions";
 
 export const getPokemonListQueryKey = (location: string, offset: number) => {
   return ["pokemon-list", location, { offset }] as const;
