@@ -7,12 +7,13 @@ import { PaginationNav } from "~/components/pagination-nav";
 import { StrategyPageLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
 import { SectionHeader } from "~/components/console/section-header";
-import { PokemonTableSkeleton } from "~/components/console/pokemon-table-skeleton";
+import { PokemonTableSkeleton } from "~/components/tables/pokemon-table-skeleton";
 import { POKEMON_LIMIT } from "~/constants";
-import { getFilteredPokemonListQueryKey, getFilteredPokemonListQueryFn } from "~/util/pokemon";
-import { lazily } from "~/util/lazily";
+import { getFilteredPokemonListQueryKey, getFilteredPokemonListQueryFn } from "~/utils/pokemon";
+import { lazily } from "~/lib/lazily";
+import { getStrategyArticle } from "~/server/strategy-article.functions";
 
-const { PokemonTable } = lazily(() => import("~/components/console/pokemon-table"));
+const { PokemonTable } = lazily(() => import("~/components/tables/pokemon-table"));
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -57,14 +58,19 @@ export const Route = createFileRoute("/filters")({
       pokemonListOptions,
     };
   },
-  loader: ({ context }) => {
+  loader: async ({ context }) => {
     void context.queryClient.prefetchQuery(context.pokemonListOptions);
+    const { Renderable: Article } = await getStrategyArticle({
+      data: { title: "Submitted filter prefetch", slug: "filters" },
+    });
+    return { Article };
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { offset: currentOffset, name: nameFilter } = Route.useSearch();
+  const { Article } = Route.useLoaderData();
   const navigate = Route.useNavigate();
 
   return (
@@ -72,7 +78,7 @@ function RouteComponent() {
       <div className="max-w-7xl mx-auto">
         <SectionHeader title="05_filters" subtitle="// Search with prefetch" />
 
-        <StrategyPageLayout articleEyebrow="Search" articleTitle="Submitted filter prefetch">
+        <StrategyPageLayout sidebar={Article}>
           {/* Filter UI */}
           <ConsoleCard className="mb-6">
             <h2 className="text-sm font-semibold mb-4 text-(--text-primary) uppercase tracking-wider">

@@ -85,7 +85,7 @@ function RootDocument(props: Readonly<{ children: React.ReactNode }>) {
           Skip to main content
         </a>
         <Header />
-        <div id="main-content">{props.children}</div>
+        {props.children}
 
         <TanStackDevtools
           plugins={[

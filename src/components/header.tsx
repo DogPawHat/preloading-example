@@ -16,9 +16,6 @@ export function Header() {
           <span className="hidden font-display text-lg font-semibold leading-none sm:inline">
             Prefetching Patterns
           </span>
-          <span className="hidden text-xs font-mono uppercase text-(--text-muted) sm:inline">
-            Contents
-          </span>
         </Link>
 
         <nav className="flex shrink-0 items-center gap-2" aria-label="Reader navigation">

@@ -4,15 +4,20 @@ import { useLiveSuspenseQuery, eq, ilike, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
 import { StrategyPageLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
-import { PokemonTableSkeleton } from "~/components/console/pokemon-table-skeleton";
+import { PokemonTableSkeleton } from "~/components/tables/pokemon-table-skeleton";
 import { SectionHeader } from "~/components/console/section-header";
 import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
-import { pokemonCollection, pokemonTypesCollection, typesCollection } from "~/lib/collections";
+import {
+  pokemonCollection,
+  pokemonTypesCollection,
+  typesCollection,
+} from "~/data/local/collections";
 import { cn } from "~/lib/utils";
 import { POKEMON_LIMIT } from "~/constants";
-import { lazily } from "~/util/lazily";
+import { lazily } from "~/lib/lazily";
+import { getStrategyArticle } from "~/server/strategy-article.functions";
 
-const { PokemonTable } = lazily(() => import("~/components/console/pokemon-table"));
+const { PokemonTable } = lazily(() => import("~/components/tables/pokemon-table"));
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -42,11 +47,18 @@ function FilterSubmitContextProvider(props: {
 export const Route = createFileRoute("/live-query-filters")({
   ssr: false,
   validateSearch: searchParamsSchema,
+  loader: async () => {
+    const { Renderable: Article } = await getStrategyArticle({
+      data: { title: "Reactive filtered data", slug: "live-query-filters" },
+    });
+    return { Article };
+  },
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { offset: currentOffset, name: nameFilter } = Route.useSearch();
+  const { Article } = Route.useLoaderData();
   const navigate = Route.useNavigate();
 
   return (
@@ -54,7 +66,7 @@ function RouteComponent() {
       <div className="max-w-7xl mx-auto">
         <SectionHeader title="08_live-query-filters" subtitle="// Electric SQL live search" />
 
-        <StrategyPageLayout articleEyebrow="Live search" articleTitle="Reactive filtered data">
+        <StrategyPageLayout sidebar={Article}>
           <div>
             <ConsoleCard className="mb-6">
               <h2 className="text-sm font-semibold mb-4 text-(--text-primary) uppercase tracking-wider">
