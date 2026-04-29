@@ -1,23 +1,23 @@
-import { Suspense, useCallback, useState } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveSuspenseQuery, eq, ilike, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
-import { PaginationNav } from "~/components/pagination-nav";
 import { StrategyPageLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
-import { PokemonTableSkeleton } from "~/components/tables/pokemon-table-skeleton";
 import { SectionHeader } from "~/components/console/section-header";
 import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
+import {
+  PokedexPagination,
+  PokedexTableResults,
+  PokedexTableSection,
+} from "~/components/tables/pokedex-table-section";
 import {
   pokemonCollection,
   pokemonTypesCollection,
   typesCollection,
 } from "~/data/local/collections";
 import { POKEMON_LIMIT } from "~/constants";
-import { lazily } from "~/lib/lazily";
 import { getStrategyArticle } from "~/server/strategy-article.functions";
-
-const { PokemonTable } = lazily(() => import("~/components/tables/pokemon-table"));
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -27,7 +27,7 @@ const searchParamsSchema = v.object({
 function FilterSubmitContextProvider(props: {
   initialName: string;
   handleSubmit: (nameFilter: string) => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const [nameFilter, setNameFilter] = useState(props.initialName);
 
@@ -86,30 +86,20 @@ function RouteComponent() {
             </ConsoleCard>
 
             <ConsoleCard>
-              <h1 className="text-lg font-mono text-(--text-primary) mb-4">
-                National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
-                {nameFilter && (
-                  <span className="text-(--text-muted)"> (filtered: &quot;{nameFilter}&quot;)</span>
-                )}
-              </h1>
-
-              <Suspense
-                fallback={
-                  <>
-                    <div className="min-h-125">
-                      <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
-                    </div>
-                    <PaginationNav
-                      search={{ name: nameFilter }}
-                      nextOffset={null}
-                      prevOffset={null}
-                      to="/live-query-filters"
-                    />
-                  </>
+              <PokedexTableSection
+                currentOffset={currentOffset}
+                nameFilter={nameFilter}
+                fallbackPagination={
+                  <PokedexPagination
+                    nameFilter={nameFilter}
+                    nextOffset={null}
+                    prevOffset={null}
+                    to="/live-query-filters"
+                  />
                 }
               >
                 <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
-              </Suspense>
+              </PokedexTableSection>
             </ConsoleCard>
           </div>
         </StrategyPageLayout>
@@ -168,22 +158,17 @@ function PokemonTableContent({
   const nextOffset = hasMore ? currentOffset + POKEMON_LIMIT : null;
 
   return (
-    <>
-      <div className="min-h-125">
-        <PokemonTable pokemon={pokemon} />
-
-        {pokemon.length === 0 && nameFilter && (
-          <div className="text-center py-4 text-(--text-muted) font-mono text-sm">
-            No Pokémon found matching &quot;{nameFilter}&quot;
-          </div>
-        )}
-      </div>
-      <PaginationNav
-        search={{ name: nameFilter }}
-        prevOffset={prevOffset}
-        nextOffset={nextOffset}
-        to="/live-query-filters"
-      />
-    </>
+    <PokedexTableResults
+      nameFilter={nameFilter}
+      pokemon={pokemon}
+      pagination={
+        <PokedexPagination
+          nameFilter={nameFilter}
+          prevOffset={prevOffset}
+          nextOffset={nextOffset}
+          to="/live-query-filters"
+        />
+      }
+    />
   );
 }

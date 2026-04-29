@@ -1,22 +1,21 @@
-import { Suspense } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveSuspenseQuery, eq, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
-import { PaginationNav } from "~/components/pagination-nav";
 import { StrategyPageLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
 import { SectionHeader } from "~/components/console/section-header";
-import { PokemonTableSkeleton } from "~/components/tables/pokemon-table-skeleton";
+import {
+  PokedexPagination,
+  PokedexTableResults,
+  PokedexTableSection,
+} from "~/components/tables/pokedex-table-section";
 import { POKEMON_LIMIT } from "~/constants";
-import { lazily } from "~/lib/lazily";
 import { getStrategyArticle } from "~/server/strategy-article.functions";
 import {
   pokemonCollection,
   typesCollection,
   pokemonTypesCollection,
 } from "~/data/local/collections";
-
-const { PokemonTable } = lazily(() => import("~/components/tables/pokemon-table"));
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -45,21 +44,14 @@ function RouteComponent() {
 
         <StrategyPageLayout sidebar={Article}>
           <ConsoleCard className="mb-6">
-            <h1 className="text-lg font-mono text-(--text-primary) mb-4">
-              National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
-            </h1>
-            <Suspense
-              fallback={
-                <>
-                  <div className="min-h-125">
-                    <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
-                  </div>
-                  <PaginationNav prevOffset={null} nextOffset={null} to="/live-query" />
-                </>
+            <PokedexTableSection
+              currentOffset={currentOffset}
+              fallbackPagination={
+                <PokedexPagination prevOffset={null} nextOffset={null} to="/live-query" />
               }
             >
               <PokemonTableContent currentOffset={currentOffset} />
-            </Suspense>
+            </PokedexTableSection>
           </ConsoleCard>
         </StrategyPageLayout>
       </div>
@@ -105,11 +97,11 @@ function PokemonTableContent({ currentOffset }: { currentOffset: number }) {
   const nextOffset = hasMore ? currentOffset + POKEMON_LIMIT : null;
 
   return (
-    <>
-      <div className="min-h-125">
-        <PokemonTable pokemon={pokemon} />
-      </div>
-      <PaginationNav prevOffset={prevOffset} nextOffset={nextOffset} to="/live-query" />
-    </>
+    <PokedexTableResults
+      pokemon={pokemon}
+      pagination={
+        <PokedexPagination prevOffset={prevOffset} nextOffset={nextOffset} to="/live-query" />
+      }
+    />
   );
 }

@@ -1,20 +1,19 @@
-import { Suspense, useCallback, useState } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { useDebouncedCallback } from "@tanstack/react-pacer";
 import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
-import { PaginationNav } from "~/components/pagination-nav";
 import { StrategyPageLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
 import { SectionHeader } from "~/components/console/section-header";
-import { PokemonTableSkeleton } from "~/components/tables/pokemon-table-skeleton";
-import { POKEMON_LIMIT } from "~/constants";
+import {
+  PokedexPagination,
+  PokedexTableResults,
+  PokedexTableSection,
+} from "~/components/tables/pokedex-table-section";
 import { getFilteredPokemonListQueryKey, getFilteredPokemonListQueryFn } from "~/utils/pokemon";
-import { lazily } from "~/lib/lazily";
 import { getStrategyArticle } from "~/server/strategy-article.functions";
-
-const { PokemonTable } = lazily(() => import("~/components/tables/pokemon-table"));
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -56,7 +55,7 @@ export const Route = createFileRoute("/debounced-preload-filters")({
 function PreloadFilterSubmitContextProvider(props: {
   initialName: string;
   handleSubmit: (nameFilter: string) => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const queryClient = useQueryClient();
   const { pokemonListOptions: serverPokemonListOptions } = Route.useRouteContext();
@@ -129,29 +128,19 @@ function RouteComponent() {
           </ConsoleCard>
 
           <ConsoleCard>
-            <h1 className="text-lg font-mono text-(--text-primary) mb-4">
-              National Pokédex: Pokémon {currentOffset + 1}-{currentOffset + POKEMON_LIMIT}
-              {nameFilter && (
-                <span className="text-(--text-muted)"> (filtered: &quot;{nameFilter}&quot;)</span>
-              )}
-            </h1>
-
-            <Suspense
-              fallback={
-                <>
-                  <div className="min-h-125">
-                    <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
-                  </div>
-                  <PaginationNav
-                    prevOffset={null}
-                    nextOffset={null}
-                    to="/debounced-preload-filters"
-                  />
-                </>
+            <PokedexTableSection
+              currentOffset={currentOffset}
+              nameFilter={nameFilter}
+              fallbackPagination={
+                <PokedexPagination
+                  prevOffset={null}
+                  nextOffset={null}
+                  to="/debounced-preload-filters"
+                />
               }
             >
               <PokemonTableContent nameFilter={nameFilter} />
-            </Suspense>
+            </PokedexTableSection>
           </ConsoleCard>
         </StrategyPageLayout>
       </div>
@@ -165,22 +154,17 @@ function PokemonTableContent({ nameFilter }: { nameFilter: string }) {
   const filteredPokemon = data.pokemon;
 
   return (
-    <>
-      <div className="min-h-125">
-        <PokemonTable pokemon={filteredPokemon} />
-
-        {filteredPokemon.length === 0 && nameFilter && (
-          <div className="text-center py-4 text-(--text-muted) font-mono text-sm">
-            No Pokémon found matching &quot;{nameFilter}&quot;
-          </div>
-        )}
-      </div>
-      <PaginationNav
-        prefetch="viewport"
-        prevOffset={data.prevOffset}
-        nextOffset={data.nextOffset}
-        to="/debounced-preload-filters"
-      />
-    </>
+    <PokedexTableResults
+      nameFilter={nameFilter}
+      pokemon={filteredPokemon}
+      pagination={
+        <PokedexPagination
+          prefetch="viewport"
+          prevOffset={data.prevOffset}
+          nextOffset={data.nextOffset}
+          to="/debounced-preload-filters"
+        />
+      }
+    />
   );
 }
