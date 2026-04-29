@@ -15,7 +15,11 @@ import {
   pokemonTypesCollection,
   typesCollection,
 } from "~/data/local/collections";
-import { POKEMON_LIMIT } from "~/constants";
+import {
+  getPokemonListingQueryLimit,
+  normalizePokemonNameFilter,
+  toPokemonListing,
+} from "~/lib/pokemon-listing";
 import { getStrategyArticle } from "~/server/strategy-article.functions";
 
 const searchParamsSchema = v.object({
@@ -112,7 +116,7 @@ function PokemonTableContent({
   currentOffset: number;
   nameFilter: string;
 }) {
-  const trimmedNameFilter = nameFilter.trim();
+  const trimmedNameFilter = normalizePokemonNameFilter(nameFilter);
   const { data } = useLiveSuspenseQuery(
     (q) => {
       let query = q.from({ pokemon: pokemonCollection });
@@ -124,7 +128,7 @@ function PokemonTableContent({
       return query
         .orderBy(({ pokemon }) => pokemon.dexId)
         .offset(currentOffset)
-        .limit(POKEMON_LIMIT + 1)
+        .limit(getPokemonListingQueryLimit())
         .select(({ pokemon }) => ({
           id: pokemon.id,
           name: pokemon.name,
@@ -145,24 +149,17 @@ function PokemonTableContent({
     [currentOffset, trimmedNameFilter],
   );
 
-  const hasMore = data.length > POKEMON_LIMIT;
-  const pokemon = (hasMore ? data.slice(0, POKEMON_LIMIT) : data).map((pokemon) => ({
-    id: pokemon.id,
-    name: pokemon.name,
-    types: pokemon.types.map((type) => ({ name: type.name })),
-  }));
-  const prevOffset = currentOffset > 0 ? Math.max(0, currentOffset - POKEMON_LIMIT) : null;
-  const nextOffset = hasMore ? currentOffset + POKEMON_LIMIT : null;
+  const listing = toPokemonListing(data, { offset: currentOffset, nameFilter });
 
   return (
     <PokedexTableResults
       nameFilter={nameFilter}
-      pokemon={pokemon}
+      pokemon={listing.pokemon}
       pagination={
         <PokedexPagination
           nameFilter={nameFilter}
-          prevOffset={prevOffset}
-          nextOffset={nextOffset}
+          prevOffset={listing.prevOffset}
+          nextOffset={listing.nextOffset}
           to="/live-query-filters"
         />
       }

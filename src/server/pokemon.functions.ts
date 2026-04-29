@@ -1,7 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import * as v from "valibot";
 import { DB } from "~/data/db";
-import { POKEMON_LIMIT } from "~/constants";
+import {
+  getPokemonListingQueryLimit,
+  normalizePokemonNameFilter,
+  toPokemonListing,
+} from "~/lib/pokemon-listing";
 
 const PokemonListParamsSchema = v.object({
   offset: v.optional(v.number()),
@@ -13,47 +17,25 @@ const FilteredPokemonListParamsSchema = v.object({
 });
 
 const innerGetPokemonList = async (offset: number) => {
-  // Fetch one extra item to check if there are more results
-  const pokemon = await DB.queries.getPokemonAtOffset(offset, POKEMON_LIMIT + 1);
+  const pokemon = await DB.queries.getPokemonAtOffset(offset, getPokemonListingQueryLimit());
 
-  // Check if there are more results by looking at the extra item
-  const hasMore = pokemon.length > POKEMON_LIMIT;
-
-  // Remove the extra item if it exists
-  const results = hasMore ? pokemon.slice(0, -1) : pokemon;
-
-  return {
-    pokemon: results,
-    nextOffset: hasMore ? offset + POKEMON_LIMIT : null,
-    prevOffset: offset > 0 ? Math.max(0, offset - POKEMON_LIMIT) : null,
-  };
+  return toPokemonListing(pokemon, { offset });
 };
 
 const innerGetFilteredPokemonList = async (offset: number, nameFilter: string) => {
-  // If no filter is provided, fall back to regular query
-  if (!nameFilter.trim()) {
+  const appliedFilter = normalizePokemonNameFilter(nameFilter);
+
+  if (!appliedFilter) {
     return await innerGetPokemonList(offset);
   }
 
-  // Fetch one extra item to check if there are more results
   const pokemon = await DB.queries.getFilteredPokemonAtOffset(
     offset,
-    POKEMON_LIMIT + 1,
-    `%${nameFilter.trim()}%`,
+    getPokemonListingQueryLimit(),
+    appliedFilter,
   );
 
-  // Check if there are more results by looking at the extra item
-  const hasMore = pokemon.length > POKEMON_LIMIT;
-
-  // Remove the extra item if it exists
-  const results = hasMore ? pokemon.slice(0, -1) : pokemon;
-
-  return {
-    pokemon: results,
-    nextOffset: hasMore ? offset + POKEMON_LIMIT : null,
-    prevOffset: offset > 0 ? Math.max(0, offset - POKEMON_LIMIT) : null,
-    appliedFilter: nameFilter.trim(),
-  };
+  return toPokemonListing(pokemon, { offset, nameFilter: appliedFilter });
 };
 
 export const getServerPokemonList = createServerFn({ method: "GET" })

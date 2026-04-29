@@ -8,13 +8,13 @@ import {
   PokedexTableResults,
   PokedexTableSection,
 } from "~/components/tables/pokedex-table-section";
-import { POKEMON_LIMIT } from "~/constants";
 import { getStrategyArticle } from "~/server/strategy-article.functions";
 import {
   pokemonCollection,
   typesCollection,
   pokemonTypesCollection,
 } from "~/data/local/collections";
+import { getPokemonListingQueryLimit, toPokemonListing } from "~/lib/pokemon-listing";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -63,7 +63,7 @@ function PokemonTableContent({ currentOffset }: { currentOffset: number }) {
         .from({ pokemon: pokemonCollection })
         .orderBy(({ pokemon }) => pokemon.dexId)
         .offset(currentOffset)
-        .limit(POKEMON_LIMIT + 1)
+        .limit(getPokemonListingQueryLimit())
         .select(({ pokemon }) => ({
           id: pokemon.id,
           name: pokemon.name,
@@ -84,20 +84,17 @@ function PokemonTableContent({ currentOffset }: { currentOffset: number }) {
     [currentOffset],
   );
 
-  const hasMore = data.length > POKEMON_LIMIT;
-  const pokemon = (hasMore ? data.slice(0, POKEMON_LIMIT) : data).map((pokemon) => ({
-    id: pokemon.id,
-    name: pokemon.name,
-    types: pokemon.types.map((type) => ({ name: type.name })),
-  }));
-  const prevOffset = currentOffset > 0 ? Math.max(0, currentOffset - POKEMON_LIMIT) : null;
-  const nextOffset = hasMore ? currentOffset + POKEMON_LIMIT : null;
+  const listing = toPokemonListing(data, { offset: currentOffset });
 
   return (
     <PokedexTableResults
-      pokemon={pokemon}
+      pokemon={listing.pokemon}
       pagination={
-        <PokedexPagination prevOffset={prevOffset} nextOffset={nextOffset} to="/live-query" />
+        <PokedexPagination
+          prevOffset={listing.prevOffset}
+          nextOffset={listing.nextOffset}
+          to="/live-query"
+        />
       }
     />
   );
