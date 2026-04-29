@@ -1,7 +1,8 @@
 import { Suspense, useCallback, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useLiveSuspenseQuery, eq, ilike, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
+import { PaginationNav } from "~/components/pagination-nav";
 import { StrategyPageLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
 import { PokemonTableSkeleton } from "~/components/tables/pokemon-table-skeleton";
@@ -12,7 +13,6 @@ import {
   pokemonTypesCollection,
   typesCollection,
 } from "~/data/local/collections";
-import { cn } from "~/lib/utils";
 import { POKEMON_LIMIT } from "~/constants";
 import { lazily } from "~/lib/lazily";
 import { getStrategyArticle } from "~/server/strategy-article.functions";
@@ -99,10 +99,11 @@ function RouteComponent() {
                     <div className="min-h-125">
                       <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
                     </div>
-                    <LiveQueryFiltersPagination
-                      nameFilter={nameFilter}
+                    <PaginationNav
+                      search={{ name: nameFilter }}
                       nextOffset={null}
                       prevOffset={null}
+                      to="/live-query-filters"
                     />
                   </>
                 }
@@ -177,65 +178,12 @@ function PokemonTableContent({
           </div>
         )}
       </div>
-      <LiveQueryFiltersPagination
-        nameFilter={nameFilter}
+      <PaginationNav
+        search={{ name: nameFilter }}
         prevOffset={prevOffset}
         nextOffset={nextOffset}
+        to="/live-query-filters"
       />
     </>
-  );
-}
-
-function LiveQueryFiltersPagination(props: {
-  nameFilter: string;
-  prevOffset: number | null;
-  nextOffset: number | null;
-}) {
-  const { nameFilter, prevOffset, nextOffset } = props;
-
-  return (
-    <nav className="flex items-center justify-center gap-1 mt-8 font-mono">
-      <Link
-        to="/live-query-filters"
-        search={{ offset: prevOffset ?? 0, name: nameFilter }}
-        disabled={prevOffset == null}
-        className={cn(
-          "inline-flex items-center gap-2",
-          "px-3 py-2",
-          "border border-(--border-default)",
-          "bg-(--bg-secondary)",
-          "font-mono text-sm",
-          "text-(--text-primary)",
-          "transition-all duration-fast ease-default",
-          "hover:border-(--accent-default) hover:bg-(--accent-subtle)",
-          prevOffset == null && "opacity-50 cursor-not-allowed pointer-events-none",
-        )}
-      >
-        <span>&lt;</span>
-        <span>prev</span>
-      </Link>
-
-      <span className="px-2 text-(--text-muted)">|</span>
-
-      <Link
-        to="/live-query-filters"
-        search={{ offset: nextOffset ?? 0, name: nameFilter }}
-        disabled={nextOffset == null}
-        className={cn(
-          "inline-flex items-center gap-2",
-          "px-3 py-2",
-          "border border-(--border-default)",
-          "bg-(--bg-secondary)",
-          "font-mono text-sm",
-          "text-(--text-primary)",
-          "transition-all duration-fast ease-default",
-          "hover:border-(--accent-default) hover:bg-(--accent-subtle)",
-          nextOffset == null && "opacity-50 cursor-not-allowed pointer-events-none",
-        )}
-      >
-        <span>next</span>
-        <span>&gt;</span>
-      </Link>
-    </nav>
   );
 }

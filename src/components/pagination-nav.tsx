@@ -5,11 +5,12 @@ interface PaginationNavProps {
   prefetch?: "intent" | "viewport" | "render" | false;
   prevOffset: number | null;
   nextOffset: number | null;
+  search?: Record<string, unknown>;
   to: keyof FileRoutesByPath;
 }
 
 export function PaginationNav(props: PaginationNavProps) {
-  const { prefetch, prevOffset, nextOffset, to } = props;
+  const { prefetch, prevOffset, nextOffset, search, to } = props;
 
   return (
     <nav className="flex items-center justify-center gap-1 mt-8 font-mono">
@@ -17,7 +18,7 @@ export function PaginationNav(props: PaginationNavProps) {
       <Link
         preload={prefetch}
         to={to}
-        search={{ offset: prevOffset }}
+        search={{ ...search, offset: prevOffset ?? 0 }}
         disabled={prevOffset == null}
         className={cn(
           "inline-flex items-center gap-2",
@@ -42,7 +43,7 @@ export function PaginationNav(props: PaginationNavProps) {
       <Link
         preload={prefetch}
         to={to}
-        search={{ offset: nextOffset }}
+        search={{ ...search, offset: nextOffset ?? 0 }}
         disabled={nextOffset == null}
         className={cn(
           "inline-flex items-center gap-2",
