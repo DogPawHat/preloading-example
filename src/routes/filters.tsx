@@ -1,8 +1,7 @@
-import * as React from "react";
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
-import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
+import { FilterForm } from "~/components/filter-form";
 import { StrategyChapterLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
 import {
@@ -17,26 +16,6 @@ const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
   name: v.optional(v.string(), ""),
 });
-
-function FilterSubmitContextProvider(props: {
-  initialName: string;
-  handleSubmit: (nameFilter: string) => void;
-  children: React.ReactNode;
-}) {
-  const [nameFilter, setNameFilter] = React.useState(props.initialName);
-
-  const handleSubmit = React.useCallback(() => {
-    props.handleSubmit(nameFilter);
-  }, [nameFilter, props]);
-
-  return (
-    <FilterSubmitContext.Provider
-      value={{ handleSubmit, nameFilter, updateNameFilter: setNameFilter }}
-    >
-      {props.children}
-    </FilterSubmitContext.Provider>
-  );
-}
 
 export const Route = createFileRoute("/filters")({
   validateSearch: searchParamsSchema,
@@ -78,20 +57,14 @@ function RouteComponent() {
       sidebar={Article}
     >
       <ConsoleCard className="mb-6">
-        <h2 className="text-sm font-semibold mb-4 text-(--text-primary) uppercase tracking-wider">
-          Filters
-        </h2>
-        <FilterSubmitContextProvider
-          key={`filter-submit-context-provider-${nameFilter}`}
+        <FilterForm
           initialName={nameFilter}
-          handleSubmit={(newNameFilter) => {
+          onSubmit={(newNameFilter) => {
             void navigate({
               search: { name: newNameFilter },
             });
           }}
-        >
-          <FilterForm />
-        </FilterSubmitContextProvider>
+        />
       </ConsoleCard>
 
       <ConsoleCard>

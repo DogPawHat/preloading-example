@@ -3,25 +3,39 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
 
-export const FilterSubmitContext = React.createContext<{
-  handleSubmit: () => void;
-  updateNameFilter: (nameFilter: string) => void;
-  nameFilter: string;
-} | null>(null);
+type FilterFormProps = {
+  initialName: string;
+  onSubmit: (nameFilter: string) => void;
+  onNameChange?: (nameFilter: string) => void;
+  description?: string;
+};
 
-export function FilterForm() {
-  const submitContext = React.useContext(FilterSubmitContext);
+export function FilterForm(props: FilterFormProps) {
+  const { description, initialName, onNameChange, onSubmit } = props;
+  const [nameFilter, setNameFilter] = React.useState(initialName);
 
-  if (!submitContext) {
-    throw new Error("FilterSubmitContext not found");
-  }
+  React.useEffect(() => {
+    setNameFilter(initialName);
+  }, [initialName]);
+
+  const updateNameFilter = React.useCallback(
+    (value: string) => {
+      setNameFilter(value);
+      onNameChange?.(value);
+    },
+    [onNameChange],
+  );
 
   return (
     <div className="space-y-4">
+      <h2 className="text-sm font-semibold text-(--text-primary) uppercase tracking-wider">
+        Filters
+      </h2>
+      {description ? <p className="text-sm text-(--text-muted)">{description}</p> : null}
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          submitContext.handleSubmit();
+          onSubmit(nameFilter);
         }}
       >
         <Label
@@ -34,8 +48,8 @@ export function FilterForm() {
           id="name-filter"
           type="text"
           placeholder="Enter Pokemon name..."
-          value={submitContext.nameFilter}
-          onChange={(e) => submitContext.updateNameFilter(e.target.value)}
+          value={nameFilter}
+          onChange={(e) => updateNameFilter(e.target.value)}
           className="mt-2 bg-(--bg-secondary) border-(--border-default) focus:border-(--accent-default) focus:ring-0 rounded-none font-mono text-sm"
         />
         <Button type="submit" className="mt-2">

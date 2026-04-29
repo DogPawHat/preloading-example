@@ -1,10 +1,9 @@
-import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveSuspenseQuery, eq, ilike, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
 import { StrategyChapterLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
-import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
+import { FilterForm } from "~/components/filter-form";
 import {
   PokedexPagination,
   PokedexTableResults,
@@ -26,26 +25,6 @@ const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
   name: v.optional(v.string(), ""),
 });
-
-function FilterSubmitContextProvider(props: {
-  initialName: string;
-  handleSubmit: (nameFilter: string) => void;
-  children: React.ReactNode;
-}) {
-  const [nameFilter, setNameFilter] = React.useState(props.initialName);
-
-  const handleSubmit = React.useCallback(() => {
-    props.handleSubmit(nameFilter);
-  }, [nameFilter, props]);
-
-  return (
-    <FilterSubmitContext.Provider
-      value={{ handleSubmit, nameFilter, updateNameFilter: setNameFilter }}
-    >
-      {props.children}
-    </FilterSubmitContext.Provider>
-  );
-}
 
 export const Route = createFileRoute("/live-query-filters")({
   ssr: false,
@@ -72,20 +51,14 @@ function RouteComponent() {
     >
       <div>
         <ConsoleCard className="mb-6">
-          <h2 className="text-sm font-semibold mb-4 text-(--text-primary) uppercase tracking-wider">
-            Filters
-          </h2>
-          <FilterSubmitContextProvider
-            key={`live-filter-submit-context-provider-${nameFilter}`}
+          <FilterForm
             initialName={nameFilter}
-            handleSubmit={(newNameFilter) => {
+            onSubmit={(newNameFilter) => {
               void navigate({
                 search: { offset: 0, name: newNameFilter },
               });
             }}
-          >
-            <FilterForm />
-          </FilterSubmitContextProvider>
+          />
         </ConsoleCard>
 
         <ConsoleCard>

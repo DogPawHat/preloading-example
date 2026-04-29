@@ -1,9 +1,8 @@
-import * as React from "react";
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { useDebouncedCallback } from "@tanstack/react-pacer";
 import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
-import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
+import { FilterForm } from "~/components/filter-form";
 import { StrategyChapterLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
 import {
@@ -51,15 +50,12 @@ export const Route = createFileRoute("/debounced-preload-filters")({
   component: RouteComponent,
 });
 
-function PreloadFilterSubmitContextProvider(props: {
-  initialName: string;
-  handleSubmit: (nameFilter: string) => void;
-  children: React.ReactNode;
-}) {
+function RouteComponent() {
+  const { offset: currentOffset, name: nameFilter } = Route.useSearch();
+  const { Article } = Route.useLoaderData();
   const queryClient = useQueryClient();
   const { pokemonListOptions: serverPokemonListOptions } = Route.useRouteContext();
-  const [nameFilter, setNameFilter] = React.useState(props.initialName);
-
+  const navigate = Route.useNavigate();
   const debouncedNameFilter = useDebouncedCallback(
     (newNameFilter: string) => {
       void queryClient.prefetchQuery({
@@ -76,30 +72,6 @@ function PreloadFilterSubmitContextProvider(props: {
     },
   );
 
-  const updateNameFilter = React.useCallback(
-    (value: string) => {
-      debouncedNameFilter(value);
-      setNameFilter(value);
-    },
-    [debouncedNameFilter],
-  );
-
-  const handleSubmit = React.useCallback(() => {
-    props.handleSubmit(nameFilter);
-  }, [nameFilter, props]);
-
-  return (
-    <FilterSubmitContext.Provider value={{ handleSubmit, nameFilter, updateNameFilter }}>
-      {props.children}
-    </FilterSubmitContext.Provider>
-  );
-}
-
-function RouteComponent() {
-  const { offset: currentOffset, name: nameFilter } = Route.useSearch();
-  const { Article } = Route.useLoaderData();
-  const navigate = Route.useNavigate();
-
   return (
     <StrategyChapterLayout
       headerTitle="06_debounced"
@@ -107,22 +79,16 @@ function RouteComponent() {
       sidebar={Article}
     >
       <ConsoleCard className="mb-6">
-        <h2 className="text-sm font-semibold mb-4 text-(--text-primary) uppercase tracking-wider">
-          Filters
-        </h2>
-        <p className="text-sm text-(--text-muted) mb-4">
-          Preloads results while typing (debounced 100ms)
-        </p>
-        <PreloadFilterSubmitContextProvider
+        <FilterForm
           initialName={nameFilter}
-          handleSubmit={(newNameFilter) => {
+          description="Preloads results while typing (debounced 100ms)"
+          onNameChange={(newNameFilter) => debouncedNameFilter(newNameFilter)}
+          onSubmit={(newNameFilter) => {
             void navigate({
               search: { name: newNameFilter },
             });
           }}
-        >
-          <FilterForm />
-        </PreloadFilterSubmitContextProvider>
+        />
       </ConsoleCard>
 
       <ConsoleCard>
