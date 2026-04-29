@@ -2,9 +2,8 @@ import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveSuspenseQuery, eq, ilike, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
-import { StrategyPageLayout } from "~/components/strategy-page-layout";
+import { StrategyChapterLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
-import { SectionHeader } from "~/components/console/section-header";
 import { FilterForm, FilterSubmitContext } from "~/components/filter-form";
 import {
   PokedexPagination,
@@ -62,49 +61,47 @@ function RouteComponent() {
   const navigate = Route.useNavigate();
 
   return (
-    <main className="min-h-screen bg-(--bg-primary) p-6">
-      <div className="max-w-7xl mx-auto">
-        <SectionHeader title="08_live-query-filters" subtitle="// Electric SQL live search" />
+    <StrategyChapterLayout
+      headerTitle="08_live-query-filters"
+      headerSubtitle="// Electric SQL live search"
+      sidebar={Article}
+    >
+      <div>
+        <ConsoleCard className="mb-6">
+          <h2 className="text-sm font-semibold mb-4 text-(--text-primary) uppercase tracking-wider">
+            Filters
+          </h2>
+          <FilterSubmitContextProvider
+            key={`live-filter-submit-context-provider-${nameFilter}`}
+            initialName={nameFilter}
+            handleSubmit={(newNameFilter) => {
+              void navigate({
+                search: { offset: 0, name: newNameFilter },
+              });
+            }}
+          >
+            <FilterForm />
+          </FilterSubmitContextProvider>
+        </ConsoleCard>
 
-        <StrategyPageLayout sidebar={Article}>
-          <div>
-            <ConsoleCard className="mb-6">
-              <h2 className="text-sm font-semibold mb-4 text-(--text-primary) uppercase tracking-wider">
-                Filters
-              </h2>
-              <FilterSubmitContextProvider
-                key={`live-filter-submit-context-provider-${nameFilter}`}
-                initialName={nameFilter}
-                handleSubmit={(newNameFilter) => {
-                  void navigate({
-                    search: { offset: 0, name: newNameFilter },
-                  });
-                }}
-              >
-                <FilterForm />
-              </FilterSubmitContextProvider>
-            </ConsoleCard>
-
-            <ConsoleCard>
-              <PokedexTableSection
-                currentOffset={currentOffset}
+        <ConsoleCard>
+          <PokedexTableSection
+            currentOffset={currentOffset}
+            nameFilter={nameFilter}
+            fallbackPagination={
+              <PokedexPagination
                 nameFilter={nameFilter}
-                fallbackPagination={
-                  <PokedexPagination
-                    nameFilter={nameFilter}
-                    nextOffset={null}
-                    prevOffset={null}
-                    to="/live-query-filters"
-                  />
-                }
-              >
-                <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
-              </PokedexTableSection>
-            </ConsoleCard>
-          </div>
-        </StrategyPageLayout>
+                nextOffset={null}
+                prevOffset={null}
+                to="/live-query-filters"
+              />
+            }
+          >
+            <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
+          </PokedexTableSection>
+        </ConsoleCard>
       </div>
-    </main>
+    </StrategyChapterLayout>
   );
 }
 

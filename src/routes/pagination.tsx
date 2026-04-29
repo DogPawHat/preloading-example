@@ -1,9 +1,8 @@
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
-import { StrategyPageLayout } from "~/components/strategy-page-layout";
+import { StrategyChapterLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
-import { SectionHeader } from "~/components/console/section-header";
 import {
   PokedexPagination,
   PokedexTableResults,
@@ -48,24 +47,22 @@ function RouteComponent() {
   const { Article } = Route.useLoaderData();
 
   return (
-    <main className="min-h-screen bg-(--bg-primary) p-6">
-      <div className="max-w-7xl mx-auto">
-        <SectionHeader title="04_pagination" subtitle="// Preloading next/prev pages" />
-
-        <StrategyPageLayout sidebar={Article}>
-          <ConsoleCard className="mb-6">
-            <PokedexTableSection
-              currentOffset={currentOffset}
-              fallbackPagination={
-                <PokedexPagination prevOffset={null} nextOffset={null} to="/pagination" />
-              }
-            >
-              <PokemonTableContent />
-            </PokedexTableSection>
-          </ConsoleCard>
-        </StrategyPageLayout>
-      </div>
-    </main>
+    <StrategyChapterLayout
+      headerTitle="04_pagination"
+      headerSubtitle="// Preloading next/prev pages"
+      sidebar={Article}
+    >
+      <ConsoleCard className="mb-6">
+        <PokedexTableSection
+          currentOffset={currentOffset}
+          fallbackPagination={
+            <PokedexPagination prevOffset={null} nextOffset={null} to="/pagination" />
+          }
+        >
+          <PokemonTableContent />
+        </PokedexTableSection>
+      </ConsoleCard>
+    </StrategyChapterLayout>
   );
 }
 

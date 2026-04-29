@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
-import { StrategyPageLayout } from "~/components/strategy-page-layout";
+import { StrategyChapterLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
-import { SectionHeader } from "~/components/console/section-header";
 import {
   PokedexPagination,
   PokedexTableResults,
@@ -32,24 +31,20 @@ function RouteComponent() {
   const { Article } = Route.useLoaderData();
 
   return (
-    <main className="min-h-screen bg-(--bg-primary) p-6">
-      <div className="max-w-7xl mx-auto">
-        <SectionHeader title="01_basic" subtitle="// No prefetching (baseline)" />
-
-        <StrategyPageLayout sidebar={Article}>
-          <ConsoleCard className="mb-6">
-            <PokedexTableSection
-              currentOffset={currentOffset}
-              fallbackPagination={
-                <PokedexPagination prevOffset={null} nextOffset={null} to="/basic" />
-              }
-            >
-              <PokemonTableContent currentOffset={currentOffset} />
-            </PokedexTableSection>
-          </ConsoleCard>
-        </StrategyPageLayout>
-      </div>
-    </main>
+    <StrategyChapterLayout
+      headerTitle="01_basic"
+      headerSubtitle="// No prefetching (baseline)"
+      sidebar={Article}
+    >
+      <ConsoleCard className="mb-6">
+        <PokedexTableSection
+          currentOffset={currentOffset}
+          fallbackPagination={<PokedexPagination prevOffset={null} nextOffset={null} to="/basic" />}
+        >
+          <PokemonTableContent currentOffset={currentOffset} />
+        </PokedexTableSection>
+      </ConsoleCard>
+    </StrategyChapterLayout>
   );
 }
 
