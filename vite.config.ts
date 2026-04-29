@@ -16,7 +16,10 @@ export default defineConfig({
   fmt: {
     ignorePatterns: ["src/routeTree.gen.ts"],
   },
-  lint: { options: { typeAware: true, typeCheck: true } },
+  lint: {
+    ignorePatterns: [".agents/skills/**"],
+    options: { typeAware: true, typeCheck: true },
+  },
   server: {
     port: 3000,
   },
