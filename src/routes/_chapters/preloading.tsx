@@ -33,7 +33,6 @@ export const Route = createFileRoute("/_chapters/preloading")({
     });
 
     const preloadingArticleQueryOptions = getArticleQueryOptions({
-      title: "Route-level prefetch",
       slug: "preloading",
     });
 

@@ -2,38 +2,32 @@ import { cn } from "~/design-system/utils/cn";
 import { renderMarkdown } from "~/articles/render-markdown.server";
 
 interface ArticleShell {
-  title: string;
   markdown: string;
 }
 
-export async function ArticleShell({ title, markdown }: ArticleShell) {
+export async function ArticleShell({ markdown }: ArticleShell) {
   const content = await renderMarkdown(markdown);
 
   const mainClassName = cn([
-    "space-y-5 text-sm leading-7 text-(--text-secondary)",
-    "[&_h2]:mb-4 [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-(--text-primary) [&_h2]:first:mt-0",
-    "[&_h3]:mb-3 [&_h3]:mt-6 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-(--text-primary) first:[&_h3]:mt-0",
-    "[&_p]:mb-5",
-    "[&_ul]:mb-5 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5",
-    "[&_ol]:mb-5 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-5",
-    "[&_li]:text-(--text-secondary)",
-    "[&_strong]:font-semibold [&_strong]:text-(--text-primary)",
-    "[&_code]:rounded [&_code]:bg-(--bg-primary) [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs",
-    "[&_pre]:mb-5 [&_pre]:overflow-x-auto [&_pre]:rounded [&_pre]:bg-(--bg-primary) [&_pre]:p-4 [&_pre]:font-mono [&_pre]:text-xs",
-    "[&_a]:text-(--accent-default) [&_a]:underline [&_a]:decoration-(--accent-default)/30 [&_a]:underline-offset-2 hover:[&_a]:decoration-(--accent-default)",
-    "[&_blockquote]:mb-5 [&_blockquote]:border-l-2 [&_blockquote]:border-(--accent-default) [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-(--text-muted)",
-    "[&_hr]:my-8 [&_hr]:border-(--border-default)",
+    "prose prose-sm max-w-none leading-7",
+    "prose-headings:font-semibold prose-headings:text-(--text-primary)",
+    "prose-h2:mb-6 prose-h2:mt-8 prose-h2:text-3xl prose-h2:first:mt-0 prose-h2:font-(--font-display)",
+    "prose-h3:mb-3 prose-h3:mt-6 prose-h3:text-lg prose-h3:first:mt-0",
+    "prose-p:mb-5 prose-p:text-(--text-secondary)",
+    "prose-ul:mb-5 prose-ul:list-disc prose-ul:space-y-2 prose-ul:pl-5",
+    "prose-ol:mb-5 prose-ol:list-decimal prose-ol:space-y-2 prose-ol:pl-5",
+    "prose-li:text-(--text-secondary)",
+    "prose-strong:font-semibold prose-strong:text-(--text-primary)",
+    "prose-code:rounded prose-code:bg-(--bg-primary) prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-xs",
+    "prose-pre:mb-5 prose-pre:overflow-x-auto prose-pre:rounded prose-pre:bg-(--bg-primary) prose-pre:p-4 prose-pre:font-mono prose-pre:text-xs",
+    "prose-a:text-(--accent-default) prose-a:underline prose-a:decoration-(--accent-default)/30 prose-a:underline-offset-2 prose-a:hover:decoration-(--accent-default)",
+    "prose-blockquote:mb-5 prose-blockquote:border-l-2 prose-blockquote:border-(--accent-default) prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-(--text-muted)",
+    "prose-hr:my-8 prose-hr:border-(--border-default)",
   ]);
 
   return (
     <article className="border border-(--border-default) bg-(--bg-secondary) p-6 md:p-8 xl:sticky xl:top-20">
-      <h2 className="mb-6 text-3xl font-semibold uppercase leading-tight text-(--text-primary) md:text-4xl">
-        {title}
-      </h2>
       <div className={mainClassName}>{content}</div>
-      <div className="mt-8 border-t border-(--border-default) pt-5 font-mono text-xs uppercase text-(--text-muted)">
-        Strategy notes / walkthrough
-      </div>
     </article>
   );
 }

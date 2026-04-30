@@ -39,7 +39,6 @@ export const Route = createFileRoute("/_chapters/filters")({
     });
 
     const filtersArticleQueryOptions = getArticleQueryOptions({
-      title: "Submitted filter prefetch",
       slug: "filters",
     });
 

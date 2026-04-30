@@ -22,7 +22,6 @@ export const Route = createFileRoute("/_chapters/basic")({
   },
   context: () => {
     const noPrefetchArticleQueryOptions = getArticleQueryOptions({
-      title: "No prefetching",
       slug: "basic",
     });
     return { noPrefetchArticleQueryOptions };

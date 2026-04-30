@@ -44,7 +44,6 @@ export const Route = createFileRoute("/_chapters/debounced-preload-filters")({
     });
 
     const debouncedArticleQueryOptions = getArticleQueryOptions({
-      title: "Debounced filter prefetch",
       slug: "debounced-preload-filters",
     });
 

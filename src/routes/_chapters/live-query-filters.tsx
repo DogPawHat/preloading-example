@@ -36,7 +36,6 @@ export const Route = createFileRoute("/_chapters/live-query-filters")({
   validateSearch: searchParamsSchema,
   context: () => {
     const liveQueryFiltersArticleQueryOptions = getArticleQueryOptions({
-      title: "Reactive filtered data",
       slug: "live-query-filters",
     });
     return { liveQueryFiltersArticleQueryOptions };

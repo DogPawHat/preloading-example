@@ -33,7 +33,6 @@ export const Route = createFileRoute("/_chapters/live-query")({
   validateSearch: searchParamsSchema,
   context: () => {
     const liveQueryArticleQueryOptions = getArticleQueryOptions({
-      title: "Synced collection",
       slug: "live-query",
     });
     return { liveQueryArticleQueryOptions };

@@ -20,22 +20,20 @@ const articlesContent: Record<string, () => Promise<string>> = {
 
 const getServerArticle = createServerFn({ method: "GET" })
   .middleware([staticFunctionMiddleware])
-  .inputValidator(v.object({ title: v.string(), slug: v.string() }))
+  .inputValidator(v.object({ slug: v.string() }))
   .handler(async ({ data }) => {
     const markdown = await (articlesContent[data.slug]?.() ??
       Promise.resolve("Content coming soon."));
 
-    const article = await renderServerComponent(
-      <ArticleShell title={data.title} markdown={markdown} />,
-    );
+    const article = await renderServerComponent(<ArticleShell markdown={markdown} />);
 
     return { article };
   });
 
-export const getArticleQueryOptions = ({ title, slug }: { title: string; slug: string }) =>
+export const getArticleQueryOptions = ({ slug }: { slug: string }) =>
   queryOptions({
-    queryKey: ["article", { title, slug }],
+    queryKey: ["article", { slug }],
     structuralSharing: false,
     staleTime: Infinity,
-    queryFn: () => getServerArticle({ data: { title, slug } }),
+    queryFn: () => getServerArticle({ data: { slug } }),
   });

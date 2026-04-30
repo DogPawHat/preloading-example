@@ -33,7 +33,6 @@ export const Route = createFileRoute("/_chapters/pagination")({
     });
 
     const paginationArticleQueryOptions = getArticleQueryOptions({
-      title: "Viewport pagination preload",
       slug: "pagination",
     });
 

@@ -33,7 +33,6 @@ export const Route = createFileRoute("/_chapters/intent-preloading")({
     });
 
     const intentArticleQueryOptions = getArticleQueryOptions({
-      title: "Hover and focus preloading",
       slug: "intent-preloading",
     });
 
