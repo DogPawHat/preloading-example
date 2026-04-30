@@ -2,14 +2,14 @@ import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { ChapterSplitColumn } from "~/chapters/chapter-split";
-import { ConsoleCard } from "~/demos/components/console-card";
+import { DemoCard } from "~/demos/components/demo-card";
 import {
   PokedexPagination,
   PokedexTableResults,
   PokedexTableSection,
 } from "~/demos/components/pokedex-table-section";
 import { getPokemonListQueryKey, getPokemonListQueryFn } from "~/demos/query/pokemon-query";
-import { getArticle } from "~/articles/article.functions";
+import { getArticleQueryOptions } from "~/articles/article.functions";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -32,29 +32,36 @@ export const Route = createFileRoute("/_chapters/intent-preloading")({
       queryFn: getPokemonListQueryFn,
     });
 
+    const intentArticleQueryOptions = getArticleQueryOptions({
+      title: "Hover and focus preloading",
+      slug: "intent-preloading",
+    });
+
     return {
       pokemonListOptions,
+      intentArticleQueryOptions,
     };
   },
-  loader: async ({ context }) => {
-    void context.queryClient.prefetchQuery(context.pokemonListOptions);
-    const { Renderable: Article } = await getArticle({
-      data: { title: "Hover and focus preloading", slug: "intent-preloading" },
-    });
-    return { Article };
+  loader: async ({ context: { queryClient, pokemonListOptions, intentArticleQueryOptions } }) => {
+    void queryClient.prefetchQuery(pokemonListOptions);
+    await queryClient.ensureQueryData(intentArticleQueryOptions);
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { offset: currentOffset } = Route.useSearch();
-  const { Article } = Route.useLoaderData();
+  const { intentArticleQueryOptions } = Route.useRouteContext();
+
+  const {
+    data: { article },
+  } = useSuspenseQuery(intentArticleQueryOptions);
 
   return (
     <ChapterSplitColumn
-      blog={Article}
+      blog={article}
       table={
-        <ConsoleCard className="mb-6">
+        <DemoCard className="mb-6">
           <PokedexTableSection
             currentOffset={currentOffset}
             fallbackPagination={
@@ -63,7 +70,7 @@ function RouteComponent() {
           >
             <PokemonTableContent />
           </PokedexTableSection>
-        </ConsoleCard>
+        </DemoCard>
       }
     />
   );

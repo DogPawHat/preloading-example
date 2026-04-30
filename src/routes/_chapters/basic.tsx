@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
-import { ConsoleCard } from "~/demos/components/console-card";
+import { DemoCard } from "~/demos/components/demo-card";
 import {
   PokedexPagination,
   PokedexTableResults,
   PokedexTableSection,
 } from "~/demos/components/pokedex-table-section";
 import { getPokemonListQueryFn, getPokemonListQueryKey } from "~/demos/query/pokemon-query";
-import { getArticle } from "~/articles/article.functions";
+import { getArticleQueryOptions } from "~/articles/article.functions";
 import { ChapterSplitColumn } from "~/chapters/chapter-split";
 
 const searchParamsSchema = v.object({
@@ -20,25 +20,33 @@ export const Route = createFileRoute("/_chapters/basic")({
     routeTitle: "01_basic",
     routeSubtitle: "// Baseline fetching",
   },
-  validateSearch: searchParamsSchema,
-  loader: async () => {
-    const { Renderable: Article } = await getArticle({
-      data: { title: "No prefetching", slug: "basic" },
+  context: () => {
+    const noPrefetchArticleQueryOptions = getArticleQueryOptions({
+      title: "No prefetching",
+      slug: "basic",
     });
-    return { Article };
+    return { noPrefetchArticleQueryOptions };
+  },
+  validateSearch: searchParamsSchema,
+  loader: async ({ context: { queryClient, noPrefetchArticleQueryOptions } }) => {
+    await queryClient.ensureQueryData(noPrefetchArticleQueryOptions);
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { offset: currentOffset } = Route.useSearch();
-  const { Article } = Route.useLoaderData();
+  const { noPrefetchArticleQueryOptions } = Route.useRouteContext();
+
+  const {
+    data: { article },
+  } = useSuspenseQuery(noPrefetchArticleQueryOptions);
 
   return (
     <ChapterSplitColumn
-      blog={Article}
+      blog={article}
       table={
-        <ConsoleCard className="mb-6">
+        <DemoCard className="mb-6">
           <PokedexTableSection
             currentOffset={currentOffset}
             fallbackPagination={
@@ -47,7 +55,7 @@ function RouteComponent() {
           >
             <PokemonTableContent currentOffset={currentOffset} />
           </PokedexTableSection>
-        </ConsoleCard>
+        </DemoCard>
       }
     />
   );

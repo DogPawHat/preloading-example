@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useLiveSuspenseQuery, eq, ilike, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
 import { ChapterSplitColumn } from "~/chapters/chapter-split";
-import { ConsoleCard } from "~/demos/components/console-card";
+import { DemoCard } from "~/demos/components/demo-card";
 import { FilterForm } from "~/demos/components/filter-form";
 import {
   PokedexPagination,
@@ -19,7 +20,7 @@ import {
   normalizePokemonNameFilter,
   toPokemonListing,
 } from "~/demos/pokemon-listing/pokemon-listing";
-import { getArticle } from "~/articles/article.functions";
+import { getArticleQueryOptions } from "~/articles/article.functions";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -33,26 +34,34 @@ export const Route = createFileRoute("/_chapters/live-query-filters")({
   },
   ssr: false,
   validateSearch: searchParamsSchema,
-  loader: async () => {
-    const { Renderable: Article } = await getArticle({
-      data: { title: "Reactive filtered data", slug: "live-query-filters" },
+  context: () => {
+    const liveQueryFiltersArticleQueryOptions = getArticleQueryOptions({
+      title: "Reactive filtered data",
+      slug: "live-query-filters",
     });
-    return { Article };
+    return { liveQueryFiltersArticleQueryOptions };
+  },
+  loader: async ({ context: { queryClient, liveQueryFiltersArticleQueryOptions } }) => {
+    await queryClient.ensureQueryData(liveQueryFiltersArticleQueryOptions);
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { offset: currentOffset, name: nameFilter } = Route.useSearch();
-  const { Article } = Route.useLoaderData();
+  const { liveQueryFiltersArticleQueryOptions } = Route.useRouteContext();
   const navigate = Route.useNavigate();
+
+  const {
+    data: { article },
+  } = useSuspenseQuery(liveQueryFiltersArticleQueryOptions);
 
   return (
     <ChapterSplitColumn
-      blog={Article}
+      blog={article}
       table={
         <>
-          <ConsoleCard className="mb-6">
+          <DemoCard className="mb-6">
             <FilterForm
               initialName={nameFilter}
               onSubmit={(newNameFilter) => {
@@ -61,9 +70,9 @@ function RouteComponent() {
                 });
               }}
             />
-          </ConsoleCard>
+          </DemoCard>
 
-          <ConsoleCard>
+          <DemoCard>
             <PokedexTableSection
               currentOffset={currentOffset}
               nameFilter={nameFilter}
@@ -78,7 +87,7 @@ function RouteComponent() {
             >
               <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
             </PokedexTableSection>
-          </ConsoleCard>
+          </DemoCard>
         </>
       }
     />

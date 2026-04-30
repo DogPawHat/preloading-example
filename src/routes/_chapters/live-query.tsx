@@ -1,14 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useLiveSuspenseQuery, eq, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
 import { ChapterSplitColumn } from "~/chapters/chapter-split";
-import { ConsoleCard } from "~/demos/components/console-card";
+import { DemoCard } from "~/demos/components/demo-card";
 import {
   PokedexPagination,
   PokedexTableResults,
   PokedexTableSection,
 } from "~/demos/components/pokedex-table-section";
-import { getArticle } from "~/articles/article.functions";
+import { getArticleQueryOptions } from "~/articles/article.functions";
 import {
   pokemonCollection,
   typesCollection,
@@ -30,24 +31,32 @@ export const Route = createFileRoute("/_chapters/live-query")({
   },
   ssr: false,
   validateSearch: searchParamsSchema,
-  loader: async () => {
-    const { Renderable: Article } = await getArticle({
-      data: { title: "Synced collection", slug: "live-query" },
+  context: () => {
+    const liveQueryArticleQueryOptions = getArticleQueryOptions({
+      title: "Synced collection",
+      slug: "live-query",
     });
-    return { Article };
+    return { liveQueryArticleQueryOptions };
+  },
+  loader: async ({ context: { queryClient, liveQueryArticleQueryOptions } }) => {
+    await queryClient.ensureQueryData(liveQueryArticleQueryOptions);
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { offset: currentOffset } = Route.useSearch();
-  const { Article } = Route.useLoaderData();
+  const { liveQueryArticleQueryOptions } = Route.useRouteContext();
+
+  const {
+    data: { article },
+  } = useSuspenseQuery(liveQueryArticleQueryOptions);
 
   return (
     <ChapterSplitColumn
-      blog={Article}
+      blog={article}
       table={
-        <ConsoleCard className="mb-6">
+        <DemoCard className="mb-6">
           <PokedexTableSection
             currentOffset={currentOffset}
             fallbackPagination={
@@ -56,7 +65,7 @@ function RouteComponent() {
           >
             <PokemonTableContent currentOffset={currentOffset} />
           </PokedexTableSection>
-        </ConsoleCard>
+        </DemoCard>
       }
     />
   );

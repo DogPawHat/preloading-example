@@ -4,7 +4,7 @@ import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-
 import * as v from "valibot";
 import { FilterForm } from "~/demos/components/filter-form";
 import { ChapterSplitColumn } from "~/chapters/chapter-split";
-import { ConsoleCard } from "~/demos/components/console-card";
+import { DemoCard } from "~/demos/components/demo-card";
 import {
   PokedexPagination,
   PokedexTableResults,
@@ -14,7 +14,7 @@ import {
   getFilteredPokemonListQueryKey,
   getFilteredPokemonListQueryFn,
 } from "~/demos/query/pokemon-query";
-import { getArticle } from "~/articles/article.functions";
+import { getArticleQueryOptions } from "~/articles/article.functions";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -43,25 +43,34 @@ export const Route = createFileRoute("/_chapters/debounced-preload-filters")({
       queryFn: getFilteredPokemonListQueryFn,
     });
 
+    const debouncedArticleQueryOptions = getArticleQueryOptions({
+      title: "Debounced filter prefetch",
+      slug: "debounced-preload-filters",
+    });
+
     return {
       pokemonListOptions,
+      debouncedArticleQueryOptions,
     };
   },
-  loader: async ({ context }) => {
-    void context.queryClient.prefetchQuery(context.pokemonListOptions);
-    const { Renderable: Article } = await getArticle({
-      data: { title: "Debounced filter prefetch", slug: "debounced-preload-filters" },
-    });
-    return { Article };
+  loader: async ({
+    context: { queryClient, pokemonListOptions, debouncedArticleQueryOptions },
+  }) => {
+    void queryClient.prefetchQuery(pokemonListOptions);
+    await queryClient.ensureQueryData(debouncedArticleQueryOptions);
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { offset: currentOffset, name: nameFilter } = Route.useSearch();
-  const { Article } = Route.useLoaderData();
+  const { debouncedArticleQueryOptions, pokemonListOptions: serverPokemonListOptions } =
+    Route.useRouteContext();
   const queryClient = useQueryClient();
-  const { pokemonListOptions: serverPokemonListOptions } = Route.useRouteContext();
+
+  const {
+    data: { article },
+  } = useSuspenseQuery(debouncedArticleQueryOptions);
   const navigate = Route.useNavigate();
   const debouncedNameFilter = useDebouncedCallback(
     (newNameFilter: string) => {
@@ -81,10 +90,10 @@ function RouteComponent() {
 
   return (
     <ChapterSplitColumn
-      blog={Article}
+      blog={article}
       table={
         <>
-          <ConsoleCard className="mb-6">
+          <DemoCard className="mb-6">
             <FilterForm
               initialName={nameFilter}
               description="Preloads results while typing (debounced 100ms)"
@@ -95,9 +104,9 @@ function RouteComponent() {
                 });
               }}
             />
-          </ConsoleCard>
+          </DemoCard>
 
-          <ConsoleCard>
+          <DemoCard>
             <PokedexTableSection
               currentOffset={currentOffset}
               nameFilter={nameFilter}
@@ -111,7 +120,7 @@ function RouteComponent() {
             >
               <PokemonTableContent nameFilter={nameFilter} />
             </PokedexTableSection>
-          </ConsoleCard>
+          </DemoCard>
         </>
       }
     />

@@ -3,7 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { FilterForm } from "~/demos/components/filter-form";
 import { ChapterSplitColumn } from "~/chapters/chapter-split";
-import { ConsoleCard } from "~/demos/components/console-card";
+import { DemoCard } from "~/demos/components/demo-card";
 import {
   PokedexPagination,
   PokedexTableResults,
@@ -13,7 +13,7 @@ import {
   getFilteredPokemonListQueryKey,
   getFilteredPokemonListQueryFn,
 } from "~/demos/query/pokemon-query";
-import { getArticle } from "~/articles/article.functions";
+import { getArticleQueryOptions } from "~/articles/article.functions";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -38,31 +38,38 @@ export const Route = createFileRoute("/_chapters/filters")({
       queryFn: getFilteredPokemonListQueryFn,
     });
 
+    const filtersArticleQueryOptions = getArticleQueryOptions({
+      title: "Submitted filter prefetch",
+      slug: "filters",
+    });
+
     return {
       pokemonListOptions,
+      filtersArticleQueryOptions,
     };
   },
-  loader: async ({ context }) => {
-    void context.queryClient.prefetchQuery(context.pokemonListOptions);
-    const { Renderable: Article } = await getArticle({
-      data: { title: "Submitted filter prefetch", slug: "filters" },
-    });
-    return { Article };
+  loader: async ({ context: { queryClient, pokemonListOptions, filtersArticleQueryOptions } }) => {
+    void queryClient.prefetchQuery(pokemonListOptions);
+    await queryClient.ensureQueryData(filtersArticleQueryOptions);
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { offset: currentOffset, name: nameFilter } = Route.useSearch();
-  const { Article } = Route.useLoaderData();
+  const { filtersArticleQueryOptions } = Route.useRouteContext();
   const navigate = Route.useNavigate();
+
+  const {
+    data: { article },
+  } = useSuspenseQuery(filtersArticleQueryOptions);
 
   return (
     <ChapterSplitColumn
-      blog={Article}
+      blog={article}
       table={
         <>
-          <ConsoleCard className="mb-6">
+          <DemoCard className="mb-6">
             <FilterForm
               initialName={nameFilter}
               onSubmit={(newNameFilter) => {
@@ -71,9 +78,9 @@ function RouteComponent() {
                 });
               }}
             />
-          </ConsoleCard>
+          </DemoCard>
 
-          <ConsoleCard>
+          <DemoCard>
             <PokedexTableSection
               currentOffset={currentOffset}
               nameFilter={nameFilter}
@@ -83,7 +90,7 @@ function RouteComponent() {
             >
               <PokemonTableContent nameFilter={nameFilter} />
             </PokedexTableSection>
-          </ConsoleCard>
+          </DemoCard>
         </>
       }
     />

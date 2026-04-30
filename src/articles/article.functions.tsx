@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
+import { queryOptions } from "@tanstack/react-query";
 import { renderServerComponent } from "@tanstack/react-start/rsc";
 import * as v from "valibot";
+
 import { ArticleShell } from "~/articles/article-shell.server";
 
 const articlesContent: Record<string, () => Promise<string>> = {
@@ -15,15 +17,22 @@ const articlesContent: Record<string, () => Promise<string>> = {
   "live-query-filters": () => import("./content/live-query-filters.md?raw").then((m) => m.default),
 };
 
-export const getArticle = createServerFn({ method: "GET" })
+const getServerArticle = createServerFn({ method: "GET" })
   .inputValidator(v.object({ title: v.string(), slug: v.string() }))
   .handler(async ({ data }) => {
     const markdown = await (articlesContent[data.slug]?.() ??
       Promise.resolve("Content coming soon."));
 
-    const Renderable = await renderServerComponent(
+    const article = await renderServerComponent(
       <ArticleShell title={data.title} markdown={markdown} />,
     );
 
-    return { Renderable };
+    return { article };
+  });
+
+export const getArticleQueryOptions = ({ title, slug }: { title: string; slug: string }) =>
+  queryOptions({
+    queryKey: ["article", { title, slug }],
+    structuralSharing: false,
+    queryFn: () => getServerArticle({ data: { title, slug } }),
   });

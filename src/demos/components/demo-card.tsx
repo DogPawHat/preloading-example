@@ -1,7 +1,7 @@
 import { cn } from "~/design-system/utils/cn";
 import type { ReactNode } from "react";
 
-interface ConsoleCardProps {
+interface DemoCardProps {
   children: ReactNode;
   className?: string;
   hover?: boolean;
@@ -10,15 +10,15 @@ interface ConsoleCardProps {
 /**
  * Primary content container with hairline border.
  *
- * The console aesthetic uses zero border-radius and visible borders
+ * The demo aesthetic uses zero border-radius and visible borders
  * to create a technical, information-dense feel.
  *
  * @example
- * <ConsoleCard>
+ * <DemoCard>
  *   <h2>Content</h2>
- * </ConsoleCard>
+ * </DemoCard>
  */
-export function ConsoleCard({ children, className, hover = false }: ConsoleCardProps) {
+export function DemoCard({ children, className, hover = false }: DemoCardProps) {
   return (
     <div
       className={cn(

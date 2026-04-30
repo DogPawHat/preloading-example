@@ -1,7 +1,10 @@
 import * as React from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { useQueryErrorResetBoundary } from "@tanstack/react-query";
 import { POKEMON_LIMIT } from "~/demos/pokemon-listing/constants";
 import { lazily } from "~/vendor/lazily";
 import { PaginationNav } from "~/demos/components/pagination-nav";
+import { DemoErrorFallback } from "./demo-error-fallback";
 import { PokemonTableSkeleton } from "./pokemon-table-skeleton";
 
 const { PokemonTable } = lazily(() => import("./pokemon-table"));
@@ -21,6 +24,7 @@ interface PokedexTableSectionProps {
 
 export function PokedexTableSection(props: PokedexTableSectionProps) {
   const { children, currentOffset, fallbackPagination, nameFilter } = props;
+  const { reset } = useQueryErrorResetBoundary();
 
   return (
     <>
@@ -30,18 +34,20 @@ export function PokedexTableSection(props: PokedexTableSectionProps) {
           <span className="text-(--text-muted)"> (filtered: &quot;{nameFilter}&quot;)</span>
         )}
       </h1>
-      <React.Suspense
-        fallback={
-          <>
-            <PokedexTableShell>
-              <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
-            </PokedexTableShell>
-            {fallbackPagination}
-          </>
-        }
-      >
-        {children}
-      </React.Suspense>
+      <ErrorBoundary onReset={reset} FallbackComponent={DemoErrorFallback}>
+        <React.Suspense
+          fallback={
+            <>
+              <PokedexTableShell>
+                <PokemonTableSkeleton rowCount={POKEMON_LIMIT} />
+              </PokedexTableShell>
+              {fallbackPagination}
+            </>
+          }
+        >
+          {children}
+        </React.Suspense>
+      </ErrorBoundary>
     </>
   );
 }

@@ -56,7 +56,7 @@ Current scale:
 - `--text-xs`: dense labels, table headings, badges.
 - `--text-sm`: default body and controls.
 - `--text-base`: landing descriptions and prominent card titles.
-- `--text-lg`: console card headings.
+- `--text-lg`: demo card headings.
 - `--text-xl` and above: section headings and hero headings.
 
 Uppercase labels should be short. Avoid long uppercase prose because it harms scan speed.
@@ -68,12 +68,12 @@ The app uses a compact, document-like structure:
 - Sticky horizontal navigation at the top.
 - Landing page with a concise intro and grouped example links.
 - Example pages with `max-w-7xl`, 24px page padding, a section header, then a strategy/content split.
-- Console cards for data tables, filters, skeletons, and controls.
+- Demo cards for data tables, filters, skeletons, and controls.
 
 The strategy route layout uses:
 
 - Left column: explanation panel through `StrategyArticle`.
-- Right column: interactive console content through `ConsoleCard`.
+- Right column: interactive demo content through `DemoCard`.
 - Desktop split: `minmax(0,0.9fr)` and `minmax(34rem,1.1fr)`.
 
 Keep table areas dimensionally stable while loading. Existing examples reserve height with `min-h-125` and skeleton rows; preserve that pattern to prevent layout jump.
@@ -94,7 +94,7 @@ Keep table areas dimensionally stable while loading. Existing examples reserve h
 - The recommended starting example uses `--accent-surface` and an uppercase badge.
 - Keep card copy short and behavior-specific.
 
-**ConsoleCard**
+**DemoCard**
 
 - Primary framed work surface.
 - White or dark card background via `--bg-card`.

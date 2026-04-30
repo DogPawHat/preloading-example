@@ -61,7 +61,7 @@ _Avoid_: Vertical owner, product slice
 - The **Chapters** vertical owns chapter framing and status language, including section headers and status indicators.
 - The **Landing** vertical owns home-page presentation and consumes the **Chapters** vertical for the table of contents.
 - The **Design System** vertical owns primitive UI components, CSS files, styling tokens, utility class merging, and the theme toggle.
-- The **Demo** vertical owns console cards and panel frames used by the interactive demo surface.
+- The **Demo** vertical owns demo cards and panel frames used by the interactive demo surface.
 - Small implementation helpers used only by one vertical belong to that vertical; for example, the lazy component helper belongs to **Demo** while only the demo table uses it.
 - **Framework adapters** may remain in TanStack Start, TanStack Router, or Vite+ default locations even when they register behavior for a vertical.
 - API shape route files are **Framework adapters**; **Demo** owns the Electric collections that depend on those route URLs.
