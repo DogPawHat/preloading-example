@@ -1,0 +1,13 @@
+{
+  "plugin": [
+    [
+      "oc-plugin-goblin-mode",
+      {
+        "enabled": true,
+        "set_theme": true,
+        "sidebar": true,
+        "tips": true
+      }
+    ]
+  ]
+}
