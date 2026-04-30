@@ -1,6 +1,6 @@
 import * as React from "react";
 import { POKEMON_LIMIT } from "~/demos/pokemon-listing/constants";
-import { lazily } from "~/demos/utils/lazily";
+import { lazily } from "~/vendor/lazily";
 import { PaginationNav } from "~/demos/components/pagination-nav";
 import { PokemonTableSkeleton } from "./pokemon-table-skeleton";
 
