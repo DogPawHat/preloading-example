@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveSuspenseQuery, eq, ilike, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
-import { BlogTableSplitColumn } from "~/chapters/chapter-split";
+import { ChapterSplitColumn } from "~/chapters/chapter-split";
 import { ConsoleCard } from "~/demos/components/console-card";
 import { FilterForm } from "~/demos/components/filter-form";
 import {
@@ -19,7 +19,7 @@ import {
   normalizePokemonNameFilter,
   toPokemonListing,
 } from "~/demos/pokemon-listing/pokemon-listing";
-import { getStrategyArticle } from "~/articles/strategy-article.functions";
+import { getArticle } from "~/articles/article.functions";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/_chapters/live-query-filters")({
   ssr: false,
   validateSearch: searchParamsSchema,
   loader: async () => {
-    const { Renderable: Article } = await getStrategyArticle({
+    const { Renderable: Article } = await getArticle({
       data: { title: "Reactive filtered data", slug: "live-query-filters" },
     });
     return { Article };
@@ -48,7 +48,7 @@ function RouteComponent() {
   const navigate = Route.useNavigate();
 
   return (
-    <BlogTableSplitColumn
+    <ChapterSplitColumn
       blog={Article}
       table={
         <>

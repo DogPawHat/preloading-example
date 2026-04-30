@@ -2,7 +2,7 @@ import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { FilterForm } from "~/demos/components/filter-form";
-import { BlogTableSplitColumn } from "~/chapters/chapter-split";
+import { ChapterSplitColumn } from "~/chapters/chapter-split";
 import { ConsoleCard } from "~/demos/components/console-card";
 import {
   PokedexPagination,
@@ -13,7 +13,7 @@ import {
   getFilteredPokemonListQueryKey,
   getFilteredPokemonListQueryFn,
 } from "~/demos/query/pokemon-query";
-import { getStrategyArticle } from "~/articles/strategy-article.functions";
+import { getArticle } from "~/articles/article.functions";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -44,7 +44,7 @@ export const Route = createFileRoute("/_chapters/filters")({
   },
   loader: async ({ context }) => {
     void context.queryClient.prefetchQuery(context.pokemonListOptions);
-    const { Renderable: Article } = await getStrategyArticle({
+    const { Renderable: Article } = await getArticle({
       data: { title: "Submitted filter prefetch", slug: "filters" },
     });
     return { Article };
@@ -58,7 +58,7 @@ function RouteComponent() {
   const navigate = Route.useNavigate();
 
   return (
-    <BlogTableSplitColumn
+    <ChapterSplitColumn
       blog={Article}
       table={
         <>

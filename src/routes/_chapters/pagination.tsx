@@ -1,7 +1,7 @@
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
-import { BlogTableSplitColumn } from "~/chapters/chapter-split";
+import { ChapterSplitColumn } from "~/chapters/chapter-split";
 import { ConsoleCard } from "~/demos/components/console-card";
 import {
   PokedexPagination,
@@ -9,7 +9,7 @@ import {
   PokedexTableSection,
 } from "~/demos/components/pokedex-table-section";
 import { getPokemonListQueryKey, getPokemonListQueryFn } from "~/demos/query/pokemon-query";
-import { getStrategyArticle } from "~/articles/strategy-article.functions";
+import { getArticle } from "~/articles/article.functions";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -38,7 +38,7 @@ export const Route = createFileRoute("/_chapters/pagination")({
   },
   loader: async ({ context }) => {
     void context.queryClient.prefetchQuery(context.pokemonListOptions);
-    const { Renderable: Article } = await getStrategyArticle({
+    const { Renderable: Article } = await getArticle({
       data: { title: "Viewport pagination preload", slug: "pagination" },
     });
     return { Article };
@@ -51,7 +51,7 @@ function RouteComponent() {
   const { Article } = Route.useLoaderData();
 
   return (
-    <BlogTableSplitColumn
+    <ChapterSplitColumn
       blog={Article}
       table={
         <ConsoleCard className="mb-6">

@@ -8,8 +8,8 @@ import {
   PokedexTableSection,
 } from "~/demos/components/pokedex-table-section";
 import { getPokemonListQueryFn, getPokemonListQueryKey } from "~/demos/query/pokemon-query";
-import { getStrategyArticle } from "~/articles/strategy-article.functions";
-import { BlogTableSplitColumn } from "~/chapters/chapter-split";
+import { getArticle } from "~/articles/article.functions";
+import { ChapterSplitColumn } from "~/chapters/chapter-split";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_chapters/basic")({
   },
   validateSearch: searchParamsSchema,
   loader: async () => {
-    const { Renderable: Article } = await getStrategyArticle({
+    const { Renderable: Article } = await getArticle({
       data: { title: "No prefetching", slug: "basic" },
     });
     return { Article };
@@ -35,7 +35,7 @@ function RouteComponent() {
   const { Article } = Route.useLoaderData();
 
   return (
-    <BlogTableSplitColumn
+    <ChapterSplitColumn
       blog={Article}
       table={
         <ConsoleCard className="mb-6">

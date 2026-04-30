@@ -3,7 +3,7 @@ import { useDebouncedCallback } from "@tanstack/react-pacer";
 import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { FilterForm } from "~/demos/components/filter-form";
-import { BlogTableSplitColumn } from "~/chapters/chapter-split";
+import { ChapterSplitColumn } from "~/chapters/chapter-split";
 import { ConsoleCard } from "~/demos/components/console-card";
 import {
   PokedexPagination,
@@ -14,7 +14,7 @@ import {
   getFilteredPokemonListQueryKey,
   getFilteredPokemonListQueryFn,
 } from "~/demos/query/pokemon-query";
-import { getStrategyArticle } from "~/articles/strategy-article.functions";
+import { getArticle } from "~/articles/article.functions";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -49,7 +49,7 @@ export const Route = createFileRoute("/_chapters/debounced-preload-filters")({
   },
   loader: async ({ context }) => {
     void context.queryClient.prefetchQuery(context.pokemonListOptions);
-    const { Renderable: Article } = await getStrategyArticle({
+    const { Renderable: Article } = await getArticle({
       data: { title: "Debounced filter prefetch", slug: "debounced-preload-filters" },
     });
     return { Article };
@@ -80,7 +80,7 @@ function RouteComponent() {
   );
 
   return (
-    <BlogTableSplitColumn
+    <ChapterSplitColumn
       blog={Article}
       table={
         <>

@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveSuspenseQuery, eq, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
-import { BlogTableSplitColumn } from "~/chapters/chapter-split";
+import { ChapterSplitColumn } from "~/chapters/chapter-split";
 import { ConsoleCard } from "~/demos/components/console-card";
 import {
   PokedexPagination,
   PokedexTableResults,
   PokedexTableSection,
 } from "~/demos/components/pokedex-table-section";
-import { getStrategyArticle } from "~/articles/strategy-article.functions";
+import { getArticle } from "~/articles/article.functions";
 import {
   pokemonCollection,
   typesCollection,
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/_chapters/live-query")({
   ssr: false,
   validateSearch: searchParamsSchema,
   loader: async () => {
-    const { Renderable: Article } = await getStrategyArticle({
+    const { Renderable: Article } = await getArticle({
       data: { title: "Synced collection", slug: "live-query" },
     });
     return { Article };
@@ -44,7 +44,7 @@ function RouteComponent() {
   const { Article } = Route.useLoaderData();
 
   return (
-    <BlogTableSplitColumn
+    <ChapterSplitColumn
       blog={Article}
       table={
         <ConsoleCard className="mb-6">
