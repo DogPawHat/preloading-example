@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
-import { StrategyChapterLayout } from "~/components/strategy-page-layout";
 import { ConsoleCard } from "~/components/console/console-card";
 import {
   PokedexPagination,
@@ -10,12 +9,17 @@ import {
 } from "~/components/tables/pokedex-table-section";
 import { getPokemonListQueryFn, getPokemonListQueryKey } from "~/utils/pokemon";
 import { getStrategyArticle } from "~/server/strategy-article.functions";
+import { BlogTableSplitColumn } from "~/components/blog-table-split-column";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
 });
 
-export const Route = createFileRoute("/basic")({
+export const Route = createFileRoute("/_chapters/basic")({
+  staticData: {
+    routeTitle: "01_basic",
+    routeSubtitle: "// Baseline fetching",
+  },
   validateSearch: searchParamsSchema,
   loader: async () => {
     const { Renderable: Article } = await getStrategyArticle({
@@ -31,20 +35,21 @@ function RouteComponent() {
   const { Article } = Route.useLoaderData();
 
   return (
-    <StrategyChapterLayout
-      headerTitle="01_basic"
-      headerSubtitle="// No prefetching (baseline)"
-      sidebar={Article}
-    >
-      <ConsoleCard className="mb-6">
-        <PokedexTableSection
-          currentOffset={currentOffset}
-          fallbackPagination={<PokedexPagination prevOffset={null} nextOffset={null} to="/basic" />}
-        >
-          <PokemonTableContent currentOffset={currentOffset} />
-        </PokedexTableSection>
-      </ConsoleCard>
-    </StrategyChapterLayout>
+    <BlogTableSplitColumn
+      blog={Article}
+      table={
+        <ConsoleCard className="mb-6">
+          <PokedexTableSection
+            currentOffset={currentOffset}
+            fallbackPagination={
+              <PokedexPagination prevOffset={null} nextOffset={null} to="/basic" />
+            }
+          >
+            <PokemonTableContent currentOffset={currentOffset} />
+          </PokedexTableSection>
+        </ConsoleCard>
+      }
+    />
   );
 }
 

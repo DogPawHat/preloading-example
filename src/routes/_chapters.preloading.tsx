@@ -1,7 +1,7 @@
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
-import { StrategyChapterLayout } from "~/components/strategy-page-layout";
+import { BlogTableSplitColumn } from "~/components/blog-table-split-column";
 import { ConsoleCard } from "~/components/console/console-card";
 import {
   PokedexPagination,
@@ -15,13 +15,17 @@ const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
 });
 
-export const Route = createFileRoute("/intent-preloading")({
+export const Route = createFileRoute("/_chapters/preloading")({
+  staticData: {
+    routeTitle: "02_preloading",
+    routeSubtitle: "// Route-level prefetch",
+  },
   validateSearch: searchParamsSchema,
   loaderDeps: ({ search }) => ({
     offset: search.offset,
   }),
   context: ({ deps }) => {
-    const newKey = getPokemonListQueryKey("intent-preloading", deps.offset);
+    const newKey = getPokemonListQueryKey("preloading", deps.offset);
 
     const pokemonListOptions = queryOptions({
       queryKey: newKey,
@@ -35,7 +39,7 @@ export const Route = createFileRoute("/intent-preloading")({
   loader: async ({ context }) => {
     void context.queryClient.prefetchQuery(context.pokemonListOptions);
     const { Renderable: Article } = await getStrategyArticle({
-      data: { title: "Hover and focus preloading", slug: "intent-preloading" },
+      data: { title: "Route-level prefetch", slug: "preloading" },
     });
     return { Article };
   },
@@ -47,27 +51,26 @@ function RouteComponent() {
   const { Article } = Route.useLoaderData();
 
   return (
-    <StrategyChapterLayout
-      headerTitle="03_intent-preloading"
-      headerSubtitle="// Hover-based prefetch"
-      sidebar={Article}
-    >
-      <ConsoleCard className="mb-6">
-        <PokedexTableSection
-          currentOffset={currentOffset}
-          fallbackPagination={
-            <PokedexPagination prevOffset={null} nextOffset={null} to="/intent-preloading" />
-          }
-        >
-          <PokemonTableContent />
-        </PokedexTableSection>
-      </ConsoleCard>
-    </StrategyChapterLayout>
+    <BlogTableSplitColumn
+      blog={Article}
+      table={
+        <ConsoleCard className="mb-6">
+          <PokedexTableSection
+            currentOffset={currentOffset}
+            fallbackPagination={
+              <PokedexPagination prevOffset={null} nextOffset={null} to="/preloading" />
+            }
+          >
+            <PokemonTableContent />
+          </PokedexTableSection>
+        </ConsoleCard>
+      }
+    />
   );
 }
 
 function PokemonTableContent() {
-  const { pokemonListOptions } = useRouteContext({ from: "/intent-preloading" });
+  const { pokemonListOptions } = useRouteContext({ from: "/_chapters/preloading" });
   const { data } = useSuspenseQuery(pokemonListOptions);
 
   return (
@@ -75,10 +78,9 @@ function PokemonTableContent() {
       pokemon={data.pokemon}
       pagination={
         <PokedexPagination
-          prefetch="intent"
           prevOffset={data.prevOffset}
           nextOffset={data.nextOffset}
-          to="/intent-preloading"
+          to="/preloading"
         />
       }
     />

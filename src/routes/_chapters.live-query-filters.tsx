@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveSuspenseQuery, eq, ilike, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
-import { StrategyChapterLayout } from "~/components/strategy-page-layout";
+import { BlogTableSplitColumn } from "~/components/blog-table-split-column";
 import { ConsoleCard } from "~/components/console/console-card";
 import { FilterForm } from "~/components/filter-form";
 import {
@@ -26,7 +26,11 @@ const searchParamsSchema = v.object({
   name: v.optional(v.string(), ""),
 });
 
-export const Route = createFileRoute("/live-query-filters")({
+export const Route = createFileRoute("/_chapters/live-query-filters")({
+  staticData: {
+    routeTitle: "08_live-query-filters",
+    routeSubtitle: "// Electric SQL live search",
+  },
   ssr: false,
   validateSearch: searchParamsSchema,
   loader: async () => {
@@ -44,41 +48,40 @@ function RouteComponent() {
   const navigate = Route.useNavigate();
 
   return (
-    <StrategyChapterLayout
-      headerTitle="08_live-query-filters"
-      headerSubtitle="// Electric SQL live search"
-      sidebar={Article}
-    >
-      <div>
-        <ConsoleCard className="mb-6">
-          <FilterForm
-            initialName={nameFilter}
-            onSubmit={(newNameFilter) => {
-              void navigate({
-                search: { offset: 0, name: newNameFilter },
-              });
-            }}
-          />
-        </ConsoleCard>
+    <BlogTableSplitColumn
+      blog={Article}
+      table={
+        <>
+          <ConsoleCard className="mb-6">
+            <FilterForm
+              initialName={nameFilter}
+              onSubmit={(newNameFilter) => {
+                void navigate({
+                  search: { offset: 0, name: newNameFilter },
+                });
+              }}
+            />
+          </ConsoleCard>
 
-        <ConsoleCard>
-          <PokedexTableSection
-            currentOffset={currentOffset}
-            nameFilter={nameFilter}
-            fallbackPagination={
-              <PokedexPagination
-                nameFilter={nameFilter}
-                nextOffset={null}
-                prevOffset={null}
-                to="/live-query-filters"
-              />
-            }
-          >
-            <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
-          </PokedexTableSection>
-        </ConsoleCard>
-      </div>
-    </StrategyChapterLayout>
+          <ConsoleCard>
+            <PokedexTableSection
+              currentOffset={currentOffset}
+              nameFilter={nameFilter}
+              fallbackPagination={
+                <PokedexPagination
+                  nameFilter={nameFilter}
+                  nextOffset={null}
+                  prevOffset={null}
+                  to="/live-query-filters"
+                />
+              }
+            >
+              <PokemonTableContent currentOffset={currentOffset} nameFilter={nameFilter} />
+            </PokedexTableSection>
+          </ConsoleCard>
+        </>
+      }
+    />
   );
 }
 

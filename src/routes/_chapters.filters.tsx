@@ -2,7 +2,7 @@ import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { FilterForm } from "~/components/filter-form";
-import { StrategyChapterLayout } from "~/components/strategy-page-layout";
+import { BlogTableSplitColumn } from "~/components/blog-table-split-column";
 import { ConsoleCard } from "~/components/console/console-card";
 import {
   PokedexPagination,
@@ -17,7 +17,11 @@ const searchParamsSchema = v.object({
   name: v.optional(v.string(), ""),
 });
 
-export const Route = createFileRoute("/filters")({
+export const Route = createFileRoute("/_chapters/filters")({
+  staticData: {
+    routeTitle: "05_filters",
+    routeSubtitle: "// Search with prefetch",
+  },
   validateSearch: searchParamsSchema,
   loaderDeps: ({ search }) => ({
     offset: search.offset,
@@ -51,39 +55,40 @@ function RouteComponent() {
   const navigate = Route.useNavigate();
 
   return (
-    <StrategyChapterLayout
-      headerTitle="05_filters"
-      headerSubtitle="// Search with prefetch"
-      sidebar={Article}
-    >
-      <ConsoleCard className="mb-6">
-        <FilterForm
-          initialName={nameFilter}
-          onSubmit={(newNameFilter) => {
-            void navigate({
-              search: { name: newNameFilter },
-            });
-          }}
-        />
-      </ConsoleCard>
+    <BlogTableSplitColumn
+      blog={Article}
+      table={
+        <>
+          <ConsoleCard className="mb-6">
+            <FilterForm
+              initialName={nameFilter}
+              onSubmit={(newNameFilter) => {
+                void navigate({
+                  search: { name: newNameFilter },
+                });
+              }}
+            />
+          </ConsoleCard>
 
-      <ConsoleCard>
-        <PokedexTableSection
-          currentOffset={currentOffset}
-          nameFilter={nameFilter}
-          fallbackPagination={
-            <PokedexPagination prevOffset={null} nextOffset={null} to="/filters" />
-          }
-        >
-          <PokemonTableContent nameFilter={nameFilter} />
-        </PokedexTableSection>
-      </ConsoleCard>
-    </StrategyChapterLayout>
+          <ConsoleCard>
+            <PokedexTableSection
+              currentOffset={currentOffset}
+              nameFilter={nameFilter}
+              fallbackPagination={
+                <PokedexPagination prevOffset={null} nextOffset={null} to="/filters" />
+              }
+            >
+              <PokemonTableContent nameFilter={nameFilter} />
+            </PokedexTableSection>
+          </ConsoleCard>
+        </>
+      }
+    />
   );
 }
 
 function PokemonTableContent({ nameFilter }: { nameFilter: string }) {
-  const { pokemonListOptions } = useRouteContext({ from: "/filters" });
+  const { pokemonListOptions } = useRouteContext({ from: "/_chapters/filters" });
   const { data } = useSuspenseQuery(pokemonListOptions);
   const filteredPokemon = data.pokemon;
 

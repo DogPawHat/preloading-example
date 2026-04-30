@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveSuspenseQuery, eq, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
-import { StrategyChapterLayout } from "~/components/strategy-page-layout";
+import { BlogTableSplitColumn } from "~/components/blog-table-split-column";
 import { ConsoleCard } from "~/components/console/console-card";
 import {
   PokedexPagination,
@@ -20,7 +20,11 @@ const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
 });
 
-export const Route = createFileRoute("/live-query")({
+export const Route = createFileRoute("/_chapters/live-query")({
+  staticData: {
+    routeTitle: "07_live-query",
+    routeSubtitle: "// Electric SQL synced collection",
+  },
   ssr: false,
   validateSearch: searchParamsSchema,
   loader: async () => {
@@ -37,22 +41,21 @@ function RouteComponent() {
   const { Article } = Route.useLoaderData();
 
   return (
-    <StrategyChapterLayout
-      headerTitle="07_live-query"
-      headerSubtitle="// Electric SQL synced collection"
-      sidebar={Article}
-    >
-      <ConsoleCard className="mb-6">
-        <PokedexTableSection
-          currentOffset={currentOffset}
-          fallbackPagination={
-            <PokedexPagination prevOffset={null} nextOffset={null} to="/live-query" />
-          }
-        >
-          <PokemonTableContent currentOffset={currentOffset} />
-        </PokedexTableSection>
-      </ConsoleCard>
-    </StrategyChapterLayout>
+    <BlogTableSplitColumn
+      blog={Article}
+      table={
+        <ConsoleCard className="mb-6">
+          <PokedexTableSection
+            currentOffset={currentOffset}
+            fallbackPagination={
+              <PokedexPagination prevOffset={null} nextOffset={null} to="/live-query" />
+            }
+          >
+            <PokemonTableContent currentOffset={currentOffset} />
+          </PokedexTableSection>
+        </ConsoleCard>
+      }
+    />
   );
 }
 

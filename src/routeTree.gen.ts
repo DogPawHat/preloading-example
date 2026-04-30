@@ -9,63 +9,71 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PreloadingRouteImport } from './routes/preloading'
-import { Route as PaginationRouteImport } from './routes/pagination'
-import { Route as LiveQueryFiltersRouteImport } from './routes/live-query-filters'
-import { Route as LiveQueryRouteImport } from './routes/live-query'
-import { Route as IntentPreloadingRouteImport } from './routes/intent-preloading'
-import { Route as FiltersRouteImport } from './routes/filters'
-import { Route as DebouncedPreloadFiltersRouteImport } from './routes/debounced-preload-filters'
-import { Route as BasicRouteImport } from './routes/basic'
+import { Route as ChaptersRouteImport } from './routes/_chapters'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ChaptersPreloadingRouteImport } from './routes/_chapters.preloading'
+import { Route as ChaptersPaginationRouteImport } from './routes/_chapters.pagination'
+import { Route as ChaptersLiveQueryFiltersRouteImport } from './routes/_chapters.live-query-filters'
+import { Route as ChaptersLiveQueryRouteImport } from './routes/_chapters.live-query'
+import { Route as ChaptersIntentPreloadingRouteImport } from './routes/_chapters.intent-preloading'
+import { Route as ChaptersFiltersRouteImport } from './routes/_chapters.filters'
+import { Route as ChaptersDebouncedPreloadFiltersRouteImport } from './routes/_chapters.debounced-preload-filters'
+import { Route as ChaptersBasicRouteImport } from './routes/_chapters.basic'
 import { Route as ApiShapesTypesRouteImport } from './routes/api/shapes/types'
 import { Route as ApiShapesPokemonTypesRouteImport } from './routes/api/shapes/pokemon-types'
 import { Route as ApiShapesPokemonRouteImport } from './routes/api/shapes/pokemon'
 
-const PreloadingRoute = PreloadingRouteImport.update({
-  id: '/preloading',
-  path: '/preloading',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PaginationRoute = PaginationRouteImport.update({
-  id: '/pagination',
-  path: '/pagination',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LiveQueryFiltersRoute = LiveQueryFiltersRouteImport.update({
-  id: '/live-query-filters',
-  path: '/live-query-filters',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LiveQueryRoute = LiveQueryRouteImport.update({
-  id: '/live-query',
-  path: '/live-query',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IntentPreloadingRoute = IntentPreloadingRouteImport.update({
-  id: '/intent-preloading',
-  path: '/intent-preloading',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FiltersRoute = FiltersRouteImport.update({
-  id: '/filters',
-  path: '/filters',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DebouncedPreloadFiltersRoute = DebouncedPreloadFiltersRouteImport.update({
-  id: '/debounced-preload-filters',
-  path: '/debounced-preload-filters',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BasicRoute = BasicRouteImport.update({
-  id: '/basic',
-  path: '/basic',
+const ChaptersRoute = ChaptersRouteImport.update({
+  id: '/_chapters',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ChaptersPreloadingRoute = ChaptersPreloadingRouteImport.update({
+  id: '/preloading',
+  path: '/preloading',
+  getParentRoute: () => ChaptersRoute,
+} as any)
+const ChaptersPaginationRoute = ChaptersPaginationRouteImport.update({
+  id: '/pagination',
+  path: '/pagination',
+  getParentRoute: () => ChaptersRoute,
+} as any)
+const ChaptersLiveQueryFiltersRoute =
+  ChaptersLiveQueryFiltersRouteImport.update({
+    id: '/live-query-filters',
+    path: '/live-query-filters',
+    getParentRoute: () => ChaptersRoute,
+  } as any)
+const ChaptersLiveQueryRoute = ChaptersLiveQueryRouteImport.update({
+  id: '/live-query',
+  path: '/live-query',
+  getParentRoute: () => ChaptersRoute,
+} as any)
+const ChaptersIntentPreloadingRoute =
+  ChaptersIntentPreloadingRouteImport.update({
+    id: '/intent-preloading',
+    path: '/intent-preloading',
+    getParentRoute: () => ChaptersRoute,
+  } as any)
+const ChaptersFiltersRoute = ChaptersFiltersRouteImport.update({
+  id: '/filters',
+  path: '/filters',
+  getParentRoute: () => ChaptersRoute,
+} as any)
+const ChaptersDebouncedPreloadFiltersRoute =
+  ChaptersDebouncedPreloadFiltersRouteImport.update({
+    id: '/debounced-preload-filters',
+    path: '/debounced-preload-filters',
+    getParentRoute: () => ChaptersRoute,
+  } as any)
+const ChaptersBasicRoute = ChaptersBasicRouteImport.update({
+  id: '/basic',
+  path: '/basic',
+  getParentRoute: () => ChaptersRoute,
 } as any)
 const ApiShapesTypesRoute = ApiShapesTypesRouteImport.update({
   id: '/api/shapes/types',
@@ -85,28 +93,28 @@ const ApiShapesPokemonRoute = ApiShapesPokemonRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/basic': typeof BasicRoute
-  '/debounced-preload-filters': typeof DebouncedPreloadFiltersRoute
-  '/filters': typeof FiltersRoute
-  '/intent-preloading': typeof IntentPreloadingRoute
-  '/live-query': typeof LiveQueryRoute
-  '/live-query-filters': typeof LiveQueryFiltersRoute
-  '/pagination': typeof PaginationRoute
-  '/preloading': typeof PreloadingRoute
+  '/basic': typeof ChaptersBasicRoute
+  '/debounced-preload-filters': typeof ChaptersDebouncedPreloadFiltersRoute
+  '/filters': typeof ChaptersFiltersRoute
+  '/intent-preloading': typeof ChaptersIntentPreloadingRoute
+  '/live-query': typeof ChaptersLiveQueryRoute
+  '/live-query-filters': typeof ChaptersLiveQueryFiltersRoute
+  '/pagination': typeof ChaptersPaginationRoute
+  '/preloading': typeof ChaptersPreloadingRoute
   '/api/shapes/pokemon': typeof ApiShapesPokemonRoute
   '/api/shapes/pokemon-types': typeof ApiShapesPokemonTypesRoute
   '/api/shapes/types': typeof ApiShapesTypesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/basic': typeof BasicRoute
-  '/debounced-preload-filters': typeof DebouncedPreloadFiltersRoute
-  '/filters': typeof FiltersRoute
-  '/intent-preloading': typeof IntentPreloadingRoute
-  '/live-query': typeof LiveQueryRoute
-  '/live-query-filters': typeof LiveQueryFiltersRoute
-  '/pagination': typeof PaginationRoute
-  '/preloading': typeof PreloadingRoute
+  '/basic': typeof ChaptersBasicRoute
+  '/debounced-preload-filters': typeof ChaptersDebouncedPreloadFiltersRoute
+  '/filters': typeof ChaptersFiltersRoute
+  '/intent-preloading': typeof ChaptersIntentPreloadingRoute
+  '/live-query': typeof ChaptersLiveQueryRoute
+  '/live-query-filters': typeof ChaptersLiveQueryFiltersRoute
+  '/pagination': typeof ChaptersPaginationRoute
+  '/preloading': typeof ChaptersPreloadingRoute
   '/api/shapes/pokemon': typeof ApiShapesPokemonRoute
   '/api/shapes/pokemon-types': typeof ApiShapesPokemonTypesRoute
   '/api/shapes/types': typeof ApiShapesTypesRoute
@@ -114,14 +122,15 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/basic': typeof BasicRoute
-  '/debounced-preload-filters': typeof DebouncedPreloadFiltersRoute
-  '/filters': typeof FiltersRoute
-  '/intent-preloading': typeof IntentPreloadingRoute
-  '/live-query': typeof LiveQueryRoute
-  '/live-query-filters': typeof LiveQueryFiltersRoute
-  '/pagination': typeof PaginationRoute
-  '/preloading': typeof PreloadingRoute
+  '/_chapters': typeof ChaptersRouteWithChildren
+  '/_chapters/basic': typeof ChaptersBasicRoute
+  '/_chapters/debounced-preload-filters': typeof ChaptersDebouncedPreloadFiltersRoute
+  '/_chapters/filters': typeof ChaptersFiltersRoute
+  '/_chapters/intent-preloading': typeof ChaptersIntentPreloadingRoute
+  '/_chapters/live-query': typeof ChaptersLiveQueryRoute
+  '/_chapters/live-query-filters': typeof ChaptersLiveQueryFiltersRoute
+  '/_chapters/pagination': typeof ChaptersPaginationRoute
+  '/_chapters/preloading': typeof ChaptersPreloadingRoute
   '/api/shapes/pokemon': typeof ApiShapesPokemonRoute
   '/api/shapes/pokemon-types': typeof ApiShapesPokemonTypesRoute
   '/api/shapes/types': typeof ApiShapesTypesRoute
@@ -158,14 +167,15 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/basic'
-    | '/debounced-preload-filters'
-    | '/filters'
-    | '/intent-preloading'
-    | '/live-query'
-    | '/live-query-filters'
-    | '/pagination'
-    | '/preloading'
+    | '/_chapters'
+    | '/_chapters/basic'
+    | '/_chapters/debounced-preload-filters'
+    | '/_chapters/filters'
+    | '/_chapters/intent-preloading'
+    | '/_chapters/live-query'
+    | '/_chapters/live-query-filters'
+    | '/_chapters/pagination'
+    | '/_chapters/preloading'
     | '/api/shapes/pokemon'
     | '/api/shapes/pokemon-types'
     | '/api/shapes/types'
@@ -173,14 +183,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BasicRoute: typeof BasicRoute
-  DebouncedPreloadFiltersRoute: typeof DebouncedPreloadFiltersRoute
-  FiltersRoute: typeof FiltersRoute
-  IntentPreloadingRoute: typeof IntentPreloadingRoute
-  LiveQueryRoute: typeof LiveQueryRoute
-  LiveQueryFiltersRoute: typeof LiveQueryFiltersRoute
-  PaginationRoute: typeof PaginationRoute
-  PreloadingRoute: typeof PreloadingRoute
+  ChaptersRoute: typeof ChaptersRouteWithChildren
   ApiShapesPokemonRoute: typeof ApiShapesPokemonRoute
   ApiShapesPokemonTypesRoute: typeof ApiShapesPokemonTypesRoute
   ApiShapesTypesRoute: typeof ApiShapesTypesRoute
@@ -188,60 +191,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/preloading': {
-      id: '/preloading'
-      path: '/preloading'
-      fullPath: '/preloading'
-      preLoaderRoute: typeof PreloadingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pagination': {
-      id: '/pagination'
-      path: '/pagination'
-      fullPath: '/pagination'
-      preLoaderRoute: typeof PaginationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/live-query-filters': {
-      id: '/live-query-filters'
-      path: '/live-query-filters'
-      fullPath: '/live-query-filters'
-      preLoaderRoute: typeof LiveQueryFiltersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/live-query': {
-      id: '/live-query'
-      path: '/live-query'
-      fullPath: '/live-query'
-      preLoaderRoute: typeof LiveQueryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/intent-preloading': {
-      id: '/intent-preloading'
-      path: '/intent-preloading'
-      fullPath: '/intent-preloading'
-      preLoaderRoute: typeof IntentPreloadingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/filters': {
-      id: '/filters'
-      path: '/filters'
-      fullPath: '/filters'
-      preLoaderRoute: typeof FiltersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/debounced-preload-filters': {
-      id: '/debounced-preload-filters'
-      path: '/debounced-preload-filters'
-      fullPath: '/debounced-preload-filters'
-      preLoaderRoute: typeof DebouncedPreloadFiltersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/basic': {
-      id: '/basic'
-      path: '/basic'
-      fullPath: '/basic'
-      preLoaderRoute: typeof BasicRouteImport
+    '/_chapters': {
+      id: '/_chapters'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ChaptersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -250,6 +204,62 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_chapters/preloading': {
+      id: '/_chapters/preloading'
+      path: '/preloading'
+      fullPath: '/preloading'
+      preLoaderRoute: typeof ChaptersPreloadingRouteImport
+      parentRoute: typeof ChaptersRoute
+    }
+    '/_chapters/pagination': {
+      id: '/_chapters/pagination'
+      path: '/pagination'
+      fullPath: '/pagination'
+      preLoaderRoute: typeof ChaptersPaginationRouteImport
+      parentRoute: typeof ChaptersRoute
+    }
+    '/_chapters/live-query-filters': {
+      id: '/_chapters/live-query-filters'
+      path: '/live-query-filters'
+      fullPath: '/live-query-filters'
+      preLoaderRoute: typeof ChaptersLiveQueryFiltersRouteImport
+      parentRoute: typeof ChaptersRoute
+    }
+    '/_chapters/live-query': {
+      id: '/_chapters/live-query'
+      path: '/live-query'
+      fullPath: '/live-query'
+      preLoaderRoute: typeof ChaptersLiveQueryRouteImport
+      parentRoute: typeof ChaptersRoute
+    }
+    '/_chapters/intent-preloading': {
+      id: '/_chapters/intent-preloading'
+      path: '/intent-preloading'
+      fullPath: '/intent-preloading'
+      preLoaderRoute: typeof ChaptersIntentPreloadingRouteImport
+      parentRoute: typeof ChaptersRoute
+    }
+    '/_chapters/filters': {
+      id: '/_chapters/filters'
+      path: '/filters'
+      fullPath: '/filters'
+      preLoaderRoute: typeof ChaptersFiltersRouteImport
+      parentRoute: typeof ChaptersRoute
+    }
+    '/_chapters/debounced-preload-filters': {
+      id: '/_chapters/debounced-preload-filters'
+      path: '/debounced-preload-filters'
+      fullPath: '/debounced-preload-filters'
+      preLoaderRoute: typeof ChaptersDebouncedPreloadFiltersRouteImport
+      parentRoute: typeof ChaptersRoute
+    }
+    '/_chapters/basic': {
+      id: '/_chapters/basic'
+      path: '/basic'
+      fullPath: '/basic'
+      preLoaderRoute: typeof ChaptersBasicRouteImport
+      parentRoute: typeof ChaptersRoute
     }
     '/api/shapes/types': {
       id: '/api/shapes/types'
@@ -275,16 +285,35 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ChaptersRouteChildren {
+  ChaptersBasicRoute: typeof ChaptersBasicRoute
+  ChaptersDebouncedPreloadFiltersRoute: typeof ChaptersDebouncedPreloadFiltersRoute
+  ChaptersFiltersRoute: typeof ChaptersFiltersRoute
+  ChaptersIntentPreloadingRoute: typeof ChaptersIntentPreloadingRoute
+  ChaptersLiveQueryRoute: typeof ChaptersLiveQueryRoute
+  ChaptersLiveQueryFiltersRoute: typeof ChaptersLiveQueryFiltersRoute
+  ChaptersPaginationRoute: typeof ChaptersPaginationRoute
+  ChaptersPreloadingRoute: typeof ChaptersPreloadingRoute
+}
+
+const ChaptersRouteChildren: ChaptersRouteChildren = {
+  ChaptersBasicRoute: ChaptersBasicRoute,
+  ChaptersDebouncedPreloadFiltersRoute: ChaptersDebouncedPreloadFiltersRoute,
+  ChaptersFiltersRoute: ChaptersFiltersRoute,
+  ChaptersIntentPreloadingRoute: ChaptersIntentPreloadingRoute,
+  ChaptersLiveQueryRoute: ChaptersLiveQueryRoute,
+  ChaptersLiveQueryFiltersRoute: ChaptersLiveQueryFiltersRoute,
+  ChaptersPaginationRoute: ChaptersPaginationRoute,
+  ChaptersPreloadingRoute: ChaptersPreloadingRoute,
+}
+
+const ChaptersRouteWithChildren = ChaptersRoute._addFileChildren(
+  ChaptersRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BasicRoute: BasicRoute,
-  DebouncedPreloadFiltersRoute: DebouncedPreloadFiltersRoute,
-  FiltersRoute: FiltersRoute,
-  IntentPreloadingRoute: IntentPreloadingRoute,
-  LiveQueryRoute: LiveQueryRoute,
-  LiveQueryFiltersRoute: LiveQueryFiltersRoute,
-  PaginationRoute: PaginationRoute,
-  PreloadingRoute: PreloadingRoute,
+  ChaptersRoute: ChaptersRouteWithChildren,
   ApiShapesPokemonRoute: ApiShapesPokemonRoute,
   ApiShapesPokemonTypesRoute: ApiShapesPokemonTypesRoute,
   ApiShapesTypesRoute: ApiShapesTypesRoute,

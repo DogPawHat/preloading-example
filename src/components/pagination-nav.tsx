@@ -1,4 +1,5 @@
-import { type FileRoutesByPath, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
+import type { FileRoutesByTo } from "~/routeTree.gen";
 import { cn } from "~/lib/utils";
 
 interface PaginationNavProps {
@@ -6,7 +7,7 @@ interface PaginationNavProps {
   prevOffset: number | null;
   nextOffset: number | null;
   search?: Record<string, unknown>;
-  to: keyof FileRoutesByPath;
+  to: keyof FileRoutesByTo;
 }
 
 export function PaginationNav(props: PaginationNavProps) {

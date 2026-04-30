@@ -3,7 +3,7 @@ import { useDebouncedCallback } from "@tanstack/react-pacer";
 import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import * as v from "valibot";
 import { FilterForm } from "~/components/filter-form";
-import { StrategyChapterLayout } from "~/components/strategy-page-layout";
+import { BlogTableSplitColumn } from "~/components/blog-table-split-column";
 import { ConsoleCard } from "~/components/console/console-card";
 import {
   PokedexPagination,
@@ -18,7 +18,11 @@ const searchParamsSchema = v.object({
   name: v.optional(v.string(), ""),
 });
 
-export const Route = createFileRoute("/debounced-preload-filters")({
+export const Route = createFileRoute("/_chapters/debounced-preload-filters")({
+  staticData: {
+    routeTitle: "06_debounced",
+    routeSubtitle: "// Advanced filter prefetch",
+  },
   validateSearch: searchParamsSchema,
   loaderDeps: ({ search }) => ({
     offset: search.offset,
@@ -73,45 +77,46 @@ function RouteComponent() {
   );
 
   return (
-    <StrategyChapterLayout
-      headerTitle="06_debounced"
-      headerSubtitle="// Advanced filter prefetch"
-      sidebar={Article}
-    >
-      <ConsoleCard className="mb-6">
-        <FilterForm
-          initialName={nameFilter}
-          description="Preloads results while typing (debounced 100ms)"
-          onNameChange={(newNameFilter) => debouncedNameFilter(newNameFilter)}
-          onSubmit={(newNameFilter) => {
-            void navigate({
-              search: { name: newNameFilter },
-            });
-          }}
-        />
-      </ConsoleCard>
-
-      <ConsoleCard>
-        <PokedexTableSection
-          currentOffset={currentOffset}
-          nameFilter={nameFilter}
-          fallbackPagination={
-            <PokedexPagination
-              prevOffset={null}
-              nextOffset={null}
-              to="/debounced-preload-filters"
+    <BlogTableSplitColumn
+      blog={Article}
+      table={
+        <>
+          <ConsoleCard className="mb-6">
+            <FilterForm
+              initialName={nameFilter}
+              description="Preloads results while typing (debounced 100ms)"
+              onNameChange={(newNameFilter) => debouncedNameFilter(newNameFilter)}
+              onSubmit={(newNameFilter) => {
+                void navigate({
+                  search: { name: newNameFilter },
+                });
+              }}
             />
-          }
-        >
-          <PokemonTableContent nameFilter={nameFilter} />
-        </PokedexTableSection>
-      </ConsoleCard>
-    </StrategyChapterLayout>
+          </ConsoleCard>
+
+          <ConsoleCard>
+            <PokedexTableSection
+              currentOffset={currentOffset}
+              nameFilter={nameFilter}
+              fallbackPagination={
+                <PokedexPagination
+                  prevOffset={null}
+                  nextOffset={null}
+                  to="/debounced-preload-filters"
+                />
+              }
+            >
+              <PokemonTableContent nameFilter={nameFilter} />
+            </PokedexTableSection>
+          </ConsoleCard>
+        </>
+      }
+    />
   );
 }
 
 function PokemonTableContent({ nameFilter }: { nameFilter: string }) {
-  const { pokemonListOptions } = useRouteContext({ from: "/debounced-preload-filters" });
+  const { pokemonListOptions } = useRouteContext({ from: "/_chapters/debounced-preload-filters" });
   const { data } = useSuspenseQuery(pokemonListOptions);
   const filteredPokemon = data.pokemon;
 
