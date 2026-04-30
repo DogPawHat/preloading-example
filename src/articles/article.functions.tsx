@@ -6,7 +6,21 @@ import * as v from "valibot";
 
 import { ArticleShell } from "~/articles/article-shell.server";
 
-const articlesContent: Record<string, () => Promise<string>> = {
+export const articleSlugs = [
+  "basic",
+  "preloading",
+  "intent-preloading",
+  "pagination",
+  "filters",
+  "debounced-preload-filters",
+  "live-query",
+  "live-query-filters",
+] as const;
+
+const ArticleSlugSchema = v.picklist(articleSlugs);
+type ArticleSlug = v.InferInput<typeof ArticleSlugSchema>;
+
+const articlesContent: Record<ArticleSlug, () => Promise<string>> = {
   basic: () => import("./content/basic.md?raw").then((m) => m.default),
   preloading: () => import("./content/preloading.md?raw").then((m) => m.default),
   "intent-preloading": () => import("./content/intent-preloading.md?raw").then((m) => m.default),
@@ -20,7 +34,7 @@ const articlesContent: Record<string, () => Promise<string>> = {
 
 const getServerArticle = createServerFn({ method: "GET" })
   .middleware([staticFunctionMiddleware])
-  .inputValidator(v.object({ slug: v.string() }))
+  .inputValidator(v.object({ slug: ArticleSlugSchema }))
   .handler(async ({ data }) => {
     const markdown = await (articlesContent[data.slug]?.() ??
       Promise.resolve("Content coming soon."));
@@ -30,7 +44,7 @@ const getServerArticle = createServerFn({ method: "GET" })
     return { article };
   });
 
-export const getArticleQueryOptions = ({ slug }: { slug: string }) =>
+export const getArticleQueryOptions = ({ slug }: { slug: ArticleSlug }) =>
   queryOptions({
     queryKey: ["article", { slug }],
     structuralSharing: false,

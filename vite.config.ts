@@ -26,6 +26,9 @@ export default defineConfig({
   plugins: [
     devtools(),
     tanstackStart({
+      prerender: {
+        enabled: true,
+      },
       rsc: {
         enabled: true,
       },

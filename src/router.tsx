@@ -5,6 +5,7 @@ import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen.ts";
+import { articleSlugs, getArticleQueryOptions } from "./articles/article.functions.tsx";
 
 function DefaultErrorComponent() {
   return (
@@ -75,6 +76,10 @@ export function getRouter() {
     router,
     queryClient,
   });
+
+  void Promise.all(
+    articleSlugs.map((slug) => queryClient.prefetchQuery(getArticleQueryOptions({ slug }))),
+  );
 
   return router;
 }

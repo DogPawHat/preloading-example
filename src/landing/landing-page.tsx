@@ -1,19 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-import { renderServerComponent } from "@tanstack/react-start/rsc";
 import { StatusDot, StatusDotWithLabel } from "~/chapters/status-dot";
 import { chapterGroups } from "~/chapters/chapters";
 
-export const getLandingPage = createServerFn({ method: "GET" }).handler(async () => {
-  return renderServerComponent(<LandingPageDocument />);
-});
-
-export function LandingPage(props: Readonly<{ landingPage: React.ReactNode }>) {
-  const { landingPage } = props;
-  return <>{landingPage}</>;
-}
-
-function LandingPageDocument() {
+export function LandingPage() {
   return (
     <main className="min-h-screen flex flex-col bg-(--bg-primary)">
       <section className="border-b border-(--border-default) bg-(--bg-secondary)">
