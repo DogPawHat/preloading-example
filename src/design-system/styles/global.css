@@ -2,6 +2,7 @@
 @import "./tokens.css";
 
 @plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typeography";
 
 @custom-variant dark (&:is(.dark *));
 @custom-variant motion-safe (@media (prefers-reduced-motion: no-preference));
