@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { queryOptions } from "@tanstack/react-query";
+import { staticFunctionMiddleware } from "@tanstack/start-static-server-functions";
 import { renderServerComponent } from "@tanstack/react-start/rsc";
 import * as v from "valibot";
 
@@ -18,6 +19,7 @@ const articlesContent: Record<string, () => Promise<string>> = {
 };
 
 const getServerArticle = createServerFn({ method: "GET" })
+  .middleware([staticFunctionMiddleware])
   .inputValidator(v.object({ title: v.string(), slug: v.string() }))
   .handler(async ({ data }) => {
     const markdown = await (articlesContent[data.slug]?.() ??
@@ -34,5 +36,6 @@ export const getArticleQueryOptions = ({ title, slug }: { title: string; slug: s
   queryOptions({
     queryKey: ["article", { title, slug }],
     structuralSharing: false,
+    staleTime: Infinity,
     queryFn: () => getServerArticle({ data: { title, slug } }),
   });
