@@ -4,9 +4,9 @@ import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 
-import { Header } from "~/components/header";
+import { Header } from "~/chapters/header";
 
-import appCss from "~/styles/global.css?url";
+import appCss from "~/design-system/styles/global.css?url";
 
 interface MyRouterContext {
   queryClient: QueryClient;

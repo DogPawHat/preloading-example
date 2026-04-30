@@ -1,20 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveSuspenseQuery, eq, toArray } from "@tanstack/react-db";
 import * as v from "valibot";
-import { BlogTableSplitColumn } from "~/components/blog-table-split-column";
-import { ConsoleCard } from "~/components/console/console-card";
+import { BlogTableSplitColumn } from "~/chapters/chapter-split";
+import { ConsoleCard } from "~/demos/components/console-card";
 import {
   PokedexPagination,
   PokedexTableResults,
   PokedexTableSection,
-} from "~/components/tables/pokedex-table-section";
-import { getStrategyArticle } from "~/server/strategy-article.functions";
+} from "~/demos/components/pokedex-table-section";
+import { getStrategyArticle } from "~/articles/strategy-article.functions";
 import {
   pokemonCollection,
   typesCollection,
   pokemonTypesCollection,
-} from "~/data/local/collections";
-import { getPokemonListingQueryLimit, toPokemonListing } from "~/lib/pokemon-listing";
+} from "~/demos/live-query/collections";
+import {
+  getPokemonListingQueryLimit,
+  toPokemonListing,
+} from "~/demos/pokemon-listing/pokemon-listing";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),

@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, useMatches } from "@tanstack/react-router";
 
-import { ChapterPager } from "~/components/chapter-navigation";
-import { SectionHeader } from "~/components/console/section-header";
+import { ChapterPager } from "~/chapters/chapter-navigation";
+import { SectionHeader } from "~/chapters/section-header";
 
 export const Route = createFileRoute("/_chapters")({
   staticData: {
