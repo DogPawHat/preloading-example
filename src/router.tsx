@@ -5,7 +5,8 @@ import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen.ts";
-import { articleSlugs, getArticleQueryOptions } from "./articles/article.functions.tsx";
+import { articleSlugs } from "./articles/schemas.tsx";
+import { getArticleQueryOptions } from "./articles/querys.ts";
 
 function DefaultErrorComponent() {
   return (

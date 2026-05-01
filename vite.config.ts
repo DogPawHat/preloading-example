@@ -34,8 +34,8 @@ export default defineConfig({
       },
     }),
     netlify(),
-    react(),
     rsc(),
+    react(),
     tailwindcss(),
   ],
 });

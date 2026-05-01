@@ -9,7 +9,7 @@ import {
   PokedexTableSection,
 } from "~/demos/components/pokedex-table-section";
 import { getPokemonListQueryKey, getPokemonListQueryFn } from "~/demos/query/pokemon-query";
-import { getArticleQueryOptions } from "~/articles/article.functions";
+import { getArticleQueryOptions } from "~/articles/querys";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -55,12 +55,12 @@ function RouteComponent() {
   const { preloadingArticleQueryOptions } = Route.useRouteContext();
 
   const {
-    data: { article },
+    data: { Article },
   } = useSuspenseQuery(preloadingArticleQueryOptions);
 
   return (
     <ChapterSplitColumn
-      blog={article}
+      blog={Article}
       table={
         <DemoCard className="mb-6">
           <PokedexTableSection

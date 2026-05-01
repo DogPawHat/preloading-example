@@ -8,7 +8,7 @@ import {
   PokedexTableSection,
 } from "~/demos/components/pokedex-table-section";
 import { getPokemonListQueryFn, getPokemonListQueryKey } from "~/demos/query/pokemon-query";
-import { getArticleQueryOptions } from "~/articles/article.functions";
+import { getArticleQueryOptions } from "~/articles/querys";
 import { ChapterSplitColumn } from "~/chapters/chapter-split";
 
 const searchParamsSchema = v.object({
@@ -38,12 +38,12 @@ function RouteComponent() {
   const { noPrefetchArticleQueryOptions } = Route.useRouteContext();
 
   const {
-    data: { article },
+    data: { Article },
   } = useSuspenseQuery(noPrefetchArticleQueryOptions);
 
   return (
     <ChapterSplitColumn
-      blog={article}
+      blog={Article}
       table={
         <DemoCard className="mb-6">
           <PokedexTableSection

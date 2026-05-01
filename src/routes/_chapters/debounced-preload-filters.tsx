@@ -14,7 +14,7 @@ import {
   getFilteredPokemonListQueryKey,
   getFilteredPokemonListQueryFn,
 } from "~/demos/query/pokemon-query";
-import { getArticleQueryOptions } from "~/articles/article.functions";
+import { getArticleQueryOptions } from "~/articles/querys";
 
 const searchParamsSchema = v.object({
   offset: v.optional(v.number(), 0),
@@ -68,7 +68,7 @@ function RouteComponent() {
   const queryClient = useQueryClient();
 
   const {
-    data: { article },
+    data: { Article },
   } = useSuspenseQuery(debouncedArticleQueryOptions);
   const navigate = Route.useNavigate();
   const debouncedNameFilter = useDebouncedCallback(
@@ -89,7 +89,7 @@ function RouteComponent() {
 
   return (
     <ChapterSplitColumn
-      blog={article}
+      blog={Article}
       table={
         <>
           <DemoCard className="mb-6">

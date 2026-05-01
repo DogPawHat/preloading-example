@@ -1,5 +1,5 @@
 import { cn } from "~/design-system/utils/cn";
-import { renderMarkdown } from "~/articles/render-markdown.server";
+import { renderMarkdown } from "~/articles/__render-markdown.server";
 
 interface ArticleShell {
   markdown: string;

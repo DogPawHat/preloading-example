@@ -9,7 +9,7 @@ import {
   PokedexTableResults,
   PokedexTableSection,
 } from "~/demos/components/pokedex-table-section";
-import { getArticleQueryOptions } from "~/articles/article.functions";
+import { getArticleQueryOptions } from "~/articles/querys";
 import {
   pokemonCollection,
   typesCollection,
@@ -48,12 +48,12 @@ function RouteComponent() {
   const { liveQueryArticleQueryOptions } = Route.useRouteContext();
 
   const {
-    data: { article },
+    data: { Article },
   } = useSuspenseQuery(liveQueryArticleQueryOptions);
 
   return (
     <ChapterSplitColumn
-      blog={article}
+      blog={Article}
       table={
         <DemoCard className="mb-6">
           <PokedexTableSection
