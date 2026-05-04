@@ -78,10 +78,6 @@ export function getRouter() {
     queryClient,
   });
 
-  void Promise.all(
-    articleSlugs.map((slug) => queryClient.prefetchQuery(getArticleQueryOptions({ slug }))),
-  );
-
   return router;
 }
 
